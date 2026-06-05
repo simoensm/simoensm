@@ -2,15 +2,7 @@
 
 Master's student in **Business Analytics** · UCLouvain FUCaM Mons · Belgium
 
-Still learning and building things along the way — most of what you'll find here are projects from my studies and personal experiments.
-
----
-
-## What I build
-
-- **Data-driven tools** — automations, bots, and scripts that solve everyday problems
-- **NLP & ML projects** — from semantic analysis to gesture recognition
-- **Browser extensions** — making the web more transparent and privacy-aware
+Still learning and building things along the way. Most of what you'll find here are projects from my studies and personal experiments.
 
 ---
 
