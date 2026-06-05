@@ -363,6 +363,8 @@
     .gr:hover { background: rgba(0,255,136,0.1); }
     .pu { color: #A78BFF; border-color: rgba(123,47,255,0.32); background: rgba(123,47,255,0.04); }
     .pu:hover { background: rgba(123,47,255,0.1); }
+    .am { color: var(--amber); border-color: rgba(255,184,48,0.28); background: rgba(255,184,48,0.04); }
+    .am:hover { background: rgba(255,184,48,0.1); }
 
     /* ══════════════════════════════════════
        PROJECTS
@@ -726,25 +728,30 @@
     /* Gradient strip leading INTO photography (cyan → warm) */
     .sdiv-warm {
       position: relative; z-index: 3;
-      height: 160px; pointer-events: none;
-      background: linear-gradient(180deg, #050A0F 0%, #06080A 30%, #080806 70%, #080705 100%);
+      height: 240px; pointer-events: none; overflow: hidden;
+      background: linear-gradient(180deg, #050A0F 0%, #070A0C 25%, #080806 65%, #080705 100%);
     }
     .sdiv-warm::after {
       content: '';
-      position: absolute; bottom: 0; left: 12%; right: 12%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,184,48,0.18), transparent);
+      position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; z-index: 1;
+      background: linear-gradient(90deg, transparent, rgba(255,184,48,0.22), transparent);
     }
 
     /* Gradient strip leading OUT of photography (warm → cyan) */
     .sdiv-cool {
       position: relative; z-index: 3;
-      height: 160px; pointer-events: none;
-      background: linear-gradient(180deg, #080705 0%, #080806 30%, #06080A 70%, #050A0F 100%);
+      height: 240px; pointer-events: none; overflow: hidden;
+      background: linear-gradient(180deg, #080705 0%, #080806 35%, #070A0C 75%, #050A0F 100%);
     }
     .sdiv-cool::before {
       content: '';
-      position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,184,48,0.15), transparent);
+      position: absolute; top: 0; left: 10%; right: 10%; height: 1px; z-index: 1;
+      background: linear-gradient(90deg, transparent, rgba(255,184,48,0.18), transparent);
+    }
+
+    /* Hex field SVG inside transitions */
+    .transition-hex {
+      position: absolute; inset: 0; width: 100%; height: 100%; display: block;
     }
 
     /* Per-section top fade so they blend with the fixed canvas bg */
@@ -1019,6 +1026,16 @@
           </div>
         </div>
         <div class="glass stack-pane scan">
+          <span class="slabel" style="margin-bottom:0.6rem">// HARDWARE &amp; TINKERING</span>
+          <p style="font-size:0.78rem;color:var(--txt2);line-height:1.65;margin-bottom:0.75rem">Raspberry Pi projects (RFID reader → LCD feedback, 2-button game on LCD display), sensors (temperature · light · humidity), motors &amp; basic electronics. Converted an old PC into a home NAS running TrueNAS. Also into repairing and repurposing devices.</p>
+          <div class="chip-row">
+            <span class="chip am">Raspberry Pi</span><span class="chip am">TrueNAS / NAS</span>
+            <span class="chip am">RFID</span><span class="chip am">LCD Display</span>
+            <span class="chip am">GPIO / Sensors</span><span class="chip am">DC &amp; Servo Motors</span>
+            <span class="chip am">Device Repair</span>
+          </div>
+        </div>
+        <div class="glass stack-pane scan">
           <span class="slabel" style="margin-bottom:0">// LANGUAGES</span>
           <div class="chip-row">
             <span class="chip cy">French — Native</span>
@@ -1286,7 +1303,7 @@
       </div>
       <div class="rev" style="transition-delay:.18s">
         <p class="photo-tl">Where code stops<br>and <em>light begins.</em></p>
-        <p class="photo-loc">LESSINES, HAINAUT &nbsp;·&nbsp; BELGIUM &nbsp;·&nbsp; SINCE 2023</p>
+        <p class="photo-loc">LESSINES, HAINAUT &nbsp;·&nbsp; BELGIUM &nbsp;·&nbsp; SINCE 2023 &nbsp;·&nbsp; 30+ PROJECTS</p>
       </div>
     </div>
 
