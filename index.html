@@ -415,6 +415,7 @@
     .tor   { color:var(--green); border-color:rgba(0,255,136,0.3); background:rgba(0,255,136,0.05); }
     .tweb  { color:#A78BFF; border-color:rgba(123,47,255,0.35); background:rgba(123,47,255,0.05); }
     .tbi   { color:#FF6BAE; border-color:rgba(255,107,174,0.35); background:rgba(255,107,174,0.05); }
+    .tam   { color:#FFB830; border-color:rgba(255,184,48,0.35); background:rgba(255,184,48,0.07); }
 
     .ctitle { font-family: var(--fh); font-size: 0.97rem; font-weight: 700; color: var(--txt); margin-bottom: 0.65rem; line-height: 1.35; }
     .cdesc  { font-size: 0.83rem; color: var(--txt2); line-height: 1.65; margin-bottom: 1.2rem; }
@@ -995,7 +996,7 @@
         <p class="bio-p">Based in <strong>Belgium</strong> (Mons · Lessines), preparing for an <strong>Erasmus exchange in Norway</strong>. I target roles in <strong>consulting and data &amp; AI</strong> where analytical rigour meets strategic clarity.</p>
         <p class="bio-p">Two identities: <strong>data builder</strong> — who models, optimises, and predicts; and <strong>visual storyteller</strong> — who frames, captures, interprets. Both demand precision. Both reward curiosity.</p>
         <div class="counters">
-          <div class="ctr"><span class="ctr-n" data-target="8">0</span><span class="ctr-l">Projects Built</span></div>
+          <div class="ctr"><span class="ctr-n" data-target="10">0</span><span class="ctr-l">Projects Built</span></div>
           <div class="ctr"><span class="ctr-n" data-target="3">0</span><span class="ctr-l">Experiences</span></div>
           <div class="ctr"><span class="ctr-n" data-target="2">0</span><span class="ctr-l">Native Languages</span></div>
           <div class="ctr"><span class="ctr-n" data-target="1">0</span><span class="ctr-l">Running Hobby</span></div>
@@ -1069,6 +1070,7 @@
       <button class="fbtn" data-filter="or">OPTIMIZATION</button>
       <button class="fbtn" data-filter="web">WEB</button>
       <button class="fbtn" data-filter="nlp">NLP</button>
+      <button class="fbtn" data-filter="hw">HARDWARE</button>
     </div>
 
     <div class="proj-grid" id="projGrid">
@@ -1221,6 +1223,40 @@
           <div class="tc">Revenue YTD: €4.2M (+12.3% vs. budget)</div>
           <div>Top region: Wallonia · Conversion: 34.7%</div>
           <div>// Dashboard refreshed · 14 KPIs live ✓</div>
+        </div>
+      </div>
+
+      <!-- Command Center -->
+      <div class="pc scan" data-cat="web" data-proj="commandcenter">
+        <span class="ctag tweb">WEB · DASHBOARD</span>
+        <h3 class="ctitle">Command Center</h3>
+        <p class="cdesc">Personal productivity dashboard built with Next.js — Google OAuth sign-in, unified Calendar and Gmail views in a single interface. Full-stack TypeScript with server actions.</p>
+        <div class="cfoot">
+          <div class="cchips"><span class="cc">Next.js</span><span class="cc">TypeScript</span><span class="cc">Google API</span><span class="cc">OAuth</span></div>
+          <a href="https://github.com/simoensm/command_center" target="_blank" rel="noopener" class="cgh" aria-label="GitHub">⧉</a>
+        </div>
+        <div class="tov">
+          <div>$ npm run dev  [Next.js 15 · TypeScript]</div>
+          <div class="tc">[AUTH] Google OAuth · session active</div>
+          <div>[SYNC] Calendar + Gmail loaded ✓</div>
+          <div>[LIVE] Command Center ready at :3000</div>
+        </div>
+      </div>
+
+      <!-- GPIO OSC Trigger -->
+      <div class="pc scan" data-cat="hw" data-proj="gpiosc">
+        <span class="ctag tam">HARDWARE · RPI</span>
+        <h3 class="ctitle">GPIO → OSC Lighting Trigger</h3>
+        <p class="cdesc">Raspberry Pi script that monitors a BERM sensor on GPIO 27 and fires a random OSC message to QLC+ on each passage detection — automated gate-triggered stage lighting with 2-second debounce.</p>
+        <div class="cfoot">
+          <div class="cchips"><span class="cc">Python</span><span class="cc">Raspberry Pi</span><span class="cc">GPIO</span><span class="cc">OSC</span><span class="cc">QLC+</span></div>
+          <a href="https://github.com/simoensm/gpio_osc_trigger" target="_blank" rel="noopener" class="cgh" aria-label="GitHub">⧉</a>
+        </div>
+        <div class="tov">
+          <div>$ python3 auto_scene.py  [GPIO 27 · pull-up]</div>
+          <div class="tc">[SENSOR] Falling edge detected — passage!</div>
+          <div>[OSC] → /chaser/3 · value 255 → QLC+</div>
+          <div>[INFO] Debounce 2s · next trigger ready ✓</div>
         </div>
       </div>
 
@@ -2147,6 +2183,30 @@ const PROJ_DATA = {
     term: [['tc','// Loading sales_dashboard.pbix'],['','Revenue YTD: €4.2M (+12.3% vs. budget)'],['','Top region: Wallonia · Conversion: 34.7%'],['tc','// Dashboard refreshed · 14 KPIs live ✓']],
     stack: ['Power BI','SQL','Excel','Star Schema','ETL'],
     github: 'https://github.com/simoensm',
+  },
+  commandcenter: {
+    title: 'Command Center', file: 'app/page.tsx',
+    tag: 'WEB · DASHBOARD', tagCls: 'tweb',
+    tagline: 'Personal productivity dashboard — Google Calendar & Gmail in one Next.js app',
+    desc: ['Full-stack Next.js 15 personal command center with Google OAuth authentication. After sign-in, the app consolidates Calendar and Gmail into a single unified interface — eliminating context-switching between Google products.',
+           'Built with TypeScript server actions and the Next.js App Router. Authentication uses NextAuth with Google provider and scoped OAuth tokens for Calendar and Gmail APIs. The architecture is modular with dedicated route segments for each service.'],
+    bullets: ['Google OAuth sign-in via NextAuth — scoped Calendar + Gmail access','Unified Calendar view: events, scheduling, and agenda at a glance','Gmail integration: inbox summary and message threading','Next.js 15 App Router with TypeScript server actions'],
+    metrics: [{l:'Stack',v:'Next.js'},{l:'Auth',v:'OAuth'},{l:'Services',v:'2'},{l:'Lang',v:'TypeScript'}],
+    term: [['','$ npm run dev  [Next.js 15 · TypeScript]'],['tc','[AUTH] Google OAuth · session active'],['tc','[SYNC] Calendar + Gmail loaded ✓'],['tc','[LIVE] Command Center ready at :3000']],
+    stack: ['Next.js','TypeScript','Google Calendar API','Gmail API','NextAuth','OAuth 2.0'],
+    github: 'https://github.com/simoensm/command_center',
+  },
+  gpiosc: {
+    title: 'GPIO → OSC Lighting Trigger', file: 'auto_scene.py',
+    tag: 'HARDWARE · RPI', tagCls: 'tam',
+    tagline: 'Gate-triggered automated stage lighting via Raspberry Pi GPIO + OSC + QLC+',
+    desc: ['Raspberry Pi script that monitors a BERM proximity sensor on GPIO 27 (internal pull-up) and fires a randomised OSC UDP message to QLC+ on every passage detection — creating automated, non-repetitive lighting cues for a stage gate.',
+           'A 2-second software debounce prevents multiple triggers per passage. On each falling edge, the script randomly selects one of 5 chasers (/chaser/1 to /chaser/5) and sends value 255 over UDP to QLC+ on port 7701. QLC+ config and the .qxw workspace file are included in the repo.'],
+    bullets: ['BERM sensor wired to GPIO 27 — falling-edge interrupt detection','Random OSC address selection across 5 chasers (no repeated pattern)','2-second debounce to prevent duplicate triggers per passage','QLC+ .qxw workspace with pre-bound OSC buttons included'],
+    metrics: [{l:'GPIO pin',v:'27'},{l:'Chasers',v:'5'},{l:'Debounce',v:'2 s'},{l:'Protocol',v:'OSC UDP'}],
+    term: [['','$ python3 auto_scene.py  [GPIO 27 · pull-up]'],['tc','[SENSOR] Falling edge detected — passage!'],['tc','[OSC] → /chaser/3 · value 255 → QLC+'],['','[INFO] Debounce 2s · next trigger ready ✓']],
+    stack: ['Python','RPi.GPIO','python-osc','QLC+','Raspberry Pi','OSC','UDP'],
+    github: 'https://github.com/simoensm/gpio_osc_trigger',
   },
 };
 

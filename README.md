@@ -34,6 +34,12 @@ French · Dutch · English
 
 ---
 
+## Portfolio
+
+[simoensm.github.io/simoensm](https://simoensm.github.io/simoensm)
+
+---
+
 ## Get in touch
 
 - [LinkedIn](https://www.linkedin.com/in/mathiassimoens/)
