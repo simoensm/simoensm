@@ -18,7 +18,7 @@
 
 | Project | What it is | Stack |
 |---|---|---|
-| [**PushUp Royale**](https://github.com/simoensm/pushit) | Android fitness game: the front camera counts push-ups live with on-device pose estimation. Ranks, a star economy, challenges, friends and leaderboards | Kotlin · Jetpack Compose · MediaPipe · CameraX · Firebase |
+| [**PushIt**](https://github.com/simoensm/pushit) | Android fitness game: the front camera counts push-ups live with on-device pose estimation. Ranks, a star economy, challenges, friends and leaderboards | Kotlin · Jetpack Compose · MediaPipe · CameraX · Firebase |
 | [**SideTab**](https://github.com/simoensm/sidetab) | Turns an Android tablet into a real extended display for a Mac over USB-C. Hardware H.264, 60 fps, nothing to install on the tablet | Swift · ScreenCaptureKit · VideoToolbox · WebCodecs |
 | [**Sony Recognizer**](https://github.com/simoensm/sony_recognizer) | Event photo delivery: the camera uploads over FTPS, attendees take a selfie and instantly get every photo they appear in | Next.js · TypeScript · InsightFace · pgvector · Redis |
 
