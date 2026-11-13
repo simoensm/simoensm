@@ -85,6 +85,5 @@ French · Dutch (native) · English (C1)
 ---
 
 <p align="center">
-  <i>Open to internships and roles in consulting and data & AI, from February 2027.</i><br/>
   Reach me on <a href="https://www.linkedin.com/in/mathiassimoens/">LinkedIn</a> or through my <a href="https://simoensm.github.io/simoensm">portfolio</a>.
 </p>
