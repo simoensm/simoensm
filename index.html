@@ -156,8 +156,24 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .world p{font-size:14px;line-height:1.45;margin-top:6px;opacity:.8}
 .world .go{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:500;margin-top:14px}
 .w1 .bg{background:radial-gradient(circle at 60% 120%,#1d3a7a 0,#0a0f1d 55%,#05070d 100%)}
-.w2 .bg{background:linear-gradient(160deg,#d9d1c4,#9d8f7c)}
-.w3 .bg{background:linear-gradient(160deg,#20242c,#0d0f13)}
+.w2 .bg{background:#111}
+.w2 .bg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.4s var(--spring)}
+.world:hover .bg img{transform:scale(1.04)}
+.w2 .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0,rgba(0,0,0,0) 30%,rgba(0,0,0,0) 45%,rgba(0,0,0,.6) 100%)}
+.w1,.w2,.w3{color:#eef1f6}
+.wstat{position:absolute;left:28px;top:26px;display:flex;align-items:baseline;gap:8px;color:#eef1f6;z-index:1}
+.wstat b{font-size:30px;font-weight:600;letter-spacing:-.03em}.wstat span{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.6}
+.w3 .code{position:absolute;left:26px;right:26px;top:84px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 60px -30px rgba(0,0,0,.8);overflow:hidden;transition:transform 1.1s var(--spring)}
+.world:hover .code{transform:translateY(-4px)}
+.code .cbar{display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.code .cbar i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18)}
+.code .cbar span{margin-left:8px;font-family:var(--mono);font-size:10.5px;color:rgba(238,241,246,.5)}
+.code pre{margin:0;padding:14px 16px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:#cdd5e3;white-space:pre;overflow:hidden}
+.code .c{color:#6b778c}.code .k{color:#8fb0ff}.code .n{color:#f0b46b}
+.code .cur{display:inline-block;width:7px;height:13px;background:#8fb0ff;vertical-align:-2px;margin-left:2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.world .art{transition:transform 1.4s var(--spring)}.world:hover .art{transform:scale(1.04)}
+.w3 .bg{background:radial-gradient(120% 80% at 20% 0%,#1b2233 0,#0d1018 60%,#08090d 100%)}
 .world svg{position:absolute;inset:0;width:100%;height:100%}
 .cv{padding:110px 0 90px}
 .cvrows{margin-top:40px;display:grid;gap:14px}
@@ -420,6 +436,20 @@ body.focused .sheet{transform:none}
 .sheet li .s{font-family:var(--mono);font-size:12px;color:var(--ink3)}
 .sheet li a{color:var(--accent);font-size:14px;font-weight:500}
 .sheet li a:hover{text-decoration:underline}
+.pjlist{display:grid;gap:10px;margin-top:6px}
+.pj{display:grid;gap:6px;text-align:left;font:inherit;width:100%;padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.62);cursor:pointer;transition:background .4s var(--ease),transform .6s var(--spring),box-shadow .5s var(--ease)}
+.pj:hover{background:#fff;transform:translateY(-2px);box-shadow:0 14px 30px -16px rgba(20,30,60,.3)}
+.pjt{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.pjt b{font-size:16.5px;font-weight:600;color:var(--ink)}.pjt em{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+.pjo{font-size:14px;line-height:1.5;color:#3d424a}.pjgo{font-size:13px;font-weight:500;color:var(--accent)}
+.pjback{font:inherit;font-size:13px;border:0;background:rgba(20,22,26,.06);padding:7px 13px;border-radius:999px;cursor:pointer;margin-bottom:16px;color:#3d424a}.pjback:hover{background:rgba(20,22,26,.1)}
+.pjlead{font-size:16.5px!important;color:var(--ink)!important}
+.pjfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:6px 0 8px}
+.pjfacts div{border-radius:14px;background:rgba(255,255,255,.65);border:1px solid var(--line);padding:12px 14px}
+.pjfacts b{display:block;font-size:20px;font-weight:600;letter-spacing:-.02em}.pjfacts span{font-size:12px;color:var(--ink3)}
+.sheet ul.pjhow li{padding:9px 0 9px 18px;position:relative;font-size:14.5px}.sheet ul.pjhow li::before{content:"";position:absolute;left:2px;top:17px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.7}
+.pjstack{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 18px}.pjstack span{font-family:var(--mono);font-size:11.5px;padding:5px 10px;border-radius:999px;background:rgba(20,22,26,.06);color:#3d424a}
+.pjlinks{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 10px}.pjlinks .btn{font-size:14px;padding:11px 18px}.pjlinks .btn.soft{background:rgba(20,22,26,.06)}
+#sb{transition:opacity .22s var(--ease),transform .3s var(--ease)}#sb.swap{opacity:0;transform:translateX(8px)}
 .sheet .note{font-size:13px;color:var(--ink2);background:rgba(255,255,255,.6);border-radius:14px;padding:12px 14px;margin:16px 0;border:1px solid var(--line)}
 .rload{position:absolute;inset:0;display:grid;place-items:center;color:#8a909a;font-size:14px;background:#0e0e0f;transition:opacity .8s}
 .toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-12px);z-index:200;font-size:14px;padding:12px 18px;border-radius:16px;opacity:0;transition:all .5s var(--spring);pointer-events:none}
@@ -502,14 +532,31 @@ body.focused .sheet{transform:none}
     <h2 class="big reveal">Discover me.</h2>
     <div class="wgrid">
       <div class="world w1 reveal" data-go="journey"><div class="bg"></div>
-        <svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="eg" cx="40%" cy="35%"><stop offset="0" stop-color="#2a4f9e"/><stop offset=".6" stop-color="#0f1f45"/><stop offset="1" stop-color="#060b18"/></radialGradient></defs><circle cx="230" cy="190" r="150" fill="url(#eg)"/><circle cx="230" cy="190" r="150" fill="none" stroke="#7fa2ff" stroke-opacity=".25"/><path d="M180 120c20-8 44-6 60 6s30 8 40 22-6 30-24 34-30 14-48 8-34-20-38-36 2-26 10-34z" fill="#c9d6f5" opacity=".85"/><path d="M200 230c18-6 40 0 52 14s4 34-14 40-40-2-48-18 0-30 10-36z" fill="#1d2d55"/><circle cx="221" cy="138" r="3.5" fill="#fff"/><circle cx="221" cy="138" r="10" fill="none" stroke="#fff" stroke-opacity=".5"/><path d="M221 138 Q240 80 236 70" stroke="#8fb0ff" stroke-width="1.5" fill="none" stroke-dasharray="3 4"/><circle cx="236" cy="70" r="3" fill="#8fb0ff"/></svg>
+        <svg class="art" viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="gb" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#22407f"/><stop offset=".55" stop-color="#0d1b3b"/><stop offset="1" stop-color="#050a17"/></radialGradient><radialGradient id="gh" cx="50%" cy="50%" r="50%"><stop offset=".72" stop-color="#5c8dff" stop-opacity="0"/><stop offset=".86" stop-color="#5c8dff" stop-opacity=".22"/><stop offset="1" stop-color="#5c8dff" stop-opacity="0"/></radialGradient><clipPath id="gc"><circle cx="200" cy="210" r="150"/></clipPath></defs>
+          <circle cx="200" cy="210" r="185" fill="url(#gh)"/><circle cx="200" cy="210" r="150" fill="url(#gb)"/>
+          <g clip-path="url(#gc)" fill="none" stroke="#9fbaff" stroke-opacity=".16" stroke-width="1"><ellipse cx="200" cy="210" rx="150" ry="150"><animate attributeName="rx" values="150;0;150" dur="14s" begin="0s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="110" ry="150"><animate attributeName="rx" values="110;150;110" dur="14s" begin="-3.5s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="60" ry="150"><animate attributeName="rx" values="60;150;60" dur="14s" begin="-7s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="20" ry="150"><animate attributeName="rx" values="20;150;20" dur="14s" begin="-10.5s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="150" ry="26"/><ellipse cx="200" cy="150" rx="137" ry="22"/><ellipse cx="200" cy="270" rx="137" ry="22"/><ellipse cx="200" cy="100" rx="102" ry="15"/><ellipse cx="200" cy="320" rx="102" ry="15"/></g>
+          <circle cx="200" cy="210" r="150" fill="none" stroke="#9fbaff" stroke-opacity=".28"/>
+          <path d="M196 196 C 196 150, 214 118, 222 100" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.4" stroke-dasharray="3 5"><animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/></path>
+          <circle cx="196" cy="198" r="4" fill="#8fb0ff"/><circle cx="196" cy="198" r="4" fill="none" stroke="#8fb0ff"><animate attributeName="r" values="4;16" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="2.4s" repeatCount="indefinite"/></circle>
+          <circle cx="222" cy="100" r="3.5" fill="#fff"/>
+          <text x="208" y="204" fill="#cfdcff" font-family="Geist Mono,monospace" font-size="10" letter-spacing=".06em">MONS</text><text x="232" y="98" fill="#cfdcff" font-family="Geist Mono,monospace" font-size="10" letter-spacing=".06em">BERGEN</text></svg>
+        <div class="wstat"><b>18</b><span>countries explored</span></div>
         <div class="panel dglass hg"><h3>Journey</h3><p>A globe of where I've studied and worked. Click Belgium and it takes you place to place.</p><span class="go">Open the globe &rarr;</span></div></div>
-      <div class="world w2 reveal" data-go="studio"><div class="bg"></div>
-        <svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><rect x="60" y="70" width="120" height="84" fill="#f4f1ea"/><rect x="68" y="78" width="104" height="68" fill="#5d5448"/><rect x="200" y="60" width="74" height="98" fill="#f4f1ea"/><rect x="207" y="67" width="60" height="84" fill="#2e2a26"/><rect x="40" y="250" width="320" height="6" fill="#6b5e4d"/><rect x="150" y="212" width="90" height="38" rx="3" fill="#2b2c2f"/><rect x="154" y="216" width="82" height="30" fill="#e9ebef"/><rect x="138" y="249" width="114" height="4" fill="#9a9ca0"/><rect x="280" y="230" width="34" height="20" rx="5" fill="#1d1d1f"/><circle cx="297" cy="240" r="7" fill="#3a3a3c"/></svg>
-        <div class="panel glass hg"><h3>Above Belgium</h3><p>My company, run as a self-employed student entrepreneur. The portfolio hangs on the wall, the gear sits on the shelf.</p><span class="go">Step inside &rarr;</span></div></div>
+      <div class="world w2 reveal" data-go="studio"><div class="bg"><img src="photos/cover-studio.jpg" alt="Motorsport photo by Above Belgium" loading="lazy"></div>
+        <div class="panel dglass hg"><h3>Above Belgium</h3><p>My photo and video company, run as a self-employed student entrepreneur. Portfolio, gear, services and reviews.</p><span class="go">Step inside &rarr;</span></div></div>
       <div class="world w3 reveal" data-go="atelier"><div class="bg"></div>
-        <svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><g fill="#2c3038"><rect x="40" y="110" width="96" height="60" rx="3"/><rect x="152" y="100" width="104" height="66" rx="3"/><rect x="272" y="110" width="96" height="60" rx="3"/></g><g fill="#8fb0ff" opacity=".6"><rect x="50" y="122" width="44" height="3"/><rect x="50" y="130" width="66" height="3"/><rect x="164" y="114" width="56" height="3"/><rect x="164" y="122" width="80" height="3"/><rect x="164" y="130" width="40" height="3"/><rect x="284" y="124" width="58" height="3"/></g><rect x="20" y="230" width="360" height="6" fill="#3a3f48"/><rect x="300" y="210" width="34" height="20" rx="3" fill="#2fbf71" opacity=".8"/></svg>
-        <div class="panel dglass hg"><h3>Projects</h3><p>My atelier. Code on three screens, a Raspberry Pi on the soldering bench.</p><span class="go">Enter the atelier &rarr;</span></div></div>
+        <div class="code" aria-hidden="true"><div class="cbar"><i></i><i></i><i></i><span>RepCounter.kt</span></div>
+<pre><span class="c">// a rep counts on the way back up</span>
+<span class="k">when</span> (state) {
+  UP   <span class="k">-&gt;</span> <span class="k">if</span> (elbow &lt; <span class="n">80</span> &amp;&amp; nearFloor)
+            state = DOWN
+  DOWN <span class="k">-&gt;</span> <span class="k">if</span> (elbow &gt; <span class="n">150</span>) {
+            reps++<span class="cur"></span>
+            state = UP
+          }
+}</pre></div>
+        <div class="wstat"><b>12</b><span>projects on GitHub</span></div>
+        <div class="panel dglass hg"><h3>Projects</h3><p>Apps, data and AI models, and a bit of hardware. Each one opens with its story and its code.</p><span class="go">Enter the atelier &rarr;</span></div></div>
     </div>
   </section>
 
@@ -714,12 +761,13 @@ const CH=[
   {kind:'Education', yr:'Sep 2022', t:'Bachelor in Business Engineering', o:'Louvain School of Management · UCLouvain FUCaM Mons', p:'Three years of management, economics, quantitative methods and IT on a campus founded in 1896 and part of UCLouvain since 2011.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826},
   {kind:'Business', yr:'Sep 2023', t:'Founded Above Belgium', o:'Self-employed student entrepreneur · Lessines', p:'My photo and video company: sports, motorsports, events, portraits, drone, real estate, macro and product photography, plus video: aftermovies, interviews, products and sports.', a:'Lessines, Hainaut', sites:[], area:'lessines', lat:50.7105, lng:3.8293},
   {kind:'Experience', yr:'Jan 2025', t:'Business Engineer Intern', o:'Berma · Erpe-Mere and Anderlecht', p:'A Belgian wholesaler of furniture and decoration hardware, founded in 1977. I built the product database for its new webshop and worked in the ERP.', a:'Joseph Cardijnstraat, Erpe-Mere · Maurice Herbettelaan, Anderlecht', sites:['berma','anderlecht'], lat:50.9323, lng:3.9584},
-  {kind:'Experience', yr:'Apr 2025', t:'Treasurer and Financial Manager', o:'FUCaM Junior Consulting · Mons', p:'Restructured the 20-member student consulting association onto Odoo ERP, ran the finances and organised events of 100+ attendees.', a:'UCLouvain FUCaM campus, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:1},
+  {kind:'Experience', yr:'Apr 2025', t:'Treasurer and Financial Manager', o:'FUCaM Junior Consulting · Mons', p:'Restructured the 20-member student consulting association onto Odoo ERP, ran the finances and organised events of 100+ attendees.', a:'UCLouvain FUCaM campus, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:1, label:'fjc'},
   {kind:'Education', yr:'Sep 2025', t:'Master in Business Engineering', o:'Business Analytics · Louvain School of Management', p:'Data and decision science: artificial intelligence, recommender systems, web mining and optimisation.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:2},
   {kind:'Education', yr:'Aug 2026', t:'Erasmus at NHH', o:'NHH Norwegian School of Economics · Bergen, Norway', p:"International Finance at Norway's first business school, founded in 1936, on the Sandviken campus just outside the city centre.", a:'Helleveien 30, Bergen', sites:['nhh'], view:2, lat:60.423, lng:5.3021}
 ];
-const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons',logo:'uclouvain.png'}, berma:{t:'Berma',s:'Erpe-Mere',logo:'berma.png'}, anderlecht:{t:'Berma',s:'Anderlecht',logo:'berma.png'}, nhh:{t:'NHH',s:'Sandviken · Bergen',logo:'nhh.png',tall:true}, lessines:{t:'Above Belgium',s:'Lessines',logo:'above-belgium.svg'} };
-  const setLabel=key=>{ const I=SITE_INFO[key]; if(!I) return; $('#plT').textContent=I.t; $('#plS').textContent=I.s; const L=$('#plL'); L.src='logos/'+I.logo; L.className=I.tall?'tall':''; };
+const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons',logo:'uclouvain.png'}, berma:{t:'Berma',s:'Erpe-Mere',logo:'berma.png'}, anderlecht:{t:'Berma',s:'Anderlecht',logo:'berma.png'}, nhh:{t:'NHH',s:'Sandviken · Bergen',logo:'nhh.png',tall:true}, lessines:{t:'Above Belgium',s:'Lessines',logo:'above-belgium.svg'}, fjc:{t:'FUCaM Junior Consulting',s:'Campus · Mons',logo:'fjc.png',tall:true} };
+  let labelOverride=null;
+  const setLabel=key=>{ const I=SITE_INFO[labelOverride||key]; if(!I) return; $('#plT').textContent=I.t; $('#plS').textContent=I.s; const L=$('#plL'); L.src='logos/'+I.logo; L.className=I.tall?'tall':''; };
 const SITE_LL={ fucam:[50.4537,3.9826], berma:[50.9323,3.9584], anderlecht:[50.8449,4.3096] };
 const Journey={};
 let globeStarted=false;
@@ -764,16 +812,29 @@ const Region = (()=>{
 
   const LMATS=[];
   const tick0=()=>new Promise(r=>setTimeout(r,0));
+  // soft mask: the detailed layers fade out a few kilometres past the Belgian border, so their edges never show
+  const MASK={tex:null,box:new THREE.Vector4(0,0,1,1)};
+  function buildMask(be){ const X0=-200000,Z0=-170000,SX=400000,SZ=360000,N=1024; const c=document.createElement('canvas'); c.width=c.height=N; const g=c.getContext('2d');
+    const draw=(g,n)=>{ g.beginPath(); be.forEach(f=>polys(f).forEach(rs=>{ const r=rs[0]; r.forEach(([lon,lat],i)=>{ const [x,z]=P(lat,lon); const u=(x-X0)/SX*n, v=(z-Z0)/SZ*n; i?g.lineTo(u,v):g.moveTo(u,v); }); g.closePath(); })); };
+    // a small, slightly grown copy scaled up gives a soft edge in every browser (no canvas filter needed)
+    const sm=document.createElement('canvas'); sm.width=sm.height=72; const s2=sm.getContext('2d'); s2.fillStyle=s2.strokeStyle='#fff'; s2.lineWidth=1.4; s2.lineJoin='round'; draw(s2,72); s2.fill(); s2.stroke();
+    g.imageSmoothingEnabled=true; g.imageSmoothingQuality='high'; g.drawImage(sm,0,0,N,N);
+    g.fillStyle='#fff'; draw(g,N); g.fill();
+    MASK.tex=new THREE.CanvasTexture(c); MASK.tex.colorSpace=THREE.NoColorSpace; MASK.box.set(X0,Z0,SX,SZ); }
+  function masked(mat,isLine){ mat.onBeforeCompile=sh=>{ sh.uniforms.uMask={value:MASK.tex}; sh.uniforms.uBox={value:MASK.box};
+      sh.vertexShader='varying vec2 vFW;\n'+sh.vertexShader.replace('void main() {', 'void main() {\n'+(isLine?'vFW=(modelMatrix*vec4(position.y<0.5?instanceStart:instanceEnd,1.0)).xz;':'vFW=(modelMatrix*vec4(position,1.0)).xz;'));
+      sh.fragmentShader='uniform sampler2D uMask; uniform vec4 uBox; varying vec2 vFW;\n'+sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.a*=texture2D(uMask,(vFW-uBox.xy)/uBox.zw).r;\n#include <fog_fragment>'); };
+    mat.transparent=true; return mat; }
   async function polyLayer(list,color,order,opacity=1){ const geos=[]; let n=0;
     for(const f of list){ const pts=[]; for(let i=0;i<f.length;i+=2) pts.push(new THREE.Vector2(f[i],-f[i+1]));
       if(pts.length>3&&pts[0].distanceTo(pts[pts.length-1])<1) pts.pop(); if(pts.length<3) continue;
       try{ geos.push(new THREE.ShapeGeometry(new THREE.Shape(pts),1)); }catch(e){} if(++n%400===0) await tick0(); }
     if(!geos.length) return; const geo=BufferGeometryUtils.mergeGeometries(geos,false); geos.forEach(g=>g.dispose()); geo.rotateX(-Math.PI/2);
-    const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,transparent:opacity<1,opacity,depthTest:false,depthWrite:false,fog:true})); m.renderOrder=order; m.position.y=1; scene.add(m); }
+    const m=new THREE.Mesh(geo,masked(new THREE.MeshBasicMaterial({color,transparent:true,opacity,depthTest:false,depthWrite:false,fog:true}),false)); m.renderOrder=order; m.position.y=1; scene.add(m); }
   function lineLayer(list,pick,color,px,order,opacity=1){ const pos=[];
     for(const [t,f] of list){ if(!pick(t)) continue; for(let i=0;i<f.length-2;i+=2) pos.push(f[i],2,f[i+1],f[i+2],2,f[i+3]); }
     if(!pos.length) return; const geo=new LineSegmentsGeometry(); geo.setPositions(new Float32Array(pos));
-    const mat=new LineMaterial({color,linewidth:px,transparent:true,opacity,depthTest:false,depthWrite:false,fog:true}); mat.resolution.set(innerWidth,innerHeight); LMATS.push(mat);
+    const mat=masked(new LineMaterial({color,linewidth:px,transparent:true,opacity,depthTest:false,depthWrite:false,fog:true}),true); mat.resolution.set(innerWidth,innerHeight); LMATS.push(mat);
     const L=new LineSegments2(geo,mat); L.renderOrder=order; L.frustumCulled=false; scene.add(L); }
   // belgium.json stores each line as deltas in units of 10 m
   const dec=f=>{ const o=new Array(f.length); let x=0,z=0; for(let i=0;i<f.length;i+=2){ x+=f[i]; z+=f[i+1]; o[i]=x*10*COS(LAT0-z*10/KZ)/KX; o[i+1]=z*10; } return o; };
@@ -814,7 +875,7 @@ const Region = (()=>{
     const det=await fetch('belgium.json').then(r=>r.ok?r.json():null).catch(()=>null);
     // with the detailed map, Belgium is real land (forests, towns, rivers, roads); without it, the plain provinces
     scene.add(fillMesh(be, f=> det ? new THREE.Color('#121925') : mixHex(['#5b9df5','#6aa8f7','#4f92ee','#76b1f8'][be.indexOf(f)%4], '#0b1a33', .38), 0));
-    if(det) await buildDetail(det);
+    if(det){ buildMask(be); await buildDetail(det); }
     scene.add(lineMesh(be, det?'#6f86b3':'#eaf2ff', det?.42:.5, 1));
     // Lessines municipality
     const A=d.areas?.lessines; if(A){ const f={geometry:{type:'Polygon',coordinates:[A.ring]}};
@@ -905,7 +966,7 @@ const Region = (()=>{
   async function toArea(key,live){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); current=null; areaKey=key; setLabel(key);
     return fly({x:x-900,z:z+1500,d:17000,el:1.05,az:Math.PI/2+.25}, live, {spin:true}); }
   function toOverview(live){ current=null; return fly(OVER, live); }
-  return { OVER, elFor, show, hide, toSite, toArea, toOverview, begin, sync, end, camLL, siteLL, areaLL, AZ, get ready(){ return ready; }, prefetch:(world)=>{ if(!ready){ ready=init(world).then(()=>{ warm(); }); } return ready; }, get visible(){ return visible && $('#place').classList.contains('on'); } };
+  return { set label(k){ labelOverride=k||null; if(current||areaKey) setLabel(current||areaKey); }, OVER, elFor, show, hide, toSite, toArea, toOverview, begin, sync, end, camLL, siteLL, areaLL, AZ, get ready(){ return ready; }, prefetch:(world)=>{ if(!ready){ ready=init(world).then(()=>{ warm(); }); } return ready; }, get visible(){ return visible && $('#place').classList.contains('on'); } };
 })();
 
 async function initGlobe(){
@@ -1001,7 +1062,7 @@ async function initGlobe(){
     async function goTo(i){
       const my=++token; const live=()=>my===token; idx=i; clearTimeout(timer); caption(i); setRoute(i);
       segs.forEach((s,k)=>{ s.classList.toggle('done',k<i); const b=s.querySelector('i'); b.style.transition='none'; b.style.width=k<i?'100%':'0'; });
-      const c=CH[i]; let d=DUR;
+      const c=CH[i]; let d=DUR; Region.label=c.label;
       if(c.sites.length||c.area){
         const fresh=!Region.visible;
         if(!await intoBelgium(my,i)) return;
@@ -1049,6 +1110,97 @@ function listFor(cat){ const m=PHOTOS_DATA||{}; return cat&&cat!=='all' ? (m[cat
 function fillMasonry(cat){ const mas=document.getElementById('mas'); if(!mas) return; const list=listFor(cat);
   mas.innerHTML= list.length ? thumbsHTML(list) : CATS.filter(([k])=>!cat||cat==='all'||k===cat).map(([k,n])=>`<div class="ph-empty">${n}</div>`).join('');
   mas.querySelectorAll('.th').forEach(b=>b.onclick=()=>openLB(list,+b.dataset.i)); }
+/* ============================ PROJECTS (from the GitHub READMEs) ============================ */
+const GH='https://github.com/simoensm/';
+const PROJECTS=[
+  {id:'pushit',st:'software',name:'PushIt',tag:'Android app',year:'2026',repo:'pushit',
+   one:'A push-up game where the front camera counts your reps live, with ranks, streaks and friend leaderboards.',
+   about:'A native Android fitness game. You prop the phone against the wall, get into position, and on-device pose estimation counts every push-up in real time. No wearables, and no honour system.',
+   how:['MediaPipe Pose Landmarker runs on every CameraX frame.','A state machine follows the elbow angle and the nose-to-floor distance: down below 80 degrees, counted on the way back up above 150, with a 300 ms debounce.','Auto-calibration on the first frame adapts to body size and camera distance.','A live skeleton overlay warns about sagging hips, and counting freezes if the phone moves.','Stars, 16 ranks, achievements and challenges, plus shared leaderboards.'],
+   facts:[['6','push-up variants'],['16','ranks'],['v1.1.3','latest version']],
+   stack:['Kotlin','Jetpack Compose','MediaPipe','CameraX','Firebase','Room']},
+  {id:'sidetab',st:'software',name:'SideTab',tag:'macOS app',year:'2026',repo:'sidetab',
+   one:'Turns an Android tablet into a real extended display for a Mac, over one USB-C cable.',
+   about:"Apple's Sidecar only works with iPads, and Samsung's Second Screen only with Windows. SideTab fills the gap: plug a Galaxy Tab into the Mac and it appears as a real monitor, with nothing to install on the tablet.",
+   how:['macOS sees it as a real display, so it works with every app, Mission Control and the Displays settings.','Lives in the menu bar: plug in and the display appears, unplug and windows move back.','Retina rendering, encoded with the Mac\'s hardware H.264 encoder, at 60 fps or 30 to save power.','Switches the USB-C power direction so the tablet charges from the Mac, and shows its battery level.'],
+   facts:[['60 fps','hardware H.264'],['2x','Retina rendering'],['0','apps on the tablet']],
+   stack:['Swift','ScreenCaptureKit','VideoToolbox','USB-C']},
+  {id:'sony',st:'software',name:'Sony Recognizer',tag:'Web platform',year:'In development',repo:'sony_recognizer',
+   one:'Event photos delivered by face matching: guests take a selfie and get every photo they appear in.',
+   about:'Built for my own event work with Above Belgium. The camera uploads each photo over FTPS while I shoot. Guests scan a QR code, take a selfie, and within seconds see and download the photos they are in. Nothing manual in between.',
+   how:['Photos stream from the camera to object storage as they are taken.','A Python worker finds faces with InsightFace and stores embeddings in PostgreSQL with pgvector.','A selfie becomes a vector search over the whole event.','Queues in Redis and BullMQ keep uploads and matching flowing during a live event.'],
+   facts:[['FTPS','straight from the camera'],['pgvector','face search'],['M0','current milestone']],
+   stack:['Next.js 15','TypeScript','Tailwind','Python','InsightFace','ONNX','PostgreSQL','pgvector','Redis','Docker']},
+  {id:'privacy',st:'software',name:'Privacy Guard',tag:'Browser extension',year:'2026',repo:'privacy_guard_extension',
+   one:'A browser extension that reads privacy policies for you and gives each site a transparency score.',
+   about:'Privacy Guard spots privacy policies, terms of service and GDPR pages, analyses them and explains in seconds what you are agreeing to. Everything runs locally in the browser: no data leaves your machine.',
+   how:['Summarises the key points in five to seven sentences.','Measures readability (Flesch) and pulls the main keywords with TF-IDF.','Detects ten kinds of sensitive clauses, such as data resale, mandatory arbitration, transfers outside the EU and targeted advertising.','Combines them into a 0 to 100 transparency score with a low, medium or high risk level.'],
+   facts:[['10','clause types detected'],['0-100','transparency score'],['100%','local processing']],
+   stack:['JavaScript','NLP','TF-IDF','Chrome','Firefox','Edge']},
+  {id:'command',st:'software',name:'Command Center',tag:'Web app',year:'2026',repo:'command_center',
+   one:'A personal dashboard that puts my Google Calendar and Gmail in one place, behind a Google sign-in.',
+   about:'A Next.js app I built for my own day-to-day: sign in with Google once, then work from a single command center with a calendar view and the inbox side by side.',
+   how:['Google sign-in through Auth.js, with the access token used to call Google APIs.','Dedicated calendar and Gmail sections, with server-side API routes.','Built with the Next.js App Router and Tailwind.'],
+   facts:[['2','Google services'],['1','sign-in']],
+   stack:['Next.js','TypeScript','Auth.js','Google APIs','Tailwind']},
+  {id:'vault',st:'software',name:'Research Vault',tag:'Research workspace',year:'2026',repo:'research_vault',
+   one:'Zotero, Obsidian, Claude and GitHub wired into one research workspace that builds a knowledge graph as you read.',
+   about:'Save a paper in Zotero and two minutes later it is a structured Obsidian note, summarised from the full PDF, linked to the concepts and projects it relates to, checked for newer versions and committed to GitHub. A template anyone can reuse.',
+   how:['A ready-made vault with folders for papers, concepts, projects, courses and questions, and a home dashboard with the reading queue.','One command imports a paper with its metadata, abstract and all PDF highlights; the bibliography updates itself.','An AI research agent with eleven commands, such as summarize, link, ask, lit-review, find-papers and weekly-review.','The agent answers from your own notes, with citations, and never invents sources.'],
+   facts:[['11','agent commands'],['2 min','from paper to note']],
+   stack:['Python','Obsidian','Zotero','Claude Code','Git']},
+  {id:'planner',st:'software',name:'Project Planner',tag:'Web tool',year:'2026',repo:'project_planner_ba',
+   one:'A one-page planner for the Business Analytics projects of the second quarter, with a shared timeline.',
+   about:'Built with Matteo Galizia to keep track of every group project of the quarter: one timeline, all deadlines, and import and export so the plan can be shared.',
+   how:['A timeline of every project and deliverable.','Import, export and reset, so the plan travels between us.','A single HTML file, no install.'],
+   facts:[['1','HTML file']],
+   stack:['HTML','CSS','JavaScript']},
+  {id:'recsys',st:'optim',name:'Movie Recommender',tag:'Recommender systems',year:'2026',repo:'movielens_recommender_system',
+   one:'Collaborative filtering, latent factor, content-based and hybrid models on MovieLens, with a live demo.',
+   about:'Our group project for the recommender systems hackathon (MLSMM2156). An end-to-end pipeline that compares model families, with a full ablation study and a React and Flask web app that serves personalised recommendations.',
+   how:['User-based and item-based collaborative filtering, NMF, SVD, SVD++, content-based and hybrid models.','Ablation study over 120+ configurations with 5-fold cross-validation.','Friedman, Nemenyi and Wilcoxon tests to check which differences are real.','Best model: HybridSVD, 20% SVD and 80% per-user Ridge on 1,128 genome tags.'],
+   facts:[['0.7308','best CV RMSE'],['120+','configurations'],['5-fold','cross-validation']],
+   stack:['Python','scikit-learn','Surprise','pandas','Flask','React','Vite']},
+  {id:'esg',st:'optim',name:'ESG Web Mining',tag:'NLP and web mining',year:'2025',repo:'web_mining_ucl_2025',
+   one:'How sustainable fashion brands promote their products, compared with what their ESG reports promise.',
+   about:'Web Mining course project (MLSMM2153) with Clément Feron and Romain Nicelli. We scraped committed e-commerce stores and measured the semantic distance between the customer-facing promise and corporate sustainability reporting.',
+   how:['Web scraping of the product pages of three sustainable apparel brands.','Text mining to compare product descriptions with the ESG reports.','Link analysis and semantic similarity graphs between products.'],
+   facts:[['3','brands'],['3','communication strategies found']],
+   results:['Three distinct sustainability communication strategies.','ESG and product alignment varies strongly between brands.','Similarity graphs reveal central and bridge products.'],
+   stack:['Python','BeautifulSoup','NLP','NetworkX','pandas']},
+  {id:'gesture',st:'optim',name:'3D Gesture Recognition',tag:'Machine learning',year:'2026',repo:'ai_gesture_recognition',
+   extra:['Project code','https://github.com/Matteo-glz/MLSMM2154_Artificial-Intelligence_gesture_recognition'],
+   one:'DTW, edit distance, the $3 recogniser and a BiLSTM compared on 3D hand gestures.',
+   about:'A comparative study for the Artificial Intelligence course (MLSMM2154), on the Huang et al. (2019) dataset, with nested cross-validation, an ablation study and statistical tests. This repository is the research workspace; the code lives in the group repository.',
+   how:['Four methods: Dynamic Time Warping, edit distance, Three-Cents ($3) and a BiLSTM.','Nested cross-validation, user-dependent and user-independent.','Ablation study and hypothesis testing on the results.','Literature, concept maps and paper notes organised in Obsidian with Zotero.'],
+   facts:[['4','methods compared'],['96.3%','user-independent accuracy']],
+   stack:['Python','PyTorch','scikit-learn','Obsidian','Zotero']},
+  {id:'gpio',st:'hardware',name:'GPIO to OSC trigger',tag:'Raspberry Pi',year:'2026',repo:'gpio_osc_trigger',
+   one:'A sensor on a Raspberry Pi that fires stage-lighting scenes in QLC+ every time someone walks through a gate.',
+   about:'Made for automated event lighting. A beam sensor on the Pi detects each passage and sends a random OSC cue to QLC+, which plays one of five lighting chasers.',
+   how:['The sensor is wired to GPIO 27 with the internal pull-up.','On a falling edge the script picks one of five OSC addresses and sends the trigger.','A 2-second debounce stops one passage from firing twice.','QLC+ listens for OSC on port 7701 and runs the matching chaser.'],
+   facts:[['5','lighting scenes'],['2 s','debounce']],
+   stack:['Python','Raspberry Pi','GPIO','OSC','QLC+']},
+  {id:'bascule',st:'hardware',name:'Bascule menu bot',tag:'Automation',year:'2025',repo:'bascule_ucl',
+   one:"Every morning, the dish of the day at UCLouvain's La Bascule restaurant, read from the menu image and sent on Telegram.",
+   about:'The canteen publishes its weekly menu as an image. The script downloads it, reads it with OCR, finds today\'s dish and sends it through a Telegram bot on a schedule.',
+   how:['Scrapes the restaurant page and extracts the menu image.','Pre-processes it (greyscale, filter, threshold) and crops the area of each weekday.','Reads the text with Tesseract OCR.','Sends today\'s dish to the Telegram chat.'],
+   facts:[['5','weekdays read'],['1','message a day']],
+   stack:['Python','BeautifulSoup','Pillow','Tesseract','Telegram']}
+];
+const STATIONS={ software:['Software','Apps and tools','Things I built to use every day, from an Android game to a Mac display driver.'], optim:['Data and AI','Models and analysis','Machine learning, recommender systems and text mining from my Business Analytics master.'], hardware:['Hardware','Electronics and automation','Raspberry Pi, sensors and small bots that run on their own.'] };
+const GHI='<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>';
+function stationHTML(st){ const [k,t,d]=STATIONS[st]; const list=PROJECTS.filter(p=>p.st===st);
+  return `<div class="k">Atelier · ${k}</div><h3>${t}</h3><p>${d}</p><div class="pjlist">${list.map(p=>`<button class="pj" data-proj="${p.id}"><span class="pjt"><b>${p.name}</b><em>${p.tag}</em></span><span class="pjo">${p.one}</span><span class="pjgo">Read more &rarr;</span></button>`).join('')}</div>`; }
+function projectHTML(id){ const p=PROJECTS.find(x=>x.id===id); const st=STATIONS[p.st][0];
+  return `<button class="pjback" data-back="${p.st}">&larr; ${st}</button><div class="k">${p.tag} · ${p.year}</div><h3>${p.name}</h3><p class="pjlead">${p.one}</p>
+    ${p.facts?`<div class="pjfacts">${p.facts.map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('')}</div>`:''}
+    <h4 class="svc">What it is</h4><p>${p.about}</p>
+    <h4 class="svc">How it works</h4><ul class="pjhow">${p.how.map(x=>`<li>${x}</li>`).join('')}</ul>
+    ${p.results?`<h4 class="svc">Results</h4><ul class="pjhow">${p.results.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+    <h4 class="svc">Built with</h4><div class="pjstack">${p.stack.map(x=>`<span>${x}</span>`).join('')}</div>
+    <div class="pjlinks"><a class="btn solid" href="${GH+p.repo}" target="_blank" rel="noopener">${GHI} View on GitHub</a>${p.extra?`<a class="btn soft" href="${p.extra[1]}" target="_blank" rel="noopener">${p.extra[0]} &rarr;</a>`:''}</div>`; }
+
 function wireSheet(sid,h){
   if(sid==='portfolio'){ const pt=$('#ptabs'); pt.querySelectorAll('button').forEach(b=>b.onclick=()=>{ pt.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); $('#pg-ph').style.display=b.dataset.t==='ph'?'':'none'; $('#pg-vi').style.display=b.dataset.t==='vi'?'':'none'; });
     $$('.chipsrow button').forEach(b=>b.onclick=()=>{ $$('.chipsrow button').forEach(x=>x.classList.toggle('on',x===b)); fillMasonry(b.dataset.cat); });
@@ -1374,7 +1526,7 @@ function initRoom(){
   dp(new THREE.SphereGeometry(.03,20,16),yel,0,.026,0).scale.set(1.25,.85,1); dp(new THREE.SphereGeometry(.019,20,16),yel,.022,.06,0); dp(new THREE.ConeGeometry(.007,.018,12),std({color:0xe8731a}),.043,.058,0).rotation.z=-Math.PI/2;
   duck.position.set(ax+.62,.762,az+.25); duck.rotation.y=-2.4; A.add(duck);
   const ch2=ch.clone(true); ch2.position.set(ax+.05,0,az+.95); ch2.rotation.y=-.2; ch2.traverse(o=>{ if(o.isMesh) delete o.userData.hot; }); A.add(ch2);
-  hs('software',BE,[ax,1.55,az-.22],{side:'atelier',label:'Software and data',view:{pos:[ax,1.3,az+1.35],look:[ax,1.12,az-.25]}});
+  hs('software',BE,[ax,1.55,az-.22],{side:'atelier',label:'Software',view:{pos:[ax,1.3,az+1.35],look:[ax,1.12,az-.25]}});
 
   const WB=new THREE.Group(); A.add(WB);
   const wbT=T(1280,760,(g,w,h)=>{ g.fillStyle='#fbfbf9'; g.fillRect(0,0,w,h);
@@ -1387,7 +1539,7 @@ function initRoom(){
   B(WB,1.46,.88,.025,mat.alu,0,0,0,.006); const wbs=new THREE.Mesh(new THREE.PlaneGeometry(1.42,.84),std({map:wbT,roughness:.25})); wbs.position.z=.014; WB.add(wbs);
   B(WB,1.2,.025,.05,mat.alu,0,-.45,.03); [0x1d3f8f,0xb3261e,0x1d1d1f].forEach((c,i)=>{ C(WB,.007,.007,.11,std({color:c,roughness:.5}),-.4+i*.05,-.43,.04,10).rotation.z=Math.PI/2; });
   WB.position.set(1.0,1.75,BZ+.03);
-  hs('optim',WB,[1.0,2.3,BZ+.1],{side:'atelier',label:'Models and optimisation',view:{pos:[1.0,1.72,BZ+1.75],look:[1.0,1.72,BZ]}});
+  hs('optim',WB,[1.0,2.3,BZ+.1],{side:'atelier',label:'Data and AI',view:{pos:[1.0,1.72,BZ+1.75],look:[1.0,1.72,BZ]}});
 
   const EL=new THREE.Group(); A.add(EL); const ex=6.55, ez=BZ+.42;
   B(EL,1.5,.045,.72,mat.birch,ex,.74,ez+.04,.006);
@@ -1471,24 +1623,18 @@ function initRoom(){
       <ul><li><b>UCLouvain FUCaM Mons</b>Official photographer of the Mons campus since September 2024: events, ceremonies and campus life.</li><li><b>APEX</b>Automotive group I have been working with for several years.</li></ul>
       <ul class="rvs" id="rvs">${reviewsHTML(8)}</ul>
       <button class="more-rv" id="moreRv">Show all ${REVIEWS.items.length} reviews</button>`,
-    software:`<div class="k">Atelier</div><h3>Software and data</h3>
-      <ul><li><b>PushIt</b>Android app that counts push-ups in real time with on-device pose estimation, with friends and leaderboards.<br><span class="s">Kotlin · Jetpack Compose · MediaPipe · Firebase</span><br><a href="https://github.com/simoensm/pushit" target="_blank" rel="noopener">View on GitHub ›</a></li>
-      <li><b>SideTab</b>Turns an Android tablet into an extended Mac display over USB-C, hardware H.264 at 60 fps.<br><span class="s">Swift · ScreenCaptureKit · VideoToolbox</span><br><a href="https://github.com/simoensm/sidetab" target="_blank" rel="noopener">View on GitHub ›</a></li>
-      <li><b>Movie Recommender</b>Seven model families on MovieLens. Best hybrid at a cross-validated RMSE of 0.731, with a Flask and React demo.<br><a href="https://github.com/simoensm/movielens_recommender_system" target="_blank" rel="noopener">View on GitHub ›</a></li>
-      <li><b>ESG Web Mining</b>2,197 product pages scraped from three sustainable apparel brands and compared with their ESG reports.<br><a href="https://github.com/simoensm/web_mining_ucl_2025" target="_blank" rel="noopener">View on GitHub ›</a></li>
-      <li><b>Sony Recognizer</b>Event photo delivery by face matching. In development.<br><a href="https://github.com/simoensm/sony_recognizer" target="_blank" rel="noopener">View on GitHub ›</a></li></ul>`,
-    optim:`<div class="k">Atelier</div><h3>Models and optimisation</h3>
-      <ul><li><b>3D gesture recognition</b>Four classifiers on 1,000 sequences, with Friedman, Nemenyi and Wilcoxon tests. Best: 96.3% user-independent.<br><a href="https://github.com/simoensm/ai_gesture_recognition" target="_blank" rel="noopener">View on GitHub ›</a></li><li><b>CHwapi surgical scheduling</b>Mixed-integer model for operating-room allocation.</li><li><b>Supply chain transhipment</b>Linear programming in FICO Xpress Mosel.</li><li><b>Sales KPI dashboard</b>Power BI.</li></ul>`,
-    hardware:`<div class="k">Atelier</div><h3>Electronics and hardware</h3>
-      <ul><li><b>GPIO to OSC trigger</b>Raspberry Pi sensor that fires stage-lighting cues in QLC+ over OSC.<br><a href="https://github.com/simoensm/gpio_osc_trigger" target="_blank" rel="noopener">View on GitHub ›</a></li><li><b>Bascule menu bot</b>Scrapes the daily UCLouvain canteen menu, reads it with OCR and sends it on Telegram.<br><a href="https://github.com/simoensm/bascule_ucl" target="_blank" rel="noopener">View on GitHub ›</a></li><li><b>Home infrastructure</b>A self-hosted NAS and services.</li></ul>
-      <p class="note">Tell me what else lives on this bench and it gets its own object.</p>`
+    software:()=>stationHTML('software'),
+    optim:()=>stationHTML('optim'),
+    hardware:()=>stationHTML('hardware')
   };
   const sb=$('#sb');
   function focusF(id){ const h=hot.find(x=>x.id===id); if(!h) return;
     if(h.side!==side){ side=h.side; history.replaceState(null,'','#'+side); route=side; $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===side)); placeHl(); setCap(); }
     focused=id; document.body.classList.add('focused'); const sid=h.sheet||(/^pf-/.test(id)?'portfolio':id); const sh=SHEETS[sid]; sb.innerHTML= typeof sh==='function' ? sh(h) : sh; $('#sheet').scrollTop=0; wireSheet(sid,h);
     const v={pos:[...h.view.pos],look:[...h.view.look]}; if(!mob()){ v.pos[0]+=.32; v.look[0]+=.32; } fly(v,1.5); }
-  sb.addEventListener('click',e=>{ const f=e.target.closest('[data-focus]'); if(f){ focusF(f.dataset.focus); } });
+  sb.addEventListener('click',e=>{ const f=e.target.closest('[data-focus]'); if(f){ focusF(f.dataset.focus); return; }
+    const pj=e.target.closest('[data-proj]'), bk=e.target.closest('[data-back]');
+    if(pj||bk){ const html= pj ? projectHTML(pj.dataset.proj) : stationHTML(bk.dataset.back); sb.classList.add('swap'); setTimeout(()=>{ sb.innerHTML=html; $('#sheet').scrollTop=0; sb.classList.remove('swap'); },220); } });
   function closeF(silent){ if(!focused) return; focused=null; document.body.classList.remove('focused'); if(!silent) fly(V[side],1.3); }
   $('#sx').onclick=()=>closeF();
 
