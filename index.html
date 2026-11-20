@@ -116,7 +116,7 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .worlds{padding:110px 0 40px}
 .wgrid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px;margin-top:44px}
 .world{position:relative;border-radius:28px;min-height:440px;overflow:hidden;cursor:pointer;padding:28px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .7s var(--spring)}
-.world:hover{transform:translateY(-6px)}
+.world:hover{transform:scale(1.025)}
 .world .bg{position:absolute;inset:0;transition:transform 1.2s var(--ease)}
 .world:hover .bg{transform:scale(1.05)}
 .world .panel{position:relative;border-radius:20px;padding:18px 20px}
@@ -138,7 +138,33 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .row .org{font-size:14.5px;color:var(--ink);margin-top:2px}
 .row p{font-size:14.5px;color:var(--ink2);margin-top:6px;line-height:1.5}
 .tags{display:flex;flex-wrap:wrap;gap:8px;padding:14px 0 18px}
-.tags span{font-size:13px;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line)}
+.tags span,.tags button{font:inherit;font-size:13px;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:background .4s var(--ease),color .4s var(--ease),transform .5s var(--spring),border-color .4s}
+.tags button:hover{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-1px)}
+.cvblock.skills{padding:10px 26px}
+/* timeline */
+.tlsec{position:relative;height:calc(var(--n,7)*62vh + 100vh);margin-top:90px}
+.tlsticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;gap:34px;overflow:hidden}
+.tlhint{font-size:15px;color:var(--ink3);margin-top:10px}
+.tlrail{position:relative}
+.tlline{position:relative;height:2px;border-radius:2px;background:var(--line);margin:0 6px}
+.tlline i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;background:linear-gradient(90deg,#3f6bff,#8b5cf6)}
+.tldots{position:absolute;left:6px;right:6px;top:-6px;height:14px}
+.tldots button{position:absolute;top:0;transform:translateX(-50%);border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px}
+.tldots button i{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--line);transition:border-color .5s var(--ease),background .5s var(--ease),transform .6s var(--spring)}
+.tldots button span{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap;transition:color .5s}
+.tldots button.past i{border-color:#6d7cff;background:#6d7cff}
+.tldots button.on i{transform:scale(1.35);border-color:#3f6bff;background:#fff}
+.tldots button.on span{color:var(--ink)}
+.tlview{position:relative;height:330px}
+.tltrack{position:absolute;left:0;top:0;height:100%;display:flex;gap:22px;will-change:transform}
+.tlcard{flex:0 0 min(440px,80vw);border-radius:26px;padding:26px 28px;transition:opacity .5s var(--ease),filter .5s var(--ease)}
+.tlcard .k{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.tlcard .k b{font-weight:500;color:var(--tc,#3f6bff)}
+.tlcard h3{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-top:16px;line-height:1.2}
+.tlcard .org{font-size:14.5px;margin-top:5px}
+.tlcard p{font-size:14.5px;color:var(--ink2);line-height:1.5;margin-top:12px}
+.tlcard .soon{display:inline-block;margin-top:14px;font-size:12px;padding:5px 10px;border-radius:999px;background:rgba(63,107,255,.1);color:#3f6bff}
+@media (prefers-reduced-motion:reduce){.tltrack{transition:none}}
 footer{padding:30px 0 50px;font-size:13px;color:var(--ink3)}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 footer a:hover{color:var(--ink)}
@@ -237,7 +263,10 @@ body.playing .mode{display:none}
 .hg:hover::after{opacity:1}
 .dglass.hg:hover{background:rgba(14,17,24,.32);border-color:rgba(255,255,255,.22);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 24px 60px -18px rgba(0,0,0,.6)}
 .dglass.hg::after{background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.14),rgba(255,255,255,0) 65%)}
-.cvblock.hg:hover{transform:none}
+.cvblock.hg:hover{transform:scale(1.012)}
+.chip.hg:hover{transform:scale(1.045)}
+.world .panel.hg:hover{transform:none}
+.tlcard.hg:hover{transform:scale(1.03)}
 .world:hover .panel.hg{background:rgba(255,255,255,.28);backdrop-filter:blur(34px) saturate(2);-webkit-backdrop-filter:blur(34px) saturate(2);border-color:rgba(255,255,255,.9)}
 .world:hover .panel.dglass.hg{background:rgba(14,17,24,.3);border-color:rgba(255,255,255,.22)}
 .world:hover .panel.hg::after{opacity:1}
@@ -362,6 +391,8 @@ body.focused .sheet{transform:none}
   body.menu-open .nav .links{display:flex;flex-direction:column;width:100%;order:3;padding:6px 0}
   body.menu-open .nav .links a{font-size:17px;padding:12px 14px}
   .chips{grid-template-columns:1fr 1fr}
+  .tldots button span{opacity:0}.tldots button.on span{opacity:1}
+  .tlview{height:380px}
   .wgrid{grid-template-columns:1fr}
   .world{min-height:340px}
   .row{grid-template-columns:1fr;gap:6px}
@@ -395,21 +426,22 @@ body.focused .sheet{transform:none}
 <main id="v-overview" class="view on">
   <section class="hero wrap">
     <div class="idwrap"><div class="idcard glass hg" id="idcard" tabindex="0">
-      <div class="idhead"><img src="portrait.jpg" alt="Mathias Simoens"><div class="idt"><b>Mathias Simoens</b><span><i class="live"></i>On exchange at NHH Bergen</span><span class="role">Business Engineer · Data &amp; AI · Photographer</span></div></div>
+      <div class="idhead"><img src="portrait.jpg" alt="Mathias Simoens"><div class="idt"><b>Mathias Simoens</b><span><i class="live"></i>On exchange at NHH Bergen</span><span class="role">MSc Business Engineering student · Data &amp; AI · Photographer</span></div></div>
       <div class="more"><div class="in">
-        <p>Business engineer in the making, between data science and business. I like turning a messy question into a model, an app or a clean dashboard, and I've been photographing Belgium from above since 2022.</p>
+        <p>MSc student in Business Engineering, between data science and business. I like turning a messy question into a model, an app or a clean dashboard, and I've been photographing Belgium from above since 2022.</p>
         <ul class="idfacts">
           <li><span>Based in</span><b>Lessines, Belgium</b></li>
           <li><span>Studying</span><b>MSc Business Engineering, Business Analytics</b></li>
           <li><span>Schools</span><b>UCLouvain FUCaM Mons · NHH Bergen</b></li>
-          <li><span>Running</span><b>Above Belgium, photo and drone</b></li>
+          <li><span>Next</span><b>PwC, Technology - Cloud &amp; Data internship, 2027</b></li>
+          <li><span>Running</span><b>Above Belgium, self-employed student entrepreneur</b></li>
           <li><span>Speaks</span><b>French · Dutch · English</b></li>
         </ul>
         <div class="idlinks"><a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a><a href="mailto:mathias.simoens@student.uclouvain.be">Email</a><a href="https://github.com/simoensm/simoensm/blob/main/cv.pdf" target="_blank" rel="noopener">CV</a></div>
       </div></div>
     </div></div>
-    <h1>Business engineer.<br><em>Data, code and light.</em></h1>
-    <p class="sub">Master's student in Business Analytics at Louvain School of Management. I build models and software that answer business questions, and I run Above Belgium, my photo and drone studio.</p>
+    <h1>MSc in Business Engineering.<br><em>Data, code and light.</em></h1>
+    <p class="sub">Master's student in Business Analytics at Louvain School of Management. I build models and software that answer business questions, and I run Above Belgium, my photo and video company, as a self-employed student entrepreneur.</p>
     <div class="cta">
       <a class="btn solid" data-go="journey">My journey <span class="ar">&rarr;</span></a>
       <a class="btn soft glass hg" data-go="atelier">See the projects</a>
@@ -417,8 +449,8 @@ body.focused .sheet{transform:none}
     <div class="chips">
       <div class="chip glass hg"><small>Studying</small><b>MSc Business Engineering</b><span>Business Analytics, UCLouvain</span></div>
       <div class="chip glass hg"><small>Now</small><b>NHH Bergen</b><span>Erasmus, International Finance</span></div>
-      <div class="chip glass hg"><small>Founder</small><b>Above Belgium</b><span>Photo, video and drone, since 2023</span></div>
-      <div class="chip glass hg"><small>Languages</small><b>FR · NL · EN</b><span>Two native, one fluent</span></div>
+      <div class="chip glass hg"><small>Next</small><b>PwC</b><span>Technology - Cloud &amp; Data intern, 2027</span></div>
+      <div class="chip glass hg"><small>Self-employed</small><b>Above Belgium</b><span>My photo and video company, since 2023</span></div>
     </div>
   </section>
 
@@ -431,29 +463,28 @@ body.focused .sheet{transform:none}
         <div class="panel dglass hg"><h3>Journey</h3><p>A globe of where I've studied and worked. Click Belgium and it takes you place to place.</p><span class="go">Open the globe &rarr;</span></div></div>
       <div class="world w2 reveal" data-go="studio"><div class="bg"></div>
         <svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><rect x="60" y="70" width="120" height="84" fill="#f4f1ea"/><rect x="68" y="78" width="104" height="68" fill="#5d5448"/><rect x="200" y="60" width="74" height="98" fill="#f4f1ea"/><rect x="207" y="67" width="60" height="84" fill="#2e2a26"/><rect x="40" y="250" width="320" height="6" fill="#6b5e4d"/><rect x="150" y="212" width="90" height="38" rx="3" fill="#2b2c2f"/><rect x="154" y="216" width="82" height="30" fill="#e9ebef"/><rect x="138" y="249" width="114" height="4" fill="#9a9ca0"/><rect x="280" y="230" width="34" height="20" rx="5" fill="#1d1d1f"/><circle cx="297" cy="240" r="7" fill="#3a3a3c"/></svg>
-        <div class="panel glass hg"><h3>Above Belgium</h3><p>My studio. The portfolio hangs on the wall, the gear sits on the shelf.</p><span class="go">Enter the studio &rarr;</span></div></div>
+        <div class="panel glass hg"><h3>Above Belgium</h3><p>My company, run as a self-employed student entrepreneur. The portfolio hangs on the wall, the gear sits on the shelf.</p><span class="go">Step inside &rarr;</span></div></div>
       <div class="world w3 reveal" data-go="atelier"><div class="bg"></div>
         <svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><g fill="#2c3038"><rect x="40" y="110" width="96" height="60" rx="3"/><rect x="152" y="100" width="104" height="66" rx="3"/><rect x="272" y="110" width="96" height="60" rx="3"/></g><g fill="#8fb0ff" opacity=".6"><rect x="50" y="122" width="44" height="3"/><rect x="50" y="130" width="66" height="3"/><rect x="164" y="114" width="56" height="3"/><rect x="164" y="122" width="80" height="3"/><rect x="164" y="130" width="40" height="3"/><rect x="284" y="124" width="58" height="3"/></g><rect x="20" y="230" width="360" height="6" fill="#3a3f48"/><rect x="300" y="210" width="34" height="20" rx="3" fill="#2fbf71" opacity=".8"/></svg>
         <div class="panel dglass hg"><h3>Projects</h3><p>My atelier. Code on three screens, a Raspberry Pi on the soldering bench.</p><span class="go">Enter the atelier &rarr;</span></div></div>
     </div>
   </section>
 
+  <section class="tlsec" id="tlsec">
+    <div class="tlsticky">
+      <div class="wrap tlhead"><div class="label">Education and experience</div><h2 class="big">The path so far.</h2><p class="tlhint">Keep scrolling to move through it.</p></div>
+      <div class="tlrail wrap"><div class="tlline"><i id="tlfill"></i></div><div class="tldots" id="tldots"></div></div>
+      <div class="tlview"><div class="tltrack" id="tltrack"></div></div>
+    </div>
+  </section>
+
   <section class="cv wrap">
-    <div class="label reveal">Résumé</div>
-    <h2 class="big reveal">The short version.</h2>
+    <div class="label reveal">Skills</div>
+    <h2 class="big reveal">What I work with.</h2>
+    <p class="lead reveal">Click a skill to see the projects where I used it.</p>
     <div class="cvrows">
-      <div class="cvblock glass hg reveal"><h4>Education</h4>
-        <div class="row"><span class="when">2025 – 2027</span><div><b>Master in Business Engineering, Business Analytics</b><div class="org">Louvain School of Management, UCLouvain FUCaM Mons</div><p>Artificial intelligence, recommender systems, web mining, quantitative decision making.</p></div></div>
-        <div class="row"><span class="when">Aug – Dec 2026</span><div><b>Erasmus exchange, International Finance</b><div class="org">NHH Norwegian School of Economics, Bergen</div><p>Investments; Blockchain, Cryptocurrencies and DeFi.</p></div></div>
-        <div class="row"><span class="when">2022 – 2025</span><div><b>Bachelor in Business Engineering</b><div class="org">Louvain School of Management, UCLouvain FUCaM Mons</div></div></div>
-      </div>
-      <div class="cvblock glass hg reveal"><h4>Experience</h4>
-        <div class="row"><span class="when">2023 – now</span><div><b>Founder, photographer and drone pilot</b><div class="org">Above Belgium</div><p>Sports, motorsports, events, portraits, drone, real estate, macro and product photography, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.</p></div></div>
-        <div class="row"><span class="when">2025 – 2026</span><div><b>Treasurer and Financial Manager</b><div class="org">FUCaM Junior Consulting, Mons</div><p>Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.</p></div></div>
-        <div class="row"><span class="when">Jan – Feb 2025</span><div><b>Business Engineer Intern</b><div class="org">Berma, Anderlecht and Erpe-Mere</div><p>Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.</p></div></div>
-      </div>
-      <div class="cvblock glass hg reveal"><h4>Skills</h4><div class="tags">
-        <span>Python</span><span>pandas</span><span>scikit-learn</span><span>SQL</span><span>Power BI</span><span>Excel</span><span>NLP</span><span>Web scraping</span><span>Statistical testing</span><span>Linear and integer programming</span><span>FICO Xpress</span><span>PuLP</span><span>Kotlin</span><span>Swift</span><span>TypeScript</span><span>React</span><span>Flask</span><span>Firebase</span><span>Git</span><span>Odoo ERP</span><span>Adobe</span></div></div>
+      <div class="cvblock glass hg reveal skills"><div class="tags" id="skills">
+        <button data-skill="software" data-room="atelier">Python</button><button data-skill="software" data-room="atelier">pandas</button><button data-skill="software" data-room="atelier">scikit-learn</button><button data-skill="software" data-room="atelier">SQL</button><button data-skill="software" data-room="atelier">Power BI</button><button data-skill="optim" data-room="atelier">Excel</button><button data-skill="software" data-room="atelier">NLP</button><button data-skill="software" data-room="atelier">Web scraping</button><button data-skill="optim" data-room="atelier">Statistical testing</button><button data-skill="optim" data-room="atelier">Linear and integer programming</button><button data-skill="optim" data-room="atelier">FICO Xpress</button><button data-skill="optim" data-room="atelier">PuLP</button><button data-skill="software" data-room="atelier">Kotlin</button><button data-skill="software" data-room="atelier">Swift</button><button data-skill="software" data-room="atelier">TypeScript</button><button data-skill="software" data-room="atelier">React</button><button data-skill="software" data-room="atelier">Flask</button><button data-skill="software" data-room="atelier">Firebase</button><button data-skill="software" data-room="atelier">Git</button><button data-skill="software" data-room="atelier">Odoo ERP</button><button data-skill="macbook" data-room="studio">Adobe</button></div></div>
     </div>
   </section>
   <footer><div class="wrap"><span>Mathias Simoens · Lessines, Belgium</span><span><a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.abovebelgium.be" target="_blank" rel="noopener">abovebelgium.be</a></span></div></footer>
@@ -534,7 +565,7 @@ function show(r){
   if(r!=='journey'){ Journey.stop?.(); window.__G?.pauseAnimation?.(); } else window.__G?.resumeAnimation?.();
   document.querySelector('.aura').style.display = r==='overview' ? '' : 'none';
   if(r==='journey') initGlobe();
-  if(r==='studio'||r==='atelier'){ initRoom(); Room.setSide(r, prev!=='studio'&&prev!=='atelier'); }
+  if(r==='studio'||r==='atelier'){ initRoom(); Room.setSide(r, prev!=='studio'&&prev!=='atelier'); if(pendingFocus){ const f=pendingFocus; pendingFocus=null; setTimeout(()=>Room.focus?.(f), prev==='studio'||prev==='atelier'?900:2300); } }
 }
 document.addEventListener('click',e=>{ const t=e.target.closest('[data-go]'); if(t){ e.preventDefault(); go(t.dataset.go); } });
 addEventListener('hashchange',()=>show(location.hash.slice(1)||'overview'));
@@ -544,7 +575,39 @@ $$('.reveal').forEach(el=>io.observe(el));
 $('#idcard').addEventListener('click',e=>{ if(e.target.closest('a')) return; if(matchMedia('(hover: none)').matches) $('#idcard').classList.toggle('open'); });
 document.addEventListener('click',e=>{ if(!e.target.closest('#idcard')) $('#idcard')?.classList.remove('open'); });
 $$('.hg').forEach(el=>el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); }));
-$$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.hg')?.classList.add('lift'))); 
+$$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.hg')?.classList.add('lift')));
+
+/* education and experience timeline, driven by scrolling */
+const TL=[
+  {when:'Sep 2022 – Jun 2025',yr:'2022',kind:'Education',t:'Bachelor in Business Engineering',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Management, economics, quantitative methods and IT.'},
+  {when:'2023 – now',yr:'2023',kind:'Experience',t:'Self-employed student entrepreneur',o:'Above Belgium, my photo and video company',p:'Sports, motorsports, events, portraits, drone, real estate, macro and products, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.'},
+  {when:'Jan – Feb 2025',yr:'2025',kind:'Experience',t:'Business Engineer Intern',o:'Berma, Anderlecht and Erpe-Mere',p:'Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.'},
+  {when:'2025 – 2026',yr:'2025',kind:'Experience',t:'Treasurer and Financial Manager',o:'FUCaM Junior Consulting, Mons',p:'Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.'},
+  {when:'Sep 2025 – 2027',yr:'2025',kind:'Education',t:'MSc in Business Engineering, Business Analytics',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Artificial intelligence, recommender systems, web mining, quantitative decision making.'},
+  {when:'Aug – Dec 2026',yr:'2026',kind:'Education',t:'Erasmus exchange, International Finance',o:'NHH Norwegian School of Economics, Bergen',p:'Investments; Blockchain, Cryptocurrencies and DeFi.'},
+  {when:'Jan 2027',yr:'2027',kind:'Experience',t:'Intern, Technology - Cloud & Data',o:'PwC Belgium',p:'Technology consulting internship in the Cloud & Data team.',soon:true}
+];
+(()=>{ const sec=$('#tlsec'), track=$('#tltrack'), dots=$('#tldots'), fill=$('#tlfill'); if(!sec) return;
+  sec.style.setProperty('--n',TL.length);
+  track.innerHTML=TL.map(it=>`<article class="tlcard glass hg" style="--tc:${it.kind==='Education'?'#3f6bff':'#8b5cf6'}"><div class="k"><b>${it.kind}</b><span>${it.when}</span></div><h3>${it.t}</h3><div class="org">${it.o}</div><p>${it.p}</p>${it.soon?'<span class="soon">Coming up</span>':''}</article>`).join('');
+  dots.innerHTML=TL.map((it,i)=>`<button style="left:${TL.length>1?i/(TL.length-1)*100:0}%" aria-label="${it.t}"><i></i><span>${it.when.split(' – ')[0]}</span></button>`).join('');
+  const cards=[...track.children], db=[...dots.children];
+  cards.forEach(el=>el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); }));
+  let pos=0, want=0, raf=0;
+  const read=()=>{ const r=sec.getBoundingClientRect(), span=sec.offsetHeight-innerHeight; want=Math.min(1,Math.max(0,-r.top/span))*(TL.length-1); if(!raf) raf=requestAnimationFrame(tick); };
+  const tick=()=>{ raf=0; pos+= (want-pos)*.14; if(Math.abs(want-pos)<.001) pos=want; else raf=requestAnimationFrame(tick);
+    const w=cards[0].offsetWidth+22, view=track.parentElement.offsetWidth;
+    track.style.transform=`translate3d(${view/2-cards[0].offsetWidth/2-pos*w}px,0,0)`;
+    cards.forEach((c,i)=>{ const d=Math.abs(i-pos); c.style.opacity=Math.max(.28,1-d*.45); c.style.filter=d>.6?`saturate(${Math.max(.4,1-d*.3)})`:''; });
+    fill.style.width=(pos/(TL.length-1)*100)+'%';
+    const a=Math.round(pos); db.forEach((b,i)=>{ b.classList.toggle('on',i===a); b.classList.toggle('past',i<a); }); };
+  db.forEach((b,i)=>b.onclick=()=>{ const span=sec.offsetHeight-innerHeight; scrollTo({top:sec.offsetTop+span*i/(TL.length-1)+1,behavior:'smooth'}); });
+  addEventListener('scroll',read,{passive:true}); addEventListener('resize',read); read();
+})();
+
+/* a skill takes you straight to the projects that use it */
+let pendingFocus=null;
+$('#skills')?.addEventListener('click',e=>{ const b=e.target.closest('[data-skill]'); if(!b) return; pendingFocus=b.dataset.skill; go(b.dataset.room); });
 
 /* ============================ JOURNEY ============================ */
 // ISO 3166 alpha-2 codes of the countries I've been to, by continent
@@ -557,7 +620,7 @@ const hexA=(h,a)=>{ const n=parseInt(h.slice(1),16); return `rgba(${n>>16&255},$
 const lighten=(h,k=.35)=>{ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v+(255-v)*k); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; };
 const CH=[
   {kind:'Education', yr:'Sep 2022', t:'Bachelor in Business Engineering', o:'Louvain School of Management · UCLouvain FUCaM Mons', p:'Three years of management, economics, quantitative methods and IT on a campus founded in 1896 and part of UCLouvain since 2011.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826},
-  {kind:'Business', yr:'Sep 2023', t:'Founded Above Belgium', o:'Photo, video and drone · Lessines', p:'My own business: sports, motorsports, events, portraits, drone, real estate, macro and product photography, plus video: aftermovies, interviews, products and sports.', a:'Lessines, Hainaut', sites:[], area:'lessines', lat:50.7105, lng:3.8293},
+  {kind:'Business', yr:'Sep 2023', t:'Founded Above Belgium', o:'Self-employed student entrepreneur · Lessines', p:'My photo and video company: sports, motorsports, events, portraits, drone, real estate, macro and product photography, plus video: aftermovies, interviews, products and sports.', a:'Lessines, Hainaut', sites:[], area:'lessines', lat:50.7105, lng:3.8293},
   {kind:'Experience', yr:'Jan 2025', t:'Business Engineer Intern', o:'Berma · Erpe-Mere and Anderlecht', p:'A Belgian wholesaler of furniture and decoration hardware, founded in 1977. I built the product database for its new webshop and worked in the ERP.', a:'Joseph Cardijnstraat, Erpe-Mere · Maurice Herbettelaan, Anderlecht', sites:['berma','anderlecht'], lat:50.9323, lng:3.9584},
   {kind:'Experience', yr:'Apr 2025', t:'Treasurer and Financial Manager', o:'FUCaM Junior Consulting · Mons', p:'Restructured the 20-member student consulting association onto Odoo ERP, ran the finances and organised events of 100+ attendees.', a:'UCLouvain FUCaM campus, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:1},
   {kind:'Education', yr:'Sep 2025', t:'Master in Business Engineering', o:'Business Analytics · Louvain School of Management', p:'Data and decision science: artificial intelligence, recommender systems, web mining and optimisation.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:2},
@@ -1241,8 +1304,9 @@ function initRoom(){
   let side='studio', focused=null;
   const segB=$$('#seg button'), hl=$('#hl');
   const placeHl=()=>{ const b=segB.find(x=>x.dataset.side===side); hl.style.width=b.offsetWidth+'px'; hl.style.transform=`translateX(${b.offsetLeft-3}px)`; segB.forEach(x=>x.classList.toggle('on',x===b)); };
-  const CAP={ studio:['Studio','Above Belgium.','Portfolio on the wall, gear on the shelves, the story on the laptop.'], atelier:['Atelier','Projects.','Code on the screens, models on the board, hardware on the bench.'] };
+  const CAP={ studio:['My company','Above Belgium.','Portfolio on the wall, gear on the shelves, the story on the laptop.'], atelier:['Atelier','Projects.','Code on the screens, models on the board, hardware on the bench.'] };
   const setCap=()=>{ const [k,h,p]=CAP[side]; $('#rk').textContent=k; $('#rh').textContent=h; $('#rp').textContent=p; };
+  Room.focus=id=>focusF(id);
   Room.setSide=(s,fromOutside)=>{ const changed=s!==side; side=s; closeF(true); placeHl(); setCap(); fly(V[side], fromOutside?2.2:1.7, (!fromOutside&&changed)?1:0); };
   segB.forEach(b=>b.onclick=()=>go(b.dataset.side));
   addEventListener('keydown',e=>{ if(route!=='studio'&&route!=='atelier') return; if(e.key==='Escape') closeF(); if(e.key==='ArrowRight'&&!focused) go('atelier'); if(e.key==='ArrowLeft'&&!focused) go('studio'); });
