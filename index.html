@@ -295,6 +295,14 @@ body.playing .mode{display:none}
 .more-rv{width:100%;margin-top:8px;padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.6);font-size:13.5px;font-weight:500;cursor:pointer;transition:background .3s}
 .more-rv:hover{background:#fff}
 
+
+.sheet h4.svc{font-family:var(--mono);font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin:18px 0 8px}
+.svcgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.svcgrid span{display:block;padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.6);border:1px solid var(--line);font-size:12.5px;line-height:1.4;color:var(--ink2);transition:background .4s var(--ease),transform .5s var(--spring)}
+.svcgrid span:hover{background:#fff;transform:translateY(-2px)}
+.svcgrid b{display:block;font-size:14.5px;color:var(--ink);font-weight:600;margin-bottom:2px}
+.chipsrow button[disabled]{cursor:default;opacity:.85}
+
 /* room */
 #v-room{background:#0e0e0f}
 #room{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -440,7 +448,7 @@ body.focused .sheet{transform:none}
         <div class="row"><span class="when">2022 – 2025</span><div><b>Bachelor in Business Engineering</b><div class="org">Louvain School of Management, UCLouvain FUCaM Mons</div></div></div>
       </div>
       <div class="cvblock glass hg reveal"><h4>Experience</h4>
-        <div class="row"><span class="when">2023 – now</span><div><b>Founder, photographer and drone pilot</b><div class="org">Above Belgium</div><p>Corporate, event, sports, drone and astro photography, run end to end from finding clients to delivery.</p></div></div>
+        <div class="row"><span class="when">2023 – now</span><div><b>Founder, photographer and drone pilot</b><div class="org">Above Belgium</div><p>Sports, motorsports, events, portraits, drone, real estate, macro and product photography, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.</p></div></div>
         <div class="row"><span class="when">2025 – 2026</span><div><b>Treasurer and Financial Manager</b><div class="org">FUCaM Junior Consulting, Mons</div><p>Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.</p></div></div>
         <div class="row"><span class="when">Jan – Feb 2025</span><div><b>Business Engineer Intern</b><div class="org">Berma, Anderlecht and Erpe-Mere</div><p>Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.</p></div></div>
       </div>
@@ -549,7 +557,7 @@ const hexA=(h,a)=>{ const n=parseInt(h.slice(1),16); return `rgba(${n>>16&255},$
 const lighten=(h,k=.35)=>{ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v+(255-v)*k); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; };
 const CH=[
   {kind:'Education', yr:'Sep 2022', t:'Bachelor in Business Engineering', o:'Louvain School of Management · UCLouvain FUCaM Mons', p:'Three years of management, economics, quantitative methods and IT on a campus founded in 1896 and part of UCLouvain since 2011.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826},
-  {kind:'Business', yr:'Sep 2023', t:'Founded Above Belgium', o:'Photo, video and drone · Lessines', p:'My own business: corporate and event work, sports, aerial and astrophotography, run end to end from the first client call to delivery.', a:'Lessines, Hainaut', sites:[], area:'lessines', lat:50.7105, lng:3.8293},
+  {kind:'Business', yr:'Sep 2023', t:'Founded Above Belgium', o:'Photo, video and drone · Lessines', p:'My own business: sports, motorsports, events, portraits, drone, real estate, macro and product photography, plus video: aftermovies, interviews, products and sports.', a:'Lessines, Hainaut', sites:[], area:'lessines', lat:50.7105, lng:3.8293},
   {kind:'Experience', yr:'Jan 2025', t:'Business Engineer Intern', o:'Berma · Erpe-Mere and Anderlecht', p:'A Belgian wholesaler of furniture and decoration hardware, founded in 1977. I built the product database for its new webshop and worked in the ERP.', a:'Joseph Cardijnstraat, Erpe-Mere · Maurice Herbettelaan, Anderlecht', sites:['berma','anderlecht'], lat:50.9323, lng:3.9584},
   {kind:'Experience', yr:'Apr 2025', t:'Treasurer and Financial Manager', o:'FUCaM Junior Consulting · Mons', p:'Restructured the 20-member student consulting association onto Odoo ERP, ran the finances and organised events of 100+ attendees.', a:'UCLouvain FUCaM campus, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:1},
   {kind:'Education', yr:'Sep 2025', t:'Master in Business Engineering', o:'Business Analytics · Louvain School of Management', p:'Data and decision science: artificial intelligence, recommender systems, web mining and optimisation.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:2},
@@ -791,7 +799,8 @@ async function initGlobe(){
 
 /* ============================ PHOTOS ============================ */
 // Real photos come from photos/photos.json (built from the files you drop in photos-inbox/)
-const CATS=[['events','Events'],['automotive','Automotive'],['aerial','Aerial'],['macro','Macro'],['portraits','Portraits'],['night','Night']];
+const CATS=[['sports','Sports'],['motorsports','Motorsports'],['events','Events'],['portraits','Portraits'],['drone','Drone'],['realestate','Real estate'],['macro','Macro'],['products','Products']];
+const VCATS=[['aftermovies','Aftermovies'],['interviews','Interviews'],['products','Products'],['sports','Sports']];
 const PHOTOS=fetch('photos/photos.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null);
 let PHOTOS_DATA=null; PHOTOS.then(m=>PHOTOS_DATA=m);
 const esc=t=>String(t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -802,7 +811,7 @@ function portfolioSheet(cat){
   return `<div class="k">Above Belgium</div><h3>Portfolio</h3>
     <div class="tabs" id="ptabs"><button class="on" data-t="ph">Photos</button><button data-t="vi">Videos</button></div>
     <div id="pg-ph">${chips}<div class="masonry" id="mas"></div>${has?'':`<p class="note">No photos online yet. Drop your best shots in the <b>photos-inbox</b> folder of your repository, one subfolder per category, and I'll optimise and publish them here.</p>`}</div>
-    <div id="pg-vi" style="display:none">${vids.length? vids.map(v=>`<div class="vid">${v.youtube?`<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(v.youtube)}" title="${esc(v.title)}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`:`<video src="${esc(v.src)}" controls preload="metadata" playsinline></video>`}<b>${esc(v.title)}</b></div>`).join('') : `<p class="note">Videos are best hosted on YouTube or Vimeo, then embedded here. Send me the links and their titles.</p>`}</div>`; }
+    <div id="pg-vi" style="display:none"><div class="chipsrow">${VCATS.map(([k,n])=>`<button disabled>${n}<em>${vids.filter(v=>v.cat===k).length||''}</em></button>`).join('')}</div>${vids.length? vids.map(v=>`<div class="vid">${v.youtube?`<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(v.youtube)}" title="${esc(v.title)}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`:`<video src="${esc(v.src)}" controls preload="metadata" playsinline></video>`}<b>${esc(v.title)}</b></div>`).join('') : `<p class="note">Videos are best hosted on YouTube or Vimeo, then embedded here. Send me the links and their titles.</p>`}</div>`; }
 function listFor(cat){ const m=PHOTOS_DATA||{}; return cat&&cat!=='all' ? (m[cat]||[]) : CATS.flatMap(([k])=>m[k]||[]); }
 function fillMasonry(cat){ const mas=document.getElementById('mas'); if(!mas) return; const list=listFor(cat);
   mas.innerHTML= list.length ? thumbsHTML(list) : CATS.filter(([k])=>!cat||cat==='all'||k===cat).map(([k,n])=>`<div class="ph-empty">${n}</div>`).join('');
@@ -898,11 +907,13 @@ function initRoom(){
   // painterly placeholders, replaced by real photos once photos/photos.json exists
   const scenes={
     events:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#1c1a24'); gr.addColorStop(1,'#3a2c25'); g.fillStyle=gr; g.fillRect(0,0,w,h); for(let i=0;i<14;i++){ const x=Math.random()*w; const r=g.createRadialGradient(x,h*.25,0,x,h*.25,w*.18); r.addColorStop(0,`rgba(255,${180+Math.random()*60|0},120,.45)`); r.addColorStop(1,'rgba(0,0,0,0)'); g.fillStyle=r; g.fillRect(0,0,w,h);} g.fillStyle='rgba(8,8,10,.9)'; for(let i=0;i<9;i++){ const x=i*w/8+(Math.random()-.5)*20; g.beginPath(); g.ellipse(x,h*.78,w*.05,h*.12,0,0,7); g.fill(); g.beginPath(); g.arc(x,h*.6,w*.035,0,7); g.fill(); } },
-    automotive:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#2a2f36'); gr.addColorStop(.6,'#15181c'); gr.addColorStop(1,'#0b0c0e'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='#0e1013'; g.beginPath(); g.moveTo(w*.1,h*.72); g.quadraticCurveTo(w*.25,h*.48,w*.5,h*.46); g.quadraticCurveTo(w*.78,h*.47,w*.9,h*.66); g.lineTo(w*.92,h*.75); g.lineTo(w*.08,h*.75); g.fill(); g.strokeStyle='rgba(220,230,240,.55)'; g.lineWidth=2; g.beginPath(); g.moveTo(w*.12,h*.7); g.quadraticCurveTo(w*.3,h*.5,w*.52,h*.49); g.quadraticCurveTo(w*.75,h*.5,w*.88,h*.65); g.stroke(); g.fillStyle='#050506'; [.26,.74].forEach(k=>{ g.beginPath(); g.arc(w*k,h*.75,h*.08,0,7); g.fill(); }); },
-    aerial:(g,w,h)=>{ const cols=['#5f7146','#8f8a56','#43603a','#a9a06a','#506a46','#7a7a49']; g.save(); g.translate(w/2,h/2); g.rotate(-.42); for(let i=-8;i<10;i++){ g.fillStyle=cols[(i+20)%6]; g.fillRect(-w,i*h/9,2*w,h/9); } g.restore(); g.strokeStyle='rgba(230,226,214,.6)'; g.lineWidth=3; g.beginPath(); g.moveTo(0,h*.82); g.bezierCurveTo(w*.3,h*.55,w*.6,h*.95,w,h*.38); g.stroke(); },
+    motorsports:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#2a2f36'); gr.addColorStop(.6,'#15181c'); gr.addColorStop(1,'#0b0c0e'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='#0e1013'; g.beginPath(); g.moveTo(w*.1,h*.72); g.quadraticCurveTo(w*.25,h*.48,w*.5,h*.46); g.quadraticCurveTo(w*.78,h*.47,w*.9,h*.66); g.lineTo(w*.92,h*.75); g.lineTo(w*.08,h*.75); g.fill(); g.strokeStyle='rgba(220,230,240,.55)'; g.lineWidth=2; g.beginPath(); g.moveTo(w*.12,h*.7); g.quadraticCurveTo(w*.3,h*.5,w*.52,h*.49); g.quadraticCurveTo(w*.75,h*.5,w*.88,h*.65); g.stroke(); g.fillStyle='#050506'; [.26,.74].forEach(k=>{ g.beginPath(); g.arc(w*k,h*.75,h*.08,0,7); g.fill(); }); },
+    drone:(g,w,h)=>{ const cols=['#5f7146','#8f8a56','#43603a','#a9a06a','#506a46','#7a7a49']; g.save(); g.translate(w/2,h/2); g.rotate(-.42); for(let i=-8;i<10;i++){ g.fillStyle=cols[(i+20)%6]; g.fillRect(-w,i*h/9,2*w,h/9); } g.restore(); g.strokeStyle='rgba(230,226,214,.6)'; g.lineWidth=3; g.beginPath(); g.moveTo(0,h*.82); g.bezierCurveTo(w*.3,h*.55,w*.6,h*.95,w,h*.38); g.stroke(); },
     macro:(g,w,h)=>{ const r=g.createRadialGradient(w*.5,h*.5,0,w*.5,h*.5,w*.7); r.addColorStop(0,'#3f6b3a'); r.addColorStop(1,'#0c140b'); g.fillStyle=r; g.fillRect(0,0,w,h); for(let i=0;i<9;i++){ const a=i/9*Math.PI*2; g.fillStyle=`rgba(${220+Math.random()*30|0},${120+Math.random()*60|0},${150+Math.random()*60|0},.85)`; g.beginPath(); g.ellipse(w*.5+Math.cos(a)*w*.14,h*.5+Math.sin(a)*h*.18,w*.12,h*.07,a,0,7); g.fill(); } g.fillStyle='#f2c94c'; g.beginPath(); g.arc(w*.5,h*.5,w*.06,0,7); g.fill(); },
     portraits:(g,w,h)=>{ const r=g.createRadialGradient(w*.5,h*.4,10,w*.5,h*.5,w*.8); r.addColorStop(0,'#7a736c'); r.addColorStop(1,'#26231f'); g.fillStyle=r; g.fillRect(0,0,w,h); g.fillStyle='#1a1715'; g.beginPath(); g.ellipse(w*.5,h*.4,w*.17,h*.19,0,0,7); g.fill(); g.beginPath(); g.ellipse(w*.5,h*.98,w*.42,h*.32,0,0,7); g.fill(); },
-    night:(g,w,h)=>{ g.fillStyle='#05070d'; g.fillRect(0,0,w,h); const gr=g.createLinearGradient(0,h,w,0); gr.addColorStop(.3,'rgba(0,0,0,0)'); gr.addColorStop(.5,'rgba(170,150,210,.3)'); gr.addColorStop(.7,'rgba(0,0,0,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); for(let i=0;i<900;i++){ g.fillStyle=`rgba(255,255,255,${Math.random()})`; g.fillRect(Math.random()*w,Math.random()*h,Math.random()*1.6,Math.random()*1.6);} g.fillStyle='#000'; g.beginPath(); g.moveTo(0,h); g.lineTo(0,h*.85); for(let x=0;x<=w;x+=12) g.lineTo(x,h*.86-Math.random()*h*.04); g.lineTo(w,h); g.fill(); }
+    sports:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#1e3a2a'); gr.addColorStop(1,'#2f5a3c'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.strokeStyle='rgba(255,255,255,.35)'; g.lineWidth=3; g.strokeRect(w*.08,h*.15,w*.84,h*.7); g.beginPath(); g.moveTo(w/2,h*.15); g.lineTo(w/2,h*.85); g.stroke(); g.beginPath(); g.arc(w/2,h/2,h*.14,0,7); g.stroke(); g.fillStyle='#111'; [[.36,.42],[.6,.55],[.48,.66]].forEach(([x,y])=>{ g.beginPath(); g.ellipse(w*x,h*y,w*.022,h*.07,0,0,7); g.fill(); }); g.fillStyle='#fff'; g.beginPath(); g.arc(w*.53,h*.6,h*.025,0,7); g.fill(); },
+    realestate:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#9fc3e6'); gr.addColorStop(.6,'#dfe8ef'); gr.addColorStop(1,'#7d8c6a'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='#e9e4da'; g.fillRect(w*.22,h*.38,w*.56,h*.4); g.fillStyle='#4a4f57'; g.beginPath(); g.moveTo(w*.18,h*.4); g.lineTo(w*.5,h*.18); g.lineTo(w*.82,h*.4); g.fill(); g.fillStyle='#2d3440'; for(let i=0;i<3;i++) g.fillRect(w*(.28+i*.17),h*.48,w*.1,h*.12); g.fillStyle='#5b4636'; g.fillRect(w*.46,h*.64,w*.08,h*.14); },
+    products:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#efe9e1'); gr.addColorStop(1,'#cfc5b8'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='rgba(0,0,0,.12)'; g.beginPath(); g.ellipse(w*.5,h*.82,w*.2,h*.04,0,0,7); g.fill(); const bg=g.createLinearGradient(w*.42,0,w*.58,0); bg.addColorStop(0,'#2b2f36'); bg.addColorStop(.5,'#5a6270'); bg.addColorStop(1,'#1e2228'); g.fillStyle=bg; g.beginPath(); g.roundRect(w*.42,h*.3,w*.16,h*.52,w*.03); g.fill(); g.fillStyle='#c9a46a'; g.fillRect(w*.455,h*.2,w*.09,h*.11); },
   };
   const labelTex=(lines,w=512,h=256,bg='#f6f4ef',fg='#1d1d1f')=>T(w,h,(g)=>{ g.fillStyle=bg; g.fillRect(0,0,w,h); g.fillStyle=fg; lines.forEach(([txt,size,weight,y,col])=>{ g.font=`${weight||500} ${size}px Geist,system-ui,sans-serif`; g.fillStyle=col||fg; g.fillText(txt,28,y); }); });
 
@@ -910,9 +921,9 @@ function initRoom(){
   const gallery=new THREE.Group(); S.add(gallery);
   const frameMat=std({color:0x151517,roughness:.35,metalness:.6});
   const FR=[]; const gx=-4.6, gy=1.92;
-  CATS.forEach(([key,name],i)=>{ const col=i%3, row=Math.floor(i/3);
-    const w= col===1 ? .62 : .52, h= col===1 ? .42 : .36;
-    const x=gx+(col-1)*.72, y=gy+(row?-.28:.26) + (col===1 ? (row?-.03:.03) : 0);
+  CATS.forEach(([key,name],i)=>{ const col=i%4, row=Math.floor(i/4);
+    const w=.46, h=.32;
+    const x=gx+(col-1.5)*.56, y=gy+(row?-.22:.2);
     const g=new THREE.Group(); gallery.add(g);
     B(g,w+.04,h+.04,.028,frameMat,x,y,BZ+.02,.003);
     const mt=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat.paper); mt.position.set(x,y,BZ+.035); g.add(mt);
@@ -921,9 +932,9 @@ function initRoom(){
     FR.push({key,name,ph,w,h}); hs('pf-'+key,g,[x,y,BZ],{side:'studio',label:name,nomark:true,cat:key,view:{pos:[x,y-.02,BZ+1.25],look:[x,y,BZ]}});
   });
   // picture light over the gallery
-  B(gallery,2.1,.025,.06,frameMat,gx,2.42,BZ+.07,.01);
+  B(gallery,2.3,.025,.06,frameMat,gx,2.4,BZ+.07,.01);
   const pLight=new THREE.SpotLight(0xffe7c8,6,3,.95,.9,1.6); pLight.position.set(gx,2.38,BZ+.35); pLight.target.position.set(gx,1.7,BZ); scene.add(pLight,pLight.target);
-  hs('portfolio',gallery,[gx,2.62,BZ+.05],{side:'studio',label:'Portfolio',view:{pos:[gx,1.88,BZ+2.35],look:[gx,1.86,BZ]}});
+  hs('portfolio',gallery,[gx,2.62,BZ+.05],{side:'studio',label:'Portfolio',view:{pos:[gx,1.9,BZ+2.6],look:[gx,1.9,BZ]}});
 
   /* desk: oak top, black steel frame, MacBook Pro, DJI Mini 3, notebook, lamp */
   const desk=new THREE.Group(); S.add(desk); const dx=-4.6, dz=BZ+.48;
@@ -937,7 +948,9 @@ function initRoom(){
     g.fillStyle='#9fb6d3'; g.font='500 26px Geist Mono,monospace'; g.fillText('ABOVE BELGIUM · SINCE 2022',90,190);
     g.fillStyle='#ffffff'; g.font='600 96px Geist,system-ui,sans-serif'; g.fillText('Seen from above.',90,310);
     g.fillStyle='#b9c3d0'; g.font='400 34px Geist,system-ui,sans-serif'; g.fillText('Photo, video and drone. Official photographer of UCLouvain Mons.',90,372);
-    ['Events','Automotive','Aerial','Macro','Portraits','Prints'].forEach((s,i)=>{ const x=90+(i%3)*410,y=480+Math.floor(i/3)*170; g.fillStyle='rgba(255,255,255,.07)'; g.beginPath(); g.roundRect(x,y,380,140,24); g.fill(); g.strokeStyle='rgba(255,255,255,.12)'; g.stroke(); g.fillStyle='#fff'; g.font='600 36px Geist,system-ui,sans-serif'; g.fillText(s,x+30,y+84); }); });
+    g.fillStyle='#9fb6d3'; g.font='500 22px Geist Mono,monospace'; g.fillText('PHOTO',90,450); g.fillText('VIDEO',90,736);
+    ['Sports','Motorsports','Events','Portraits','Drone','Real estate','Macro','Products'].forEach((s,i)=>{ const x=90+(i%4)*305,y=470+Math.floor(i/4)*112; g.fillStyle='rgba(255,255,255,.07)'; g.beginPath(); g.roundRect(x,y,285,96,20); g.fill(); g.fillStyle='#fff'; g.font='600 30px Geist,system-ui,sans-serif'; g.fillText(s,x+24,y+60); });
+    ['Aftermovies','Interviews','Products','Sports'].forEach((s,i)=>{ const x=90+i*305,y=756; g.fillStyle='rgba(143,176,255,.14)'; g.beginPath(); g.roundRect(x,y,285,96,20); g.fill(); g.fillStyle='#fff'; g.font='600 30px Geist,system-ui,sans-serif'; g.fillText(s,x+24,y+60); }); });
   const mb=new THREE.Group(); desk.add(mb);
   const sb_=std({color:0x2c2d30,roughness:.32,metalness:.9});
   B(mb,.312,.0078,.221,sb_,0,.0039,0,.0035);
@@ -1079,7 +1092,7 @@ function initRoom(){
   const tray=B(PR,.18,.004,.13,std({color:0xe8e5df}),px-.12,.71,pz+.2,.002);
   const pr1=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),std({map:T(300,200,scenes.events),roughness:.5})); pr1.rotation.x=-Math.PI/2; pr1.position.set(px-.12,.714,pz+.2); PR.add(pr1);
   const led=new THREE.Mesh(new THREE.SphereGeometry(.005,8,8),std({emissive:0x30d158,emissiveIntensity:3})); led.position.set(px+.05,.83,pz+.151); PR.add(led);
-  ['automotive','aerial','portraits'].forEach((k,i)=>{ const pp=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),std({map:T(300,200,scenes[k]),roughness:.5})); pp.rotation.x=-Math.PI/2; pp.rotation.z=(i-1)*.12; pp.position.set(px+.25,.681+i*.002,pz+.05); PR.add(pp); });
+  ['motorsports','drone','portraits'].forEach((k,i)=>{ const pp=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),std({map:T(300,200,scenes[k]),roughness:.5})); pp.rotation.x=-Math.PI/2; pp.rotation.z=(i-1)*.12; pp.position.set(px+.25,.681+i*.002,pz+.05); PR.add(pp); });
   hs('printer',PR,[px-.12,1.02,pz],{side:'studio',label:'Prints and live printing',view:{pos:[px-.05,1.32,pz+1.25],look:[px-.05,.78,pz]}});
 
   const CL=new THREE.Group(); S.add(CL);
@@ -1204,7 +1217,11 @@ function initRoom(){
       <p>Photography has always been my passion. Like many people, I started with my phone. In 2022 I decided to take it further and bought my first drone, and that is where the idea of Above Belgium came from: a name that literally means what it says.</p>
       <p>The project grew a lot once I bought my first real camera. I learned to master it through online videos, and I haven't grown tired of it since. Today I combine it with my Master's in Business Analytics at UCLouvain FUCaM Mons.</p>
       <p>My goal is simple: gain experience today, to give you an even better result tomorrow.</p>
-      <ul><li><b>Events and institutions</b>Official photographer of UCLouvain in Mons since September 2024.</li><li><b>Automotive</b>Vehicles and showrooms, for the APEX automotive group for several years.</li><li><b>Aerial</b>Photo and 4K HDR video with the DJI Mini 3.</li><li><b>Macro</b>True 2:1 close-ups with the Laowa 100mm.</li><li><b>Portraits</b>Headshots and portraits in my own studio corner.</li><li><b>Prints and live printing</b>Prints in several formats, and on-site printing at events.</li></ul>
+      <h4 class="svc">Photo</h4>
+      <div class="svcgrid"><span><b>Sports</b>Matches, clubs and competitions</span><span><b>Motorsports</b>Cars, racing and the automotive world, including work for the APEX group</span><span><b>Events</b>Official photographer of UCLouvain in Mons since September 2024</span><span><b>Portraits</b>Headshots and portraits in my own studio</span><span><b>Drone</b>Aerial photo and video with the DJI Mini 3</span><span><b>Real estate</b>Interiors, exteriors and aerial views</span><span><b>Macro</b>True 2:1 close-ups with the Laowa 100mm</span><span><b>Products</b>Clean studio shots for brands and webshops</span></div>
+      <h4 class="svc">Video</h4>
+      <div class="svcgrid"><span><b>Aftermovies</b>The story of your event in a few minutes</span><span><b>Interviews</b>Clean framing, light and sound</span><span><b>Products</b>Short films that sell</span><span><b>Sports</b>Action, highlights and recaps</span></div>
+      <p style="margin-top:14px">Prints in several formats, and live printing at events, are available too.</p>
       <p><a href="https://www.abovebelgium.be" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">abovebelgium.be ›</a></p>`,
     gear:`<div class="k">Above Belgium</div><h3>Professional work,<br>professional gear.</h3><p>Everything I shoot with. Click an item on the shelves, or pick one here.</p>${GEARNAV('')}
       <ul><li><b>Sony A7 III</b><span class="s">Full-frame mirrorless camera</span></li><li><b>Sony FE 24-240mm</b><span class="s">10x travel zoom</span></li><li><b>Laowa 100mm 2X</b><span class="s">Ultra macro, APO</span></li><li><b>DJI Mini 3</b><span class="s">4K HDR drone</span></li></ul>`,
