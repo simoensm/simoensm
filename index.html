@@ -275,11 +275,13 @@ body.playing .mode{top:84px;right:150px}
 .rl::before{content:"";position:absolute;left:-9px;top:6px;width:5px;height:5px;border-radius:50%;background:#eef1f6}
 .rl.on{opacity:1}
 #place.on{opacity:1;pointer-events:auto}
-.plabel{position:absolute;z-index:4;transform:translate(-50%,calc(-100% - 14px));border-radius:14px;padding:9px 13px;pointer-events:none;opacity:0;transition:opacity .6s var(--ease);white-space:nowrap;text-align:center}
+.plabel{position:absolute;z-index:4;transform:translate(-50%,calc(-100% - 16px));display:flex;align-items:center;gap:12px;border-radius:16px;padding:10px 14px;pointer-events:none;opacity:0;transition:opacity .6s var(--ease);white-space:nowrap;background:rgba(255,255,255,.94);color:#14161a;box-shadow:0 18px 40px -14px rgba(0,0,0,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.plabel img{height:26px;width:auto;max-width:150px;display:block}.plabel img.tall{height:46px}
+.plabel>div{padding-left:12px;border-left:1px solid rgba(20,22,26,.12)}
 .plabel.on{opacity:1}
 .plabel b{display:block;font-size:13.5px;font-weight:600}
-.plabel span{display:block;font-family:var(--mono);font-size:10.5px;color:#9aa3b2;margin-top:2px}
-.plabel::after{content:"";position:absolute;left:50%;bottom:-14px;width:1px;height:14px;background:rgba(238,241,246,.5)}
+.plabel span{display:block;font-family:var(--mono);font-size:10.5px;color:#6b7280;margin-top:2px}
+.plabel::after{content:"";position:absolute;left:50%;bottom:-16px;width:1px;height:16px;background:rgba(238,241,246,.6)}
 .caption .addr{font-family:var(--mono);font-size:11px;color:#7d8696;margin-top:12px}
 .osm{position:absolute;right:16px;bottom:10px;font-size:10.5px;color:#5d6574;opacity:0;transition:opacity .6s}
 body.inplace .osm{opacity:1}
@@ -569,7 +571,7 @@ body.focused .sheet{transform:none}
   <div id="globe"><div class="gload">Loading the globe</div></div>
   <canvas id="place"></canvas>
   <div id="rlabels"></div>
-  <div id="plabel" class="plabel dglass"><b id="plT"></b><span id="plS"></span></div>
+  <div id="plabel" class="plabel"><img id="plL" alt=""><div><b id="plT"></b><span id="plS"></span></div></div>
   <div class="jtitle"><h2>Journey.</h2><p id="jhint">Where I've studied and worked. Click Belgium to walk through it.</p></div>
   <div class="jstart"><button class="jbtn primary" id="play"><svg viewBox="0 0 14 14"><path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Start my journey</button></div>
   <div class="jstats dglass">
@@ -714,9 +716,10 @@ const CH=[
   {kind:'Experience', yr:'Jan 2025', t:'Business Engineer Intern', o:'Berma · Erpe-Mere and Anderlecht', p:'A Belgian wholesaler of furniture and decoration hardware, founded in 1977. I built the product database for its new webshop and worked in the ERP.', a:'Joseph Cardijnstraat, Erpe-Mere · Maurice Herbettelaan, Anderlecht', sites:['berma','anderlecht'], lat:50.9323, lng:3.9584},
   {kind:'Experience', yr:'Apr 2025', t:'Treasurer and Financial Manager', o:'FUCaM Junior Consulting · Mons', p:'Restructured the 20-member student consulting association onto Odoo ERP, ran the finances and organised events of 100+ attendees.', a:'UCLouvain FUCaM campus, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:1},
   {kind:'Education', yr:'Sep 2025', t:'Master in Business Engineering', o:'Business Analytics · Louvain School of Management', p:'Data and decision science: artificial intelligence, recommender systems, web mining and optimisation.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826, view:2},
-  {kind:'Education', yr:'Aug 2026', t:'Erasmus at NHH', o:'NHH Norwegian School of Economics · Bergen, Norway', p:"International Finance at Norway's first business school, founded in 1936, on the Sandviken campus just outside the city centre.", a:'Helleveien 30, Bergen', sites:[], lat:60.423, lng:5.3021}
+  {kind:'Education', yr:'Aug 2026', t:'Erasmus at NHH', o:'NHH Norwegian School of Economics · Bergen, Norway', p:"International Finance at Norway's first business school, founded in 1936, on the Sandviken campus just outside the city centre.", a:'Helleveien 30, Bergen', sites:['nhh'], view:2, lat:60.423, lng:5.3021}
 ];
-const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons'}, berma:{t:'Berma',s:'Erpe-Mere'}, anderlecht:{t:'Berma',s:'Anderlecht'} };
+const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons',logo:'uclouvain.png'}, berma:{t:'Berma',s:'Erpe-Mere',logo:'berma.png'}, anderlecht:{t:'Berma',s:'Anderlecht',logo:'berma.png'}, nhh:{t:'NHH',s:'Sandviken · Bergen',logo:'nhh.png',tall:true}, lessines:{t:'Above Belgium',s:'Lessines',logo:'above-belgium.svg'} };
+  const setLabel=key=>{ const I=SITE_INFO[key]; if(!I) return; $('#plT').textContent=I.t; $('#plS').textContent=I.s; const L=$('#plL'); L.src='logos/'+I.logo; L.className=I.tall?'tall':''; };
 const SITE_LL={ fucam:[50.4537,3.9826], berma:[50.9323,3.9584], anderlecht:[50.8449,4.3096] };
 const Journey={};
 let globeStarted=false;
@@ -736,12 +739,14 @@ function oceanTex(){ const W=2048,H=1024; const mp=document.createElement('canva
 /* ---------- Region: an accurate flat map of Belgium, continuous from country scale down to the buildings ---------- */
 const Region = (()=>{
   const LAT0=50.6, LON0=4.4, KX=111320*Math.cos(LAT0*Math.PI/180), KZ=110540;
-  const P=(lat,lon)=>[(lon-LON0)*KX, -(lat-LAT0)*KZ];
+  const COS=lat=>111320*Math.cos(lat*Math.PI/180);
+  const P=(lat,lon)=>[(lon-LON0)*COS(lat), -(lat-LAT0)*KZ];
+  const unP=(x,z)=>{ const lat=LAT0-z/KZ; return [lat, LON0+x/COS(lat)]; };
   const BG='#03050a', SEA='#0d2c57';
-  let renderer, scene, camera, sun, data=null, ready=null, visible=false, raf=0, current=null, idleSpin=false, alpha=1;
+  let renderer, scene, camera, sun, data=null, ready=null, visible=false, raf=0, current=null, areaKey=null, idleSpin=false, alpha=1;
   const cam={x:0,z:0,d:573000,el:1.52,az:Math.PI/2};
   const site={}; const cityEls=[];
-  const CITIES=[['Mons',50.4542,3.9523],['Lessines',50.7121,3.8296],['Erpe-Mere',50.926,3.968],['Brussels',50.8467,4.3525],['Ghent',51.0543,3.7174],['Antwerp',51.2194,4.4025],['Liège',50.6326,5.5797],['Charleroi',50.4108,4.4446],['Tournai',50.6066,3.389],['Bruges',51.2093,3.2247],['Namur',50.4674,4.872]];
+  const CITIES=[['Mons',50.4542,3.9523],['Erpe-Mere',50.926,3.968],['Brussels',50.8467,4.3525],['Ghent',51.0543,3.7174],['Antwerp',51.2194,4.4025],['Liège',50.6326,5.5797],['Charleroi',50.4108,4.4446],['Tournai',50.6066,3.389],['Bruges',51.2093,3.2247],['Namur',50.4674,4.872],['Bergen',60.3913,5.3221]];
   const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons'}, berma:{t:'Berma',s:'Erpe-Mere'}, anderlecht:{t:'Berma',s:'Anderlecht'} };
 
   function shapeFrom(rings){ // rings: [outer, ...holes] in lon/lat
@@ -771,7 +776,7 @@ const Region = (()=>{
     const mat=new LineMaterial({color,linewidth:px,transparent:true,opacity,depthTest:false,depthWrite:false,fog:true}); mat.resolution.set(innerWidth,innerHeight); LMATS.push(mat);
     const L=new LineSegments2(geo,mat); L.renderOrder=order; L.frustumCulled=false; scene.add(L); }
   // belgium.json stores each line as deltas in units of 10 m
-  const dec=f=>{ const o=new Array(f.length); let x=0,z=0; for(let i=0;i<f.length;i+=2){ x+=f[i]; z+=f[i+1]; o[i]=x*10; o[i+1]=z*10; } return o; };
+  const dec=f=>{ const o=new Array(f.length); let x=0,z=0; for(let i=0;i<f.length;i+=2){ x+=f[i]; z+=f[i+1]; o[i]=x*10*COS(LAT0-z*10/KZ)/KX; o[i+1]=z*10; } return o; };
   async function buildDetail(raw){
     const det={}; for(const k of ['mw','prim','water']) det[k]=(raw[k]||[]).map(([t,f])=>[t,dec(f)]); for(const k of ['green','urban','lakes']) det[k]=(raw[k]||[]).map(dec);
     // same palette as the street-level ground under each place, so zooming in never changes the look
@@ -799,9 +804,11 @@ const Region = (()=>{
     data=d;
     // sea and neighbouring countries
     const sea=new THREE.Mesh(new THREE.PlaneGeometry(4e6,4e6),new THREE.MeshBasicMaterial({color:SEA,depthTest:false,depthWrite:false})); sea.renderOrder=-20; sea.rotation.x=-Math.PI/2; sea.position.y=-60; scene.add(sea);
-    const near=world.filter(f=>{ if(f.properties.id==='BE') return false; const r=polys(f)[0]?.[0]; if(!r) return false; return r.some(([lon,lat])=>lon>-6&&lon<16&&lat>42&&lat<58); });
+    const no=await geo('norwayHigh').catch(()=>[]);
+    const near=world.filter(f=>{ const id=f.properties.id; if(id==='BE'||(id==='NO'&&no.length)) return false; const r=polys(f)[0]?.[0]; if(!r) return false; return r.some(([lon,lat])=>lon>-6&&lon<32&&lat>42&&lat<72); });
     scene.add(fillMesh(near, f=> mixHex(VISITED[f.properties.id]?(COL[f.properties.id]||'#4fd1c5'):'#1c2944', '#0c1119', VISITED[f.properties.id]?.82:.55), -30));
     scene.add(lineMesh(near,'#9fc3ff',.22,-29));
+    if(no.length){ scene.add(fillMesh(no,()=>mixHex(COL.NO||'#4fd1c5','#0c1119',.8),-29.5)); scene.add(lineMesh(no,'#9fc3ff',.24,-28.5)); }
     // Belgium, province by province
     const be = prov.length ? prov : world.filter(f=>f.properties.id==='BE');
     const det=await fetch('belgium.json').then(r=>r.ok?r.json():null).catch(()=>null);
@@ -857,7 +864,9 @@ const Region = (()=>{
     // labels
     const showCities=alpha>.97&&cam.d>4000&&cam.d<900000;
     cityEls.forEach(c=>{ tmp.copy(c.v).project(camera); const on=showCities&&tmp.z<1&&Math.abs(tmp.x)<1.1&&Math.abs(tmp.y)<1.1; c.e.classList.toggle('on',on); if(on){ c.e.style.transform=`translate(${(tmp.x+1)/2*innerWidth}px,${(1-tmp.y)/2*innerHeight}px)`; } });
-    const lab=$('#plabel'); if(alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
+    const lab=$('#plabel'); const A=areaKey&&data.areas[areaKey];
+    if(alpha>.97&&A&&cam.d<60000){ const [ax,az]=P(A.center[0],A.center[1]); tmp.set(ax,0,az).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); }
+    else if(alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
     if(current&&site[current]){ const r=site[current].ring; const t=(now%2600)/2600; const k=30+t*70; r.scale.set(k,k,k); r.material.opacity=.5*(1-t); }
     renderer.render(scene,camera); }
   const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2, easeS=t=>-(Math.cos(Math.PI*t)-1)/2;
@@ -878,22 +887,22 @@ const Region = (()=>{
   const OVER={x:0,z:0,d:573000,el:1.52,az:Math.PI/2};
   const R_EARTH=6371000;
   const fade=alt=>Math.min(1,Math.max(0,(0.16-alt)/0.09));
-  function begin(key){ alpha=0; current=key||null; if(key){ $('#plT').textContent=SITE_INFO[key].t; $('#plS').textContent=SITE_INFO[key].s; } visible=true; if(!raf) raf=requestAnimationFrame(frame); const c=$('#place'); c.style.transition='none'; c.classList.add('on'); document.body.classList.add('inplace'); }
+  function begin(key,area){ alpha=0; current=key||null; areaKey=area||null; if(key) setLabel(key); else if(area) setLabel(area); visible=true; if(!raf) raf=requestAnimationFrame(frame); const c=$('#place'); c.style.transition='none'; c.classList.add('on'); document.body.classList.add('inplace'); }
   // follow the globe's camera, so both views move as one
   function sync(lat,lng,alt,az,el){ const [x,z]=P(lat,lng); cam.x=x; cam.z=z; cam.d=Math.max(alt*R_EARTH,60); cam.el=el??elFor(cam.d); cam.az=az; idleSpin=false; alpha=fade(alt); $('#place').style.opacity=alpha; return alpha; }
   function end(spin){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; alpha=1; idleSpin=!!spin; }
-  function camLL(){ return { lat: LAT0 - cam.z/KZ, lng: LON0 + cam.x/KX, altitude: cam.d/R_EARTH, az:cam.az }; }
-  function siteLL(key){ const s=data.sites[key]; const [ox,oz]=P(s.c[0],s.c[1]); return { lat: LAT0-(oz+s.tc[1])/KZ, lng: LON0+(ox+s.tc[0])/KX, d: key==='berma'?440:500 }; }
-  function areaLL(key){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); return { lat: LAT0-(z+1500)/KZ, lng: LON0+(x-900)/KX, d:17000 }; }
+  function camLL(){ const [lat,lng]=unP(cam.x,cam.z); return { lat, lng, altitude: cam.d/R_EARTH, az:cam.az }; }
+  function siteLL(key){ const s=data.sites[key]; const [ox,oz]=P(s.c[0],s.c[1]); const [lat,lng]=unP(ox+s.tc[0],oz+s.tc[1]); return { lat, lng, d: key==='berma'?440:500 }; }
+  function areaLL(key){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); const [lat,lng]=unP(x-900,z+1500); return { lat, lng, d:17000 }; }
   async function show(world){ if(!ready) ready=init(world); await ready; alpha=1; Object.assign(cam,OVER); current=null; visible=true; if(!raf) raf=requestAnimationFrame(frame);
     $('#place').classList.add('on'); document.body.classList.add('inplace'); }
-  function hide(){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; c.classList.remove('on'); $('#plabel').classList.remove('on'); cityEls.forEach(c=>c.e.classList.remove('on')); document.body.classList.remove('inplace'); current=null; setTimeout(()=>{ if(!$('#place').classList.contains('on')) visible=false; },1100); }
+  function hide(){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; c.classList.remove('on'); $('#plabel').classList.remove('on'); cityEls.forEach(c=>c.e.classList.remove('on')); document.body.classList.remove('inplace'); current=null; areaKey=null; setTimeout(()=>{ if(!$('#place').classList.contains('on')) visible=false; },1100); }
   // draw every place once while hidden, so textures and shaders are on the GPU before the first zoom
   function warm(){ try{ const keep={...cam}; for(const k of Object.keys(site)){ const S=site[k]; Object.assign(cam,{x:S.ox+S.s.tc[0],z:S.oz+S.s.tc[1],d:600,el:.6}); place(); renderer.render(scene,camera); } Object.assign(cam,OVER); place(); renderer.render(scene,camera); }catch(e){} }
   const AZ=[Math.PI/2-.35, Math.PI/2+1.0, Math.PI/2+2.3];
-  async function toSite(key,variant,live){ const S=site[key]; current=key; $('#plT').textContent=SITE_INFO[key].t; $('#plS').textContent=SITE_INFO[key].s;
+  async function toSite(key,variant,live){ const S=site[key]; current=key; areaKey=null; setLabel(key);
     return fly({x:S.ox+S.s.tc[0], z:S.oz+S.s.tc[1], d:key==='berma'?440:500, el:.6, az:AZ[variant%3]}, live, {spin:true}); }
-  async function toArea(key,live){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); current=null;
+  async function toArea(key,live){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); current=null; areaKey=key; setLabel(key);
     return fly({x:x-900,z:z+1500,d:17000,el:1.05,az:Math.PI/2+.25}, live, {spin:true}); }
   function toOverview(live){ current=null; return fly(OVER, live); }
   return { OVER, elFor, show, hide, toSite, toArea, toOverview, begin, sync, end, camLL, siteLL, areaLL, AZ, get ready(){ return ready; }, prefetch:(world)=>{ if(!ready){ ready=init(world).then(()=>{ warm(); }); } return ready; }, get visible(){ return visible && $('#place').classList.contains('on'); } };
@@ -979,13 +988,13 @@ async function initGlobe(){
         const ez= down ? easeS(cl((t-.45)/.55)) : easeS(cl(t/.55));
         const lat=from.lat+dLat*ep, lng=from.lng+dLng*ep, alt=Math.exp(Math.log(a0)+(Math.log(a1)-Math.log(a0))*ea);
         const az=from.az+daz*ez;
-        if(alt<.2){ if(!mapOn){ Region.begin(to.key); mapOn=true; } const f=Region.sync(lat,lng,alt,az, to.el!=null&&down ? Region.elFor(alt*6371000)+(to.el-Region.elFor(a1*6371000))*ez : null); globeRun(f<1); }
+        if(alt<.2){ if(!mapOn){ Region.begin(to.key, to.area); mapOn=true; } const f=Region.sync(lat,lng,alt,az, to.el!=null&&down ? Region.elFor(alt*6371000)+(to.el-Region.elFor(a1*6371000))*ez : null); globeRun(f<1); }
         else { if(mapOn){ Region.hide(); mapOn=false; } globeRun(true); }
         if(globeOn) g.pointOfView({lat,lng,altitude:Math.max(alt,.004)},0);
         if(t<1) requestAnimationFrame(step); else { ctr.enabled=true; if(mapOn) Region.end(down); res(true); } };
       requestAnimationFrame(step); }); }
     async function intoBelgium(my, i){ if(Region.visible) return true; const c=CH[i];
-      const T= c.sites.length ? {...Region.siteLL(c.sites[0]), az:Region.AZ[(c.view||0)%3], el:.6, key:c.sites[0]} : {...Region.areaLL(c.area), az:Math.PI/2+.25, el:1.05};
+      const T= c.sites.length ? {...Region.siteLL(c.sites[0]), az:Region.AZ[(c.view||0)%3], el:.6, key:c.sites[0]} : {...Region.areaLL(c.area), az:Math.PI/2+.25, el:1.05, area:c.area};
       T.altitude=T.d/6371000; return dive(T,my); }
     async function outOfBelgium(my, to){ if(!Region.visible){ return to ? flight(to,my,{peak:2.3}) : true; }
       return dive(to||{lat:50.6,lng:4.4,altitude:.5}, my); }
