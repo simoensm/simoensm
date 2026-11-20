@@ -116,7 +116,7 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .worlds{padding:110px 0 40px}
 .wgrid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px;margin-top:44px}
 .world{position:relative;border-radius:28px;min-height:440px;overflow:hidden;cursor:pointer;padding:28px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .7s var(--spring)}
-.world:hover{transform:scale(1.025)}
+.world:hover{transform:none}
 .world .bg{position:absolute;inset:0;transition:transform 1.2s var(--ease)}
 .world:hover .bg{transform:scale(1.05)}
 .world .panel{position:relative;border-radius:20px;padding:18px 20px}
@@ -145,18 +145,19 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .tlsec{position:relative;height:calc(var(--n,7)*62vh + 100vh);margin-top:90px}
 .tlsticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;gap:34px;overflow:hidden}
 .tlhint{font-size:15px;color:var(--ink3);margin-top:10px}
+.tlsticky>.wrap{width:100%;box-sizing:border-box}
 .tlrail{position:relative}
-.tlline{position:relative;height:2px;border-radius:2px;background:var(--line);margin:0 6px}
+.tlline{position:relative;height:2px;border-radius:2px;background:var(--line);margin:0 34px}
 .tlline i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;background:linear-gradient(90deg,#3f6bff,#8b5cf6)}
-.tldots{position:absolute;left:6px;right:6px;top:-6px;height:14px}
+.tldots{position:absolute;left:62px;right:62px;top:-6px;height:14px}
 .tldots button{position:absolute;top:0;transform:translateX(-50%);border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px}
 .tldots button i{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--line);transition:border-color .5s var(--ease),background .5s var(--ease),transform .6s var(--spring)}
 .tldots button span{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap;transition:color .5s}
 .tldots button.past i{border-color:#6d7cff;background:#6d7cff}
 .tldots button.on i{transform:scale(1.35);border-color:#3f6bff;background:#fff}
 .tldots button.on span{color:var(--ink)}
-.tlview{position:relative;height:330px}
-.tltrack{position:absolute;left:0;top:0;height:100%;display:flex;gap:22px;will-change:transform}
+.tlview{position:relative;height:300px;margin-top:18px}
+.tltrack{position:absolute;left:0;top:0;height:100%;display:flex;align-items:flex-start;gap:22px;will-change:transform}
 .tlcard{flex:0 0 min(440px,80vw);border-radius:26px;padding:26px 28px;transition:opacity .5s var(--ease),filter .5s var(--ease)}
 .tlcard .k{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
 .tlcard .k b{font-weight:500;color:var(--tc,#3f6bff)}
@@ -264,7 +265,17 @@ body.playing .mode{display:none}
 .dglass.hg:hover{background:rgba(14,17,24,.32);border-color:rgba(255,255,255,.22);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 24px 60px -18px rgba(0,0,0,.6)}
 .dglass.hg::after{background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.14),rgba(255,255,255,0) 65%)}
 .cvblock.hg:hover{transform:scale(1.012)}
-.chip.hg:hover{transform:scale(1.045)}
+.chip.hg:hover{transform:none}
+/* on hover a panel widens, its neighbours make room */
+@media (min-width:901px){
+  .wgrid{display:flex}
+  .wgrid .world{flex:1 1 0;min-width:0;transition:flex-grow .9s var(--spring),transform .7s var(--spring)}
+  .wgrid .world.w1{flex-grow:1.25}
+  .wgrid .world:hover{flex-grow:1.85}
+  .chips{display:flex}
+  .chips .chip{flex:1 1 0;min-width:0;transition:flex-grow .9s var(--spring),background .7s var(--ease),backdrop-filter .7s var(--ease),box-shadow .7s var(--ease),border-color .7s var(--ease)}
+  .chips .chip:hover{flex-grow:1.5}
+}
 .world .panel.hg:hover{transform:none}
 .tlcard.hg:hover{transform:scale(1.03)}
 .world:hover .panel.hg{background:rgba(255,255,255,.28);backdrop-filter:blur(34px) saturate(2);-webkit-backdrop-filter:blur(34px) saturate(2);border-color:rgba(255,255,255,.9)}
@@ -456,7 +467,7 @@ body.focused .sheet{transform:none}
 
   <section class="worlds wrap">
     <div class="label reveal">Three worlds</div>
-    <h2 class="big reveal">Where I've been, what I shoot,<br>and what I build.</h2>
+    <h2 class="big reveal">Discover me.</h2>
     <div class="wgrid">
       <div class="world w1 reveal" data-go="journey"><div class="bg"></div>
         <svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="eg" cx="40%" cy="35%"><stop offset="0" stop-color="#2a4f9e"/><stop offset=".6" stop-color="#0f1f45"/><stop offset="1" stop-color="#060b18"/></radialGradient></defs><circle cx="230" cy="190" r="150" fill="url(#eg)"/><circle cx="230" cy="190" r="150" fill="none" stroke="#7fa2ff" stroke-opacity=".25"/><path d="M180 120c20-8 44-6 60 6s30 8 40 22-6 30-24 34-30 14-48 8-34-20-38-36 2-26 10-34z" fill="#c9d6f5" opacity=".85"/><path d="M200 230c18-6 40 0 52 14s4 34-14 40-40-2-48-18 0-30 10-36z" fill="#1d2d55"/><circle cx="221" cy="138" r="3.5" fill="#fff"/><circle cx="221" cy="138" r="10" fill="none" stroke="#fff" stroke-opacity=".5"/><path d="M221 138 Q240 80 236 70" stroke="#8fb0ff" stroke-width="1.5" fill="none" stroke-dasharray="3 4"/><circle cx="236" cy="70" r="3" fill="#8fb0ff"/></svg>
@@ -543,6 +554,9 @@ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
+import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -579,18 +593,18 @@ $$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.
 
 /* education and experience timeline, driven by scrolling */
 const TL=[
-  {when:'Sep 2022 – Jun 2025',yr:'2022',kind:'Education',t:'Bachelor in Business Engineering',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Management, economics, quantitative methods and IT.'},
-  {when:'2023 – now',yr:'2023',kind:'Experience',t:'Self-employed student entrepreneur',o:'Above Belgium, my photo and video company',p:'Sports, motorsports, events, portraits, drone, real estate, macro and products, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.'},
-  {when:'Jan – Feb 2025',yr:'2025',kind:'Experience',t:'Business Engineer Intern',o:'Berma, Anderlecht and Erpe-Mere',p:'Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.'},
-  {when:'2025 – 2026',yr:'2025',kind:'Experience',t:'Treasurer and Financial Manager',o:'FUCaM Junior Consulting, Mons',p:'Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.'},
-  {when:'Sep 2025 – 2027',yr:'2025',kind:'Education',t:'MSc in Business Engineering, Business Analytics',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Artificial intelligence, recommender systems, web mining, quantitative decision making.'},
-  {when:'Aug – Dec 2026',yr:'2026',kind:'Education',t:'Erasmus exchange, International Finance',o:'NHH Norwegian School of Economics, Bergen',p:'Investments; Blockchain, Cryptocurrencies and DeFi.'},
-  {when:'Jan 2027',yr:'2027',kind:'Experience',t:'Intern, Technology - Cloud & Data',o:'PwC Belgium',p:'Technology consulting internship in the Cloud & Data team.',soon:true}
+  {when:'Sep 2022 – Jun 2025',d:'Sep 2022',yr:'2022',kind:'Education',t:'Bachelor in Business Engineering',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Management, economics, quantitative methods and IT.'},
+  {when:'2023 – now',d:'2023',yr:'2023',kind:'Experience',t:'Self-employed student entrepreneur',o:'Above Belgium, my photo and video company',p:'Sports, motorsports, events, portraits, drone, real estate, macro and products, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.'},
+  {when:'Jan – Feb 2025',d:'Jan 2025',yr:'2025',kind:'Experience',t:'Business Engineer Intern',o:'Berma, Anderlecht and Erpe-Mere',p:'Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.'},
+  {when:'2025 – 2026',d:'2025',yr:'2025',kind:'Experience',t:'Treasurer and Financial Manager',o:'FUCaM Junior Consulting, Mons',p:'Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.'},
+  {when:'Sep 2025 – 2027',d:'Sep 2025',yr:'2025',kind:'Education',t:'MSc in Business Engineering, Business Analytics',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Artificial intelligence, recommender systems, web mining, quantitative decision making.'},
+  {when:'Aug – Dec 2026',d:'Aug 2026',yr:'2026',kind:'Education',t:'Erasmus exchange, International Finance',o:'NHH Norwegian School of Economics, Bergen',p:'Investments; Blockchain, Cryptocurrencies and DeFi.'},
+  {when:'Jan 2027',d:'Jan 2027',yr:'2027',kind:'Experience',t:'Intern, Technology - Cloud & Data',o:'PwC Belgium',p:'Technology consulting internship in the Cloud & Data team.',soon:true}
 ];
 (()=>{ const sec=$('#tlsec'), track=$('#tltrack'), dots=$('#tldots'), fill=$('#tlfill'); if(!sec) return;
   sec.style.setProperty('--n',TL.length);
   track.innerHTML=TL.map(it=>`<article class="tlcard glass hg" style="--tc:${it.kind==='Education'?'#3f6bff':'#8b5cf6'}"><div class="k"><b>${it.kind}</b><span>${it.when}</span></div><h3>${it.t}</h3><div class="org">${it.o}</div><p>${it.p}</p>${it.soon?'<span class="soon">Coming up</span>':''}</article>`).join('');
-  dots.innerHTML=TL.map((it,i)=>`<button style="left:${TL.length>1?i/(TL.length-1)*100:0}%" aria-label="${it.t}"><i></i><span>${it.when.split(' – ')[0]}</span></button>`).join('');
+  dots.innerHTML=TL.map((it,i)=>`<button style="left:${TL.length>1?i/(TL.length-1)*100:0}%" aria-label="${it.t}"><i></i><span>${it.d}</span></button>`).join('');
   const cards=[...track.children], db=[...dots.children];
   cards.forEach(el=>el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); }));
   let pos=0, want=0, raf=0;
@@ -667,6 +681,33 @@ const Region = (()=>{
     const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(pts,3)); const L=new THREE.LineSegments(geo,new THREE.LineBasicMaterial({color:new THREE.Color(color).lerp(new THREE.Color('#14294a'),1-opacity),depthWrite:false,depthTest:false})); L.renderOrder=-5+y/10; return L; }
   const mixHex=(a,b,t)=>{ const A=new THREE.Color(a), Bc=new THREE.Color(b); return A.lerp(Bc,t); };
 
+  const LMATS=[];
+  const tick0=()=>new Promise(r=>setTimeout(r,0));
+  async function polyLayer(list,color,order,opacity=1){ const geos=[]; let n=0;
+    for(const f of list){ const pts=[]; for(let i=0;i<f.length;i+=2) pts.push(new THREE.Vector2(f[i],-f[i+1]));
+      if(pts.length>3&&pts[0].distanceTo(pts[pts.length-1])<1) pts.pop(); if(pts.length<3) continue;
+      try{ geos.push(new THREE.ShapeGeometry(new THREE.Shape(pts),1)); }catch(e){} if(++n%400===0) await tick0(); }
+    if(!geos.length) return; const geo=BufferGeometryUtils.mergeGeometries(geos,false); geos.forEach(g=>g.dispose()); geo.rotateX(-Math.PI/2);
+    const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,transparent:opacity<1,opacity,depthTest:false,depthWrite:false,fog:true})); m.renderOrder=order; m.position.y=1; scene.add(m); }
+  function lineLayer(list,pick,color,px,order,opacity=1){ const pos=[];
+    for(const [t,f] of list){ if(!pick(t)) continue; for(let i=0;i<f.length-2;i+=2) pos.push(f[i],2,f[i+1],f[i+2],2,f[i+3]); }
+    if(!pos.length) return; const geo=new LineSegmentsGeometry(); geo.setPositions(new Float32Array(pos));
+    const mat=new LineMaterial({color,linewidth:px,transparent:true,opacity,depthTest:false,depthWrite:false}); mat.resolution.set(innerWidth,innerHeight); LMATS.push(mat);
+    const L=new LineSegments2(geo,mat); L.renderOrder=order; L.frustumCulled=false; scene.add(L); }
+  // belgium.json stores each line as deltas in units of 10 m
+  const dec=f=>{ const o=new Array(f.length); let x=0,z=0; for(let i=0;i<f.length;i+=2){ x+=f[i]; z+=f[i+1]; o[i]=x*10; o[i+1]=z*10; } return o; };
+  async function buildDetail(raw){
+    const det={}; for(const k of ['mw','prim','water']) det[k]=(raw[k]||[]).map(([t,f])=>[t,dec(f)]); for(const k of ['green','urban','lakes']) det[k]=(raw[k]||[]).map(dec);
+    // same palette as the street-level ground under each place, so zooming in never changes the look
+    await polyLayer(det.green,'#14231b',-8);
+    await polyLayer(det.urban,'#1d2431',-7.8);
+    await polyLayer(det.lakes,'#123058',-7.6);
+    lineLayer(det.water||[],t=>t<2,'#1f4f8f',1.6,-7.4);
+    lineLayer(det.prim||[],()=>true,'#3a475e',1,-7.2,.9);
+    lineLayer(det.mw||[],t=>t===1,'#56688a',1.4,-7.1);
+    lineLayer(det.mw||[],t=>t===0,'#8da3cc',2,-7);
+    addEventListener('resize',()=>LMATS.forEach(m=>m.resolution.set(innerWidth,innerHeight))); }
+
   async function init(world){
     const canvas=$('#place');
     renderer=new THREE.WebGLRenderer({canvas,antialias:true,logarithmicDepthBuffer:true,powerPreference:'high-performance'});
@@ -683,16 +724,18 @@ const Region = (()=>{
     // sea and neighbouring countries
     const sea=new THREE.Mesh(new THREE.PlaneGeometry(4e6,4e6),new THREE.MeshBasicMaterial({color:SEA,depthTest:false,depthWrite:false})); sea.renderOrder=-20; sea.rotation.x=-Math.PI/2; sea.position.y=-60; scene.add(sea);
     const near=world.filter(f=>{ if(f.properties.id==='BE') return false; const r=polys(f)[0]?.[0]; if(!r) return false; return r.some(([lon,lat])=>lon>-6&&lon<16&&lat>42&&lat<58); });
-    scene.add(fillMesh(near, f=> mixHex(VISITED[f.properties.id]?(COL[f.properties.id]||'#4fd1c5'):'#1c2944', SEA, VISITED[f.properties.id]?.55:.2), -30));
-    scene.add(lineMesh(near,'#9fc3ff',.25,-29));
+    scene.add(fillMesh(near, f=> mixHex(VISITED[f.properties.id]?(COL[f.properties.id]||'#4fd1c5'):'#1c2944', '#0c1119', VISITED[f.properties.id]?.82:.55), -30));
+    scene.add(lineMesh(near,'#9fc3ff',.22,-29));
     // Belgium, province by province
-    const shades=['#5b9df5','#6aa8f7','#4f92ee','#76b1f8','#5f9ff3','#83b9f9','#5596f1','#6ca5f4','#4c8de9','#7bb4f7','#619ff2'];
     const be = prov.length ? prov : world.filter(f=>f.properties.id==='BE');
-    scene.add(fillMesh(be, f=> mixHex(shades[be.indexOf(f)%shades.length], '#0b1a33', .38), 0));
-    scene.add(lineMesh(be,'#eaf2ff',.5,1));
+    const det=await fetch('belgium.json').then(r=>r.ok?r.json():null).catch(()=>null);
+    // with the detailed map, Belgium is real land (forests, towns, rivers, roads); without it, the plain provinces
+    scene.add(fillMesh(be, f=> det ? new THREE.Color('#121925') : mixHex(['#5b9df5','#6aa8f7','#4f92ee','#76b1f8'][be.indexOf(f)%4], '#0b1a33', .38), 0));
+    if(det) await buildDetail(det);
+    scene.add(lineMesh(be, det?'#6f86b3':'#eaf2ff', det?.42:.5, 1));
     // Lessines municipality
     const A=d.areas?.lessines; if(A){ const f={geometry:{type:'Polygon',coordinates:[A.ring]}};
-      scene.add(fillMesh([f],()=>mixHex('#fbbf24','#0b1a33',.45),2)); const ln=lineMesh([f],'#fde68a',.95,3); scene.add(ln); }
+      const lf=fillMesh([f],()=>mixHex('#fbbf24','#0b1a33',det?.7:.45),2); lf.children.forEach(m=>{ m.renderOrder=-6.5; if(det){ m.material.transparent=true; m.material.opacity=.55; } }); scene.add(lf); const ln=lineMesh([f],'#fde68a',.95,3); scene.add(ln); }
     // the places: real buildings from OpenStreetMap at their real position
     for(const key of Object.keys(d.sites)) site[key]=buildSite(key);
     // city labels
