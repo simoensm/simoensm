@@ -63,7 +63,7 @@ body.dark .burger{color:#eef1f6}
 .ctc .cp{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:12px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid var(--line);color:var(--ink2);opacity:0;transition:opacity .4s var(--ease),background .3s}
 .ctc:hover .cp{opacity:1}.ctc .cp:hover{background:#fff;color:var(--ink)}
 .ctrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.ctc.sm b{font-size:14.5px}
+.ctc.sm b{font-size:14px;word-break:normal;overflow-wrap:anywhere;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .ctwhere{display:flex;gap:10px;align-items:flex-start;margin-top:26px;font-size:14px;color:var(--ink2);line-height:1.5}
 .ctwhere .live{margin-top:6px;flex:none}
 .ctwhere em{font-style:normal;color:var(--ink3)}
@@ -175,6 +175,7 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .code .c{color:#6b778c}.code .k{color:#8fb0ff}.code .n{color:#f0b46b}
 .code .cur{display:inline-block;width:7px;height:13px;background:#8fb0ff;vertical-align:-2px;margin-left:2px;animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
+.world canvas.art{position:absolute;inset:0;width:100%;height:100%;display:block}
 .world .art{transition:transform 1.4s var(--spring)}.world:hover .art{transform:scale(1.04)}
 .w3 .bg{background:radial-gradient(120% 80% at 20% 0%,#1b2233 0,#0d1018 60%,#08090d 100%)}
 .world svg{position:absolute;inset:0;width:100%;height:100%}
@@ -252,6 +253,18 @@ body.playing .jtitle{opacity:0;transform:translateY(-14px)}
 body.playing .jstart{opacity:0;pointer-events:none}
 .jbtn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:12px 18px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--dglass-b)}
 .jbtn.primary{background:#eef1f6;color:#0b0d12;border-color:#eef1f6}
+.jbtn:not(.primary){background:rgba(14,17,24,.4);color:#eef1f6;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.jbtn svg{width:14px;height:14px}
+.jlist{position:absolute;left:40px;top:310px;width:min(380px,calc(100vw - 32px));border-radius:22px;padding:8px;z-index:6;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transform-origin:top left;transition:opacity .45s var(--ease),transform .6s var(--spring)}
+.jlist.on{opacity:1;pointer-events:auto;transform:none}
+body.playing .jlist{top:auto;left:50%;bottom:92px;transform-origin:bottom center;transform:translate(-50%,8px) scale(.98)}
+body.playing .jlist.on{transform:translate(-50%,0)}
+.jlist button{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:start;width:100%;text-align:left;font:inherit;color:#eef1f6;background:none;border:0;border-radius:14px;padding:11px 12px;cursor:pointer;transition:background .3s var(--ease)}
+.jlist button:hover,.jlist button.cur{background:rgba(255,255,255,.08)}
+.jlist .y{font-family:var(--mono);font-size:11px;color:#9aa3b2;padding-top:3px}
+.jlist b{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+.jlist small{display:block;font-size:12.5px;color:#9aa3b2;margin-top:2px}
+.jlist i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:7px;vertical-align:2px}
 .jbtn svg{width:14px;height:14px}
 .mode{position:absolute;right:32px;top:84px;display:flex;padding:4px;border-radius:999px;z-index:5}
 .mode button{border:0;background:none;color:#a7aebb;font-size:13px;font-weight:500;padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .4s var(--ease)}
@@ -291,6 +304,8 @@ body.playing .player{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .player button{width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.08);cursor:pointer;display:grid;place-items:center;transition:background .3s}
 .player button:hover{background:rgba(255,255,255,.16)}
 .player button svg{width:14px;height:14px;fill:#eef1f6}
+.player button{color:#eef1f6}
+.tlcard[data-ch]{cursor:pointer}.tlcard .open{display:inline-block;margin-top:14px;font-size:13px;font-weight:500;color:var(--accent)}
 .player .track{display:flex;gap:6px;padding:0 10px}
 .player .seg{position:relative;width:46px;height:4px;border-radius:4px;background:rgba(255,255,255,.14);cursor:pointer;overflow:hidden}
 .player .seg i{position:absolute;inset:0;width:0;background:#eef1f6;border-radius:4px}
@@ -523,7 +538,7 @@ body.focused .sheet{transform:none}
       <div class="more"><div class="in">
         <p>MSc student in Business Engineering, between data science and business. I like turning a messy question into a model, an app or a clean dashboard, and I've been photographing Belgium from above since 2022.</p>
         <ul class="idfacts">
-          <li><span>Based in</span><b>Lessines, Belgium</b></li>
+          <li><span>Based in</span><b>Belgium</b></li>
           <li><span>Studying</span><b>MSc Business Engineering, Business Analytics</b></li>
           <li><span>Schools</span><b>UCLouvain FUCaM Mons · NHH Bergen</b></li>
           <li><span>Next</span><b>PwC, Technology - Cloud &amp; Data internship, 2027</b></li>
@@ -552,13 +567,7 @@ body.focused .sheet{transform:none}
     <h2 class="big reveal">Discover me.</h2>
     <div class="wgrid">
       <div class="world w1 reveal" data-go="journey"><div class="bg"></div>
-        <svg class="art" viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="gb" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#22407f"/><stop offset=".55" stop-color="#0d1b3b"/><stop offset="1" stop-color="#050a17"/></radialGradient><radialGradient id="gh" cx="50%" cy="50%" r="50%"><stop offset=".72" stop-color="#5c8dff" stop-opacity="0"/><stop offset=".86" stop-color="#5c8dff" stop-opacity=".22"/><stop offset="1" stop-color="#5c8dff" stop-opacity="0"/></radialGradient><radialGradient id="gs" cx="78%" cy="62%" r="70%"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient><clipPath id="gc"><circle cx="200" cy="210" r="150"/></clipPath></defs>
-          <circle cx="200" cy="210" r="185" fill="url(#gh)"/><circle cx="200" cy="210" r="150" fill="url(#gb)"/>
-          <g clip-path="url(#gc)" fill="none" stroke="#9fbaff" stroke-opacity=".16" stroke-width="1"><ellipse cx="200" cy="210" rx="150" ry="150"><animate attributeName="rx" values="150;0;150" dur="14s" begin="0s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="110" ry="150"><animate attributeName="rx" values="110;150;110" dur="14s" begin="-3.5s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="60" ry="150"><animate attributeName="rx" values="60;150;60" dur="14s" begin="-7s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="20" ry="150"><animate attributeName="rx" values="20;150;20" dur="14s" begin="-10.5s" repeatCount="indefinite"/></ellipse><ellipse cx="200" cy="210" rx="150" ry="26"/><ellipse cx="200" cy="150" rx="137" ry="22"/><ellipse cx="200" cy="270" rx="137" ry="22"/><ellipse cx="200" cy="100" rx="102" ry="15"/><ellipse cx="200" cy="320" rx="102" ry="15"/></g>
-          <circle cx="200" cy="210" r="150" fill="none" stroke="#9fbaff" stroke-opacity=".28"/>
-          <circle cx="200" cy="210" r="150" fill="url(#gs)"/>
-          <g fill="#dfe8ff"><circle cx="40" cy="60" r="1.2" opacity="0.60"><animate attributeName="opacity" values="0.60;.05;0.60" dur="5s" repeatCount="indefinite"/></circle><circle cx="352" cy="48" r="1.0" opacity="0.50"><animate attributeName="opacity" values="0.50;.05;0.50" dur="7s" repeatCount="indefinite"/></circle><circle cx="372" cy="300" r="1.3" opacity="0.55"><animate attributeName="opacity" values="0.55;.05;0.55" dur="6s" repeatCount="indefinite"/></circle><circle cx="30" cy="330" r="1.0" opacity="0.40"><animate attributeName="opacity" values="0.40;.05;0.40" dur="8s" repeatCount="indefinite"/></circle><circle cx="90" cy="400" r="0.9" opacity="0.45"><animate attributeName="opacity" values="0.45;.05;0.45" dur="9s" repeatCount="indefinite"/></circle><circle cx="330" cy="400" r="1.1" opacity="0.50"><animate attributeName="opacity" values="0.50;.05;0.50" dur="5s" repeatCount="indefinite"/></circle><circle cx="300" cy="26" r="0.8" opacity="0.40"><animate attributeName="opacity" values="0.40;.05;0.40" dur="6s" repeatCount="indefinite"/></circle><circle cx="18" cy="180" r="0.9" opacity="0.50"><animate attributeName="opacity" values="0.50;.05;0.50" dur="7s" repeatCount="indefinite"/></circle><circle cx="386" cy="150" r="0.8" opacity="0.45"><animate attributeName="opacity" values="0.45;.05;0.45" dur="8s" repeatCount="indefinite"/></circle></g>
-</svg>
+        <canvas class="art" id="miniGlobe" aria-label="Globe with the countries I have explored"></canvas>
         <div class="wstat"><b>18</b><span>countries explored</span></div>
         <div class="panel dglass hg"><h3>Journey</h3><p>A globe of where I've studied and worked. Click Belgium and it takes you place to place.</p><span class="go">Open the globe &rarr;</span></div></div>
       <div class="world w2 reveal" data-go="studio"><div class="bg"><img src="photos/cover-above.jpg" alt="Mathias shooting an event for Above Belgium" loading="lazy" style="object-position:50% 28%"></div>
@@ -594,7 +603,7 @@ body.focused .sheet{transform:none}
     <p class="lead reveal">Click a skill to open the projects where I used it. The number shows how many.</p>
     <div class="skgrid" id="skills"></div>
   </section>
-  <footer><div class="wrap"><span>Mathias Simoens · Lessines, Belgium</span><span><a data-go="contact" href="#contact">Contact</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.abovebelgium.be" target="_blank" rel="noopener">abovebelgium.be</a></span></div></footer>
+  <footer><div class="wrap"><span>Mathias Simoens · Belgium</span><span><a data-go="contact" href="#contact">Contact</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.abovebelgium.be" target="_blank" rel="noopener">abovebelgium.be</a></span></div></footer>
 </main>
 
 <section id="v-contact" class="view">
@@ -612,7 +621,7 @@ body.focused .sheet{transform:none}
           <a class="ctc sm glass hg" href="https://www.abovebelgium.be" target="_blank" rel="noopener"><small>Website</small><b>abovebelgium.be</b></a>
         </div>
       </div>
-      <p class="ctwhere"><i class="live"></i><span>Based in Lessines, Belgium. In Bergen, Norway until December 2026. <em id="ctclock"></em></span></p>
+      <p class="ctwhere"><i class="live"></i><span>Based in Belgium. In Bergen, Norway until December 2026. <em id="ctclock"></em></span></p>
     </div>
     <form class="ctf glass" id="ctform" novalidate>
       <div class="ctk">What is it about?</div>
@@ -637,7 +646,7 @@ body.focused .sheet{transform:none}
   <div id="rlabels"></div>
   <div id="plabel" class="plabel"><img id="plL" alt=""><div><b id="plT"></b><span id="plS"></span></div></div>
   <div class="jtitle"><h2>Journey.</h2><p id="jhint">Where I've studied and worked. Click Belgium to walk through it.</p></div>
-  <div class="jstart"><button class="jbtn primary" id="play"><svg viewBox="0 0 14 14"><path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Start my journey</button></div>
+  <div class="jstart"><button class="jbtn primary" id="play"><svg viewBox="0 0 14 14"><path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Start my journey</button><button class="jbtn" id="jall"><svg viewBox="0 0 14 14"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>All stops</button></div>
   <div class="jstats dglass">
     <div class="jtop"><div><b id="nC">18</b><span class="of">/ 195 countries</span></div><div class="pct" id="nP">9%</div></div>
     <div class="bar"><i id="nBar"></i></div>
@@ -645,7 +654,9 @@ body.focused .sheet{transform:none}
   </div>
   <div class="legend dglass"><span><i class="lv"></i>Explored</span><span><i class="ll"></i>Not yet</span></div>
   <div class="caption dglass" id="cap"><div class="swap"><div class="meta"><span id="cIdx">01 / 06</span><span id="cKind">Education</span></div><div class="yr" id="cYr"></div><h3 id="cT"></h3><div class="org" id="cO"></div><p id="cP"></p><div class="addr" id="cA"></div></div></div>
+  <div class="jlist dglass" id="jlist"></div>
   <div class="player dglass" id="player">
+    <button id="pList" aria-label="All stops"><svg viewBox="0 0 14 14"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></button>
     <button id="pPrev" aria-label="Previous stop"><svg viewBox="0 0 14 14"><path d="M11 2v10L4 7zM2 2h2v10H2z"/></svg></button>
     <button id="pPlay" aria-label="Pause"><svg viewBox="0 0 14 14" id="pIcon"><path d="M3 2h3v10H3zM8 2h3v10H8z"/></svg></button>
     <button id="pNext" aria-label="Next stop"><svg viewBox="0 0 14 14"><path d="M3 2v10l7-5zM10 2h2v10h-2z"/></svg></button>
@@ -732,17 +743,18 @@ $$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.
 
 /* education and experience timeline, driven by scrolling */
 const TL=[
-  {when:'Sep 2022 – Jun 2025',d:'Sep 2022',yr:'2022',kind:'Education',t:'Bachelor in Business Engineering',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Management, economics, quantitative methods and IT.'},
-  {when:'2023 – now',d:'2023',yr:'2023',kind:'Experience',t:'Self-employed student entrepreneur',o:'Above Belgium, my photo and video company',p:'Sports, motorsports, events, portraits, drone, real estate, macro and products, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.'},
-  {when:'Jan – Feb 2025',d:'Jan 2025',yr:'2025',kind:'Experience',t:'Business Engineer Intern',o:'Berma, Anderlecht and Erpe-Mere',p:'Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.'},
-  {when:'2025 – 2026',d:'2025',yr:'2025',kind:'Experience',t:'Treasurer and Financial Manager',o:'FUCaM Junior Consulting, Mons',p:'Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.'},
-  {when:'Sep 2025 – 2027',d:'Sep 2025',yr:'2025',kind:'Education',t:'MSc in Business Engineering, Business Analytics',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Artificial intelligence, recommender systems, web mining, quantitative decision making.'},
-  {when:'Aug – Dec 2026',d:'Aug 2026',yr:'2026',kind:'Education',t:'Erasmus exchange, International Finance',o:'NHH Norwegian School of Economics, Bergen',p:'Investments; Blockchain, Cryptocurrencies and DeFi.'},
+  {ch:0,when:'Sep 2022 – Jun 2025',d:'Sep 2022',yr:'2022',kind:'Education',t:'Bachelor in Business Engineering',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Management, economics, quantitative methods and IT.'},
+  {ch:1,when:'2023 – now',d:'2023',yr:'2023',kind:'Experience',t:'Self-employed student entrepreneur',o:'Above Belgium, my photo and video company',p:'Sports, motorsports, events, portraits, drone, real estate, macro and products, plus aftermovies, interviews and sports video. Run end to end, from the first call to delivery.'},
+  {ch:2,when:'Jan – Feb 2025',d:'Jan 2025',yr:'2025',kind:'Experience',t:'Business Engineer Intern',o:'Berma, Anderlecht and Erpe-Mere',p:'Built the product database for a new webshop, handled accounting in a newly deployed ERP, supported the supply chain.'},
+  {ch:3,when:'2025 – 2026',d:'2025',yr:'2025',kind:'Experience',t:'Treasurer and Financial Manager',o:'FUCaM Junior Consulting, Mons',p:'Moved the 20-member association onto Odoo ERP, ran the books and the budget, organised events of 100+ people.'},
+  {ch:4,when:'Sep 2025 – 2027',d:'Sep 2025',yr:'2025',kind:'Education',t:'MSc in Business Engineering, Business Analytics',o:'Louvain School of Management, UCLouvain FUCaM Mons',p:'Artificial intelligence, recommender systems, web mining, quantitative decision making.'},
+  {ch:5,when:'Aug – Dec 2026',d:'Aug 2026',yr:'2026',kind:'Education',t:'Erasmus exchange, International Finance',o:'NHH Norwegian School of Economics, Bergen',p:'Investments; Blockchain, Cryptocurrencies and DeFi.'},
   {when:'Jan 2027',d:'Jan 2027',yr:'2027',kind:'Experience',t:'Intern, Technology - Cloud & Data',o:'PwC Belgium',p:'Technology consulting internship in the Cloud & Data team.',soon:true}
 ];
 (()=>{ const sec=$('#tlsec'), track=$('#tltrack'), dots=$('#tldots'), fill=$('#tlfill'); if(!sec) return;
   sec.style.setProperty('--n',TL.length);
-  track.innerHTML=TL.map(it=>`<article class="tlcard glass hg" style="--tc:${it.kind==='Education'?'#3f6bff':'#8b5cf6'}"><div class="k"><b>${it.kind}</b><span>${it.when}</span></div><h3>${it.t}</h3><div class="org">${it.o}</div><p>${it.p}</p>${it.soon?'<span class="soon">Coming up</span>':''}</article>`).join('');
+  track.innerHTML=TL.map(it=>`<article class="tlcard glass hg" ${it.ch!=null?`data-ch="${it.ch}"`:''} style="--tc:${it.kind==='Education'?'#3f6bff':'#8b5cf6'}"><div class="k"><b>${it.kind}</b><span>${it.when}</span></div><h3>${it.t}</h3><div class="org">${it.o}</div><p>${it.p}</p>${it.soon?'<span class="soon">Coming up</span>':''}${it.ch!=null?'<span class="open">See it on the map &rarr;</span>':''}</article>`).join('');
+  track.addEventListener('click',e=>{ const c=e.target.closest('[data-ch]'); if(!c) return; const i=+c.dataset.ch; if(Journey.startAt){ go('journey'); setTimeout(()=>Journey.startAt(i),700); } else { Journey.pending=i; go('journey'); } });
   dots.innerHTML=TL.map((it,i)=>`<button style="left:${TL.length>1?i/(TL.length-1)*100:0}%" aria-label="${it.t}"><i></i><span>${it.d}</span></button>`).join('');
   const cards=[...track.children], db=[...dots.children];
   cards.forEach(el=>el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); }));
@@ -798,6 +810,28 @@ const SITE_LL={ fucam:[50.4537,3.9826], berma:[50.9323,3.9584], anderlecht:[50.8
 const Journey={};
 let globeStarted=false;
 const loadScript=src=>new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+/* the overview's journey panel shows the same globe: explored countries in colour, the rest locked */
+(async()=>{ const cv=$('#miniGlobe'); if(!cv) return; let world;
+  try{ world=(await geo('worldLow')).filter(f=>f.properties&&f.properties.id!=='AQ'); }catch(e){ return; }
+  const D=Math.PI/180, shapes=world.map(f=>{ const g=f.geometry, L= g.type==='Polygon'?[g.coordinates]:g.type==='MultiPolygon'?g.coordinates:[]; return {id:f.properties.id, rings:L.map(p=>p[0]).filter(r=>r&&r.length>2)}; });
+  const g=cv.getContext('2d'); let W=0,H=0,R=0,cx=0,cy=0,lon0=-10,run=false,last=0; const lat0=24*D, s0=Math.sin(lat0), c0=Math.cos(lat0);
+  const size=()=>{ const r=cv.getBoundingClientRect(), k=Math.min(devicePixelRatio,2); W=cv.width=Math.round(r.width*k); H=cv.height=Math.round(r.height*k); R=Math.min(W,H*.92)*.37; cx=W/2; cy=H*.4; };
+  const draw=()=>{ g.clearRect(0,0,W,H);
+    const halo=g.createRadialGradient(cx,cy,R*.9,cx,cy,R*1.32); halo.addColorStop(0,'rgba(92,141,255,.35)'); halo.addColorStop(1,'rgba(92,141,255,0)'); g.fillStyle=halo; g.beginPath(); g.arc(cx,cy,R*1.32,0,7); g.fill();
+    const sea=g.createRadialGradient(cx-R*.35,cy-R*.4,R*.1,cx,cy,R); sea.addColorStop(0,'#1d3d7c'); sea.addColorStop(.7,'#0d1d40'); sea.addColorStop(1,'#071026'); g.fillStyle=sea; g.beginPath(); g.arc(cx,cy,R,0,7); g.fill();
+    g.save(); g.beginPath(); g.arc(cx,cy,R,0,7); g.clip(); g.lineJoin='round';
+    for(const sh of shapes){ const v=VISITED[sh.id]; let any=false; g.beginPath();
+      for(const r of sh.rings){ let vis=0; for(let i=0;i<r.length;i++){ const l=(r[i][0]-lon0)*D, f=r[i][1]*D, cf=Math.cos(f), sf=Math.sin(f), cl=Math.cos(l);
+          let x=cf*Math.sin(l), y=c0*sf-s0*cf*cl; const cc=s0*sf+c0*cf*cl; if(cc<0){ const n=Math.hypot(x,y)||1; x/=n; y/=n; } else vis++;
+          const X=cx+x*R, Y=cy-y*R; i?g.lineTo(X,Y):g.moveTo(X,Y); }
+        g.closePath(); if(vis) any=true; }
+      if(!any) continue; g.fillStyle= v ? hexA(COL[sh.id]||'#60a5fa',.95) : '#1c2944'; g.fill(); g.lineWidth= v?1.1:.6; g.strokeStyle= v ? lighten(COL[sh.id]||'#60a5fa',.45) : 'rgba(80,105,160,.55)'; g.stroke(); }
+    const shade=g.createRadialGradient(cx-R*.45,cy-R*.5,R*.2,cx,cy,R*1.05); shade.addColorStop(0,'rgba(255,255,255,.08)'); shade.addColorStop(.6,'rgba(0,0,0,0)'); shade.addColorStop(1,'rgba(0,0,0,.45)'); g.fillStyle=shade; g.fillRect(cx-R,cy-R,2*R,2*R);
+    g.restore(); g.strokeStyle='rgba(159,186,255,.35)'; g.lineWidth=1.2; g.beginPath(); g.arc(cx,cy,R,0,7); g.stroke(); };
+  const tick=now=>{ if(!run) return; requestAnimationFrame(tick); if(now-last<33) return; const dt=last?Math.min(100,now-last):0; last=now; if(!reduce) lon0-=dt*.006; draw(); };
+  size(); draw(); addEventListener('resize',()=>{ size(); draw(); });
+  new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; if(on&&!run){ run=true; last=0; requestAnimationFrame(tick); } else if(!on) run=false; })).observe(cv);
+})();
 async function geo(name){
   try{ const m=await import(`https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/${name}.js`); return m.default.features; }
   catch(e){ await loadScript(`https://cdn.jsdelivr.net/npm/@amcharts/amcharts4-geodata@4/dist/script/${name}.js`); return window['am4geodata_'+name].features; }
@@ -817,7 +851,7 @@ const Region = (()=>{
   const P=(lat,lon)=>[(lon-LON0)*COS(lat), -(lat-LAT0)*KZ];
   const unP=(x,z)=>{ const lat=LAT0-z/KZ; return [lat, LON0+x/COS(lat)]; };
   const BG='#03050a', SEA='#0d2c57';
-  let renderer, scene, camera, sun, data=null, ready=null, visible=false, raf=0, current=null, areaKey=null, idleSpin=false, alpha=1, settled=false, AD=null;
+  let renderer, scene, camera, sun, data=null, ready=null, visible=false, raf=0, current=null, areaKey=null, idleSpin=false, alpha=1, settled=false, settledAt=0, AD=null;
   const cam={x:0,z:0,d:573000,el:1.52,az:Math.PI/2};
   const site={}; const cityEls=[];
   const CITIES=[['Mons',50.4542,3.9523],['Erpe-Mere',50.926,3.968],['Brussels',50.8467,4.3525],['Ghent',51.0543,3.7174],['Antwerp',51.2194,4.4025],['Liège',50.6326,5.5797],['Charleroi',50.4108,4.4446],['Tournai',50.6066,3.389],['Bruges',51.2093,3.2247],['Namur',50.4674,4.872],['Bergen',60.3913,5.3221]];
@@ -952,8 +986,8 @@ const Region = (()=>{
     const showCities=alpha>.97&&cam.d>4000&&cam.d<900000;
     cityEls.forEach(c=>{ tmp.copy(c.v).project(camera); const on=showCities&&tmp.z<1&&Math.abs(tmp.x)<1.1&&Math.abs(tmp.y)<1.1; c.e.classList.toggle('on',on); if(on){ c.e.style.transform=`translate(${(tmp.x+1)/2*innerWidth}px,${(1-tmp.y)/2*innerHeight}px)`; } });
     const lab=$('#plabel'); const A=areaKey&&data.areas[areaKey];
-    if(settled&&alpha>.97&&A&&cam.d<60000){ const [ax,az]=P(A.center[0],A.center[1]); tmp.set(ax,0,az).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); }
-    else if(settled&&alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
+    if(settled&&performance.now()-settledAt>550&&alpha>.97&&A&&cam.d<60000){ const [ax,az]=P(A.center[0],A.center[1]); tmp.set(ax,0,az).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); }
+    else if(settled&&performance.now()-settledAt>550&&alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
     if(current&&site[current]){ const r=site[current].ring; const t=(now%2600)/2600; const k=30+t*70; r.scale.set(k,k,k); r.material.opacity=.5*(1-t); }
     // buildings only cast visible shadows up close: refresh the shadow map only then
     if(cam.d<5000) renderer.shadowMap.needsUpdate=true;
@@ -971,7 +1005,7 @@ const Region = (()=>{
       cam.d=Math.exp(Math.log(d0)+(Math.log(d1)-Math.log(d0))*ea+bump*Math.sin(Math.PI*t));
       cam.el= to.el!=null && t>.4 ? elFor(cam.d)+(to.el-elFor(d1))*sm((t-.4)/.6) : elFor(cam.d);
       cam.az=f.az+daz*ea;
-      if(t<1) requestAnimationFrame(step); else { idleSpin=!!opts.spin; settled=true; res(true); } };
+      if(t<1) requestAnimationFrame(step); else { idleSpin=!!opts.spin; settled=true; settledAt=performance.now(); res(true); } };
     requestAnimationFrame(step); }); }
   const OVER={x:0,z:0,d:573000,el:1.52,az:Math.PI/2};
   const R_EARTH=6371000;
@@ -979,7 +1013,7 @@ const Region = (()=>{
   function begin(key,area){ alpha=0; settled=false; current=key||null; areaKey=area||null; if(key) setLabel(key); else if(area) setLabel(area); visible=true; if(!raf) raf=requestAnimationFrame(frame); const c=$('#place'); c.style.transition='none'; c.classList.add('on'); document.body.classList.add('inplace'); }
   // follow the globe's camera, so both views move as one
   function sync(lat,lng,alt,az,el){ const [x,z]=P(lat,lng); cam.x=x; cam.z=z; cam.d=Math.max(alt*R_EARTH,60); cam.el=el??elFor(cam.d); cam.az=az; idleSpin=false; alpha=fade(alt); $('#place').style.opacity=alpha; return alpha; }
-  function end(spin){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; alpha=1; idleSpin=!!spin; settled=true; }
+  function end(spin){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; alpha=1; idleSpin=!!spin; settled=true; settledAt=performance.now(); }
   function camLL(){ const [lat,lng]=unP(cam.x,cam.z); return { lat, lng, altitude: cam.d/R_EARTH, az:cam.az }; }
   function siteLL(key){ const s=data.sites[key]; const [ox,oz]=P(s.c[0],s.c[1]); const [lat,lng]=unP(ox+s.tc[0],oz+s.tc[1]); return { lat, lng, d: key==='berma'?440:500 }; }
   function areaLL(key){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); const [lat,lng]=unP(x-900,z+1500); return { lat, lng, d:17000 }; }
@@ -1110,6 +1144,14 @@ async function initGlobe(){
       if(!await outOfBelgium(my,HOME)) return; ctr.autoRotate=!reduce; ctr.autoRotateSpeed=.5; }
     Journey.stop=()=>{ if(playing){ token++; clearTimeout(timer); playing=false; document.body.classList.remove('playing'); Region.hide(); g.resumeAnimation(); g.pointOfView(HOME,0); ctr.autoRotate=!reduce; } };
     function setIcon(){ $('#pIcon').innerHTML= paused? '<path d="M3 1.5v11l9-5.5z"/>' : '<path d="M3 2h3v10H3zM8 2h3v10H8z"/>'; $('#pPlay').setAttribute('aria-label',paused?'Continue':'Pause'); }
+    const KC={Education:'#8fb0ff',Experience:'#c4a1ff',Business:'#fbbf24'};
+    const jl=$('#jlist'); jl.innerHTML=CH.map((c,i)=>`<button data-i="${i}"><span class="y">${c.yr}</span><span><b><i style="background:${KC[c.kind]||'#8fb0ff'}"></i>${c.t}</b><small>${c.o}</small></span></button>`).join('');
+    jl.addEventListener('click',e=>{ const b=e.target.closest('button[data-i]'); if(!b) return; jl.classList.remove('on'); const i=+b.dataset.i; playing? goTo(i) : start(i); });
+    const toggleList=e=>{ e.stopPropagation(); [...jl.children].forEach((b,k)=>b.classList.toggle('cur',playing&&k===idx)); jl.classList.toggle('on'); };
+    $('#jall').onclick=toggleList; $('#pList').onclick=toggleList;
+    document.addEventListener('click',e=>{ if(!e.target.closest('#jlist')) jl.classList.remove('on'); });
+    Journey.startAt=i=>{ jl.classList.remove('on'); start(i); };
+    if(Journey.pending!=null){ const i=Journey.pending; Journey.pending=null; setTimeout(()=>start(i),1400); }
     $('#play').onclick=()=>start(0);
     $('#exit').onclick=stop;
     $('#pNext').onclick=()=>{ if(idx<CH.length-1) goTo(idx+1); };
@@ -1524,7 +1566,6 @@ function initRoom(){
   l35.position.set(sx+.27,shelfYs[2]+.0175,BZ+.13);
   card('Sony FE 35mm F2.8',sx+.27,shelfYs[2]);
   hs('g-35',l35,[sx+.27,shelfYs[2]+.12,BZ+.13],{side:'studio',label:'FE 35mm F2.8',nomark:true,view:{pos:[sx+.3,shelfYs[2]+.1,BZ+.72],look:[sx+.27,shelfYs[2]+.04,BZ+.13]}});
-  [0,1].forEach(i=>B(gear,.038,.023,.057,std({color:0x111214,roughness:.6}),sx+.36+i*.05,shelfYs[0]+.029,BZ+.1,.004));
 
   // --- Laowa 100mm f/2.8 2X Ultra Macro APO, standing on its rear cap ---
   const laowa=new THREE.Group(); gear.add(laowa);
@@ -1533,19 +1574,57 @@ function initRoom(){
   C(laowa,.035,.035,.03,lw,0,.027,0,64); C(laowa,.0352,.0352,.004,std({color:0x2f6bdc,roughness:.4}),0,.043,0,64);
   C(laowa,.0355,.0355,.05,sonyRub,0,.07,0,64); C(laowa,.035,.033,.036,lw,0,.113,0,64);
   const lg=new THREE.Mesh(new THREE.CircleGeometry(.024,48),std({color:0x14201c,roughness:.02,metalness:1})); lg.rotation.x=-Math.PI/2; lg.position.y=.1315; laowa.add(lg);
-  laowa.position.set(sx-.25,shelfYs[1]+.0175,BZ+.12);
-  card('Laowa 100mm 2X Macro',sx-.25,shelfYs[1]);
-  hs('g-laowa',laowa,[sx-.25,shelfYs[1]+.17,BZ+.12],{side:'studio',label:'Laowa 100mm Macro',nomark:true,view:{pos:[sx-.18,shelfYs[1]+.1,BZ+.75],look:[sx-.25,shelfYs[1]+.07,BZ+.12]}});
+  laowa.position.set(sx-.43,shelfYs[1]+.0175,BZ+.12);
+  card('Laowa 100mm 2X Macro',sx-.43,shelfYs[1]);
+  hs('g-laowa',laowa,[sx-.43,shelfYs[1]+.17,BZ+.12],{side:'studio',label:'Laowa 100mm Macro',nomark:true,view:{pos:[sx-.38,shelfYs[1]+.1,BZ+.75],look:[sx-.43,shelfYs[1]+.07,BZ+.12]}});
   // DJI RC-N1 controller and two Mini 3 batteries
   const rc=new THREE.Group(); gear.add(rc);
   B(rc,.105,.032,.06,std({color:0x2a2b2e,roughness:.5}),0,.016,0,.014); [-1,1].forEach(a=>C(rc,.006,.006,.012,std({color:0x111}),a*.025,.036,0,12)); B(rc,.08,.008,.04,djiG,0,.003,-.035,.003);
-  rc.position.set(sx+.22,shelfYs[1]+.0175,BZ+.12); rc.rotation.y=-.3;
-  [0,1].forEach(i=>B(gear,.04,.02,.072,djiG,sx+.06+i*.05,shelfYs[1]+.0275,BZ+.1,.005));
-  card('DJI Mini 3 · RC',sx+.15,shelfYs[1]);
-  hs('g-mini3b',rc,[sx+.2,shelfYs[1]+.09,BZ+.12],{side:'studio',label:'DJI Mini 3',nomark:true,sheet:'g-mini3',view:{pos:[sx+.2,shelfYs[1]+.1,BZ+.75],look:[sx+.18,shelfYs[1]+.04,BZ+.12]}});
-  // bottom shelf: SD cases, lens cloth, books
-  [[0x1f4fbf,.05],[0x7a2f2a,.04],[0x2f2f2f,.06],[0xd9d4c8,.03]].forEach(([c,t],i)=>B(gear,.16,.22,t,std({color:c,roughness:.85}),sx-.4+i*.06,shelfYs[0]+.128,BZ+.1,.004));
-  B(gear,.09,.025,.06,std({color:0x111214,roughness:.6}),sx+.18,shelfYs[0]+.03,BZ+.12,.006);
+  rc.position.set(sx+.4,shelfYs[1]+.0175,BZ+.13); rc.rotation.y=-.3;
+  card('DJI Mini 3 · RC',sx+.12,shelfYs[1]);
+  // the drone now lives on the shelf with the rest of the gear
+  gear.add(mini); mini.position.set(sx-.04,shelfYs[1]+.024,BZ+.14); mini.rotation.y=-.35;
+  { const h=hot.find(x=>x.id==='g-mini3'); h.anchor.set(sx-.04,shelfYs[1]+.15,BZ+.14); h.view={pos:[sx,shelfYs[1]+.14,BZ+.78],look:[sx-.04,shelfYs[1]+.05,BZ+.14]}; }
+  hs('g-mini3b',rc,[sx+.4,shelfYs[1]+.09,BZ+.13],{side:'studio',label:'DJI Mini 3',nomark:true,sheet:'g-mini3',view:{pos:[sx+.2,shelfYs[1]+.1,BZ+.75],look:[sx+.18,shelfYs[1]+.04,BZ+.12]}});
+  // bottom shelf: DJI Mic Mini, ND filters, SD cards, portable SSDs, drone batteries
+  const kitM=std({color:0x16171a,roughness:.55}), kitAlu=std({color:0x9a9da2,roughness:.3,metalness:1});
+  const mic=new THREE.Group(); gear.add(mic);
+  B(mic,.092,.036,.058,kitM,0,.018,0,.014); B(mic,.088,.003,.054,std({color:0x222327,roughness:.2,metalness:.3}),0,.0365,0,.012);
+  [-1,1].forEach(a=>{ B(mic,.026,.016,.03,std({color:0x2a2b2f,roughness:.5}),a*.024,.046,-.006,.006); C(mic,.006,.006,.002,std({color:0x111,roughness:.9}),a*.024,.055,-.006,16); });
+  B(mic,.03,.012,.03,std({color:0x2a2b2f,roughness:.5}),0,.044,.017,.005);
+  mic.position.set(sx-.42,shelfYs[0]+.0175,BZ+.13); mic.rotation.y=.2;
+  card('DJI Mic Mini',sx-.42,shelfYs[0]);
+  hs('g-mic',mic,[sx-.42,shelfYs[0]+.12,BZ+.13],{side:'studio',label:'DJI Mic Mini',nomark:true,view:{pos:[sx-.38,shelfYs[0]+.12,BZ+.7],look:[sx-.42,shelfYs[0]+.03,BZ+.13]}});
+  const kit=new THREE.Group(); gear.add(kit);
+  for(let i=0;i<3;i++){ const r=C(kit,.035,.035,.006,kitAlu,-.03+i*.004,.003+i*.0062,0,48); const gl=C(kit,.032,.032,.0062,std({color:[0x1a1a1c,0x2a2622,0x3b342c][i],roughness:.05,metalness:.6,transparent:true,opacity:.85}),-.03+i*.004,.0031+i*.0062,0,48); }
+  for(let i=0;i<3;i++){ const sd=B(kit,.024,.0021,.032,std({color:[0x1f4fbf,0xb7261e,0x16171a][i],roughness:.45}),.075+i*.03,.0011,.01,.001); sd.rotation.y=(i-1)*.2; }
+  B(kit,.06,.012,.045,kitM,.105,.006,-.04,.004);
+  [0,1].forEach(i=>{ B(kit,.086,.0095,.057,std({color:i?0x3b5b8f:0x4a4c52,roughness:.35,metalness:.6}),.215,.0048+i*.0097,.0,.006); });
+  kit.position.set(sx-.18,shelfYs[0]+.0175,BZ+.13);
+  card('ND filters · SD cards · SSDs',sx-.03,shelfYs[0]);
+  hs('g-kit',kit,[sx-.03,shelfYs[0]+.1,BZ+.13],{side:'studio',label:'Filters, cards and drives',nomark:true,view:{pos:[sx-.01,shelfYs[0]+.12,BZ+.72],look:[sx-.03,shelfYs[0]+.02,BZ+.13]}});
+  [0,1].forEach(i=>B(gear,.04,.02,.072,djiG,sx+.38+i*.05,shelfYs[0]+.0275,BZ+.12,.005));
+  card('Mini 3 batteries',sx+.41,shelfYs[0]);
+  // Godox speedlight on the top shelf
+  const fl=new THREE.Group(); gear.add(fl); const flM=std({color:0x151618,roughness:.55,metalness:.1});
+  B(fl,.04,.008,.024,kitAlu,0,.004,0,.002); B(fl,.062,.085,.042,flM,0,.05,0,.008);
+  B(fl,.058,.02,.038,std({color:0x0a0a0b,roughness:.2}),0,.09,0,.004);
+  const fh=new THREE.Group(); fh.position.set(0,.1,0); fh.rotation.x=-.35; fl.add(fh); B(fh,.076,.048,.056,flM,0,.024,0,.01);
+  const fw=new THREE.Mesh(new THREE.PlaneGeometry(.068,.04),std({color:0xf4f4f0,roughness:.3,emissive:0xffffff,emissiveIntensity:.05})); fw.position.set(0,.024,.0285); fh.add(fw);
+  const fs=new THREE.Mesh(new THREE.PlaneGeometry(.04,.024),std({color:0x0b1a2a,emissive:0x2a6fd0,emissiveIntensity:.5,roughness:.2})); fs.position.set(0,.06,-.0215); fs.rotation.y=Math.PI; fl.add(fs);
+  fl.position.set(sx+.5,shelfYs[2]+.0175,BZ+.13); fl.rotation.y=-.35;
+  card('Godox flash',sx+.5,shelfYs[2]);
+  hs('g-godox',fl,[sx+.5,shelfYs[2]+.2,BZ+.13],{side:'studio',label:'Godox flash',nomark:true,view:{pos:[sx+.48,shelfYs[2]+.12,BZ+.72],look:[sx+.5,shelfYs[2]+.07,BZ+.13]}});
+  // tripod on the floor next to the rack
+  const tri=new THREE.Group(); S.add(tri); const tM=std({color:0x1b1c1f,roughness:.45,metalness:.4}), tC=std({color:0x2a2b2e,roughness:.6});
+  const apex=new THREE.Vector3(0,1.02,0);
+  for(let k=0;k<3;k++){ const a=k/3*Math.PI*2+.4; const foot=new THREE.Vector3(Math.cos(a)*.34,.01,Math.sin(a)*.34);
+    const mid=apex.clone().lerp(foot,.5); rod(tri,apex,mid,.013,tM); rod(tri,mid,foot,.009,tM); const cl=new THREE.Mesh(new THREE.CylinderGeometry(.017,.017,.03,16),tC); cl.position.copy(mid); cl.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),foot.clone().sub(apex).normalize()); add(tri,cl);
+    C(tri,.012,.012,.012,std({color:0x111,roughness:.9}),foot.x,.006,foot.z,12); }
+  C(tri,.04,.035,.05,tM,0,1.03,0,32); C(tri,.011,.011,.42,kitAlu,0,.83,0,16); C(tri,.026,.03,.03,tM,0,1.07,0,24);
+  const ball=new THREE.Mesh(new THREE.SphereGeometry(.026,24,16),kitAlu); ball.position.set(0,1.1,0); add(tri,ball); B(tri,.06,.012,.05,tM,0,1.13,0,.004);
+  tri.position.set(sx-.98,0,BZ+.55);
+  hs('g-tripod',tri,[sx-.98,1.3,BZ+.55],{side:'studio',label:'Tripod',nomark:true,view:{pos:[sx-.7,1.05,BZ+2.0],look:[sx-.98,.75,BZ+.55]}});
 
   /* portrait corner: paper sweep, octabox on a stand, ring light, stool */
   const P=new THREE.Group(); S.add(P); const bx=-7.15, bz=BZ+.3;
@@ -1698,7 +1777,7 @@ function initRoom(){
   const marks=$('#marks'); hot.filter(h=>!h.nomark).forEach(h=>{ const el=document.createElement('div'); el.className='mk'; el.innerHTML=`<span class="d"></span><span class="l">${h.label}</span>`; el.onclick=()=>focusF(h.id); marks.appendChild(el); h.el=el; });
 
   const SPEC=(rows)=>`<ul class="spec">${rows.map(([k,v])=>`<li><span>${k}</span><b>${v}</b></li>`).join('')}</ul>`;
-  const GEARNAV=(cur)=>`<div class="gearnav">${[['g-a7','Sony A7 III'],['g-24240','FE 24-240'],['g-35','FE 35mm'],['g-laowa','Laowa 100mm'],['g-mini3','DJI Mini 3']].map(([id,n])=>`<button data-focus="${id}" class="${id===cur?'on':''}">${n}</button>`).join('')}</div>`;
+  const GEARNAV=(cur)=>`<div class="gearnav">${[['g-a7','Sony A7 III'],['g-24240','FE 24-240'],['g-35','FE 35mm'],['g-laowa','Laowa 100mm'],['g-mini3','DJI Mini 3'],['g-godox','Godox flash'],['g-mic','DJI Mic Mini'],['g-tripod','Tripod'],['g-kit','Filters and drives']].map(([id,n])=>`<button data-focus="${id}" class="${id===cur?'on':''}">${n}</button>`).join('')}</div>`;
   const SHEETS={
     portfolio:(h)=>portfolioSheet(h&&h.cat),
     macbook:`<div class="k">Above Belgium · Since 2022</div><h3>Seen from above.</h3>
@@ -1716,6 +1795,10 @@ function initRoom(){
     'g-a7':`<div class="k">Camera</div><h3>Sony A7 III</h3>${GEARNAV('g-a7')}<p>The body behind almost every shot: a full-frame sensor that stays clean in low light, which matters at indoor events.</p>${SPEC([['Sensor','Full frame, 24.2 MP'],['Autofocus','693 points'],['Burst','10 fps'],['Video','4K HDR'],['Stabilisation','5-axis in-body'],['Battery','About 710 shots'],['Cards','Dual SD slots'],['Mount','Sony E-mount']])}`,
     'g-24240':`<div class="k">Telephoto zoom</div><h3>Sony FE 24-240mm</h3>${GEARNAV('g-24240')}<p>One lens from wide to long telephoto, so I never miss a moment changing lenses during an event.</p>${SPEC([['Zoom','10x, 24 to 240 mm'],['Aperture','f/3.5 to 6.3'],['Stabilisation','Optical'],['Autofocus','Fast and silent'],['Mount','Full-frame E-mount']])}`,
     'g-35':`<div class="k">Prime lens</div><h3>Sony FE 35mm F2.8 ZA</h3>${GEARNAV('g-35')}<p>The lens I put on for films: small and light enough for a gimbal or a long handheld day, with a natural field of view that feels like being in the scene.</p>${SPEC([['Type','Full-frame prime, E-mount'],['Optics','ZEISS Sonnar T*'],['Aperture','f/2.8 to f/22'],['Closest focus','0.35 m'],['Filter','49 mm'],['Size and weight','61.5 × 36.5 mm, 120 g'],['Used for','Films, aftermovies and interviews']])}`,
+    'g-godox':`<div class="k">Lighting</div><h3>Godox flash</h3>${GEARNAV('g-godox')}<p>The speedlight on top of the camera at events: bounced off a ceiling or a wall it gives soft, even light indoors, and outside it fills the shadows on faces.</p>`,
+    'g-mic':`<div class="k">Audio</div><h3>DJI Mic Mini</h3>${GEARNAV('g-mic')}<p>Two small wireless transmitters and a receiver, for interviews and aftermovies. They clip onto a collar, so the voice stays clean even in a noisy room.</p>`,
+    'g-tripod':`<div class="k">Support</div><h3>Tripod</h3>${GEARNAV('g-tripod')}<p>For everything that needs a still camera: long exposures, real estate interiors, product shots and interviews framed once for the whole take.</p>`,
+    'g-kit':`<div class="k">Kit</div><h3>Filters, cards and drives</h3>${GEARNAV('g-kit')}<p>ND filters to keep a cinematic shutter speed in bright daylight and to stretch exposures, fast SD cards in both slots of the A7 III so every shot is written twice, and portable SSDs to back up on site before leaving.</p>`,
     'g-laowa':`<div class="k">Macro lens</div><h3>Laowa 100mm 2X</h3>${GEARNAV('g-laowa')}<p>For details invisible to the naked eye: twice life-size on the sensor, without any extension tube.</p>${SPEC([['Magnification','2:1, no extension tube'],['Aperture','f/2.8'],['Focus','From 25 cm to infinity'],['Optics','Apochromatic (APO)'],['Mount','Full-frame E-mount']])}`,
     'g-mini3':`<div class="k">Drone</div><h3>DJI Mini 3</h3>${GEARNAV('g-mini3')}<p>Where Above Belgium started: light enough to take anywhere, with true vertical shooting for social media.</p>${SPEC([['Camera','4K HDR at 60 fps'],['Sensor','1/1.3"'],['Flight time','Up to 38 min'],['Transmission','Up to 10 km'],['Shooting','Vertical and horizontal']])}`,
     portrait:`<div class="k">Above Belgium</div><h3>Portrait studio</h3><p>A corner with a paper backdrop, a strobe in an octabox and a ring light, for headshots, portraits and product shots.</p><div class="gal" id="pf-portrait"></div>`,
