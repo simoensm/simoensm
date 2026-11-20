@@ -1673,14 +1673,26 @@ function initRoom(){
   tri.position.set(sx-.98,0,BZ+.55);
   hs('g-tripod',tri,[sx-.98,1.3,BZ+.55],{side:'studio',label:'Tripod',nomark:true,view:{pos:[sx-.7,1.05,BZ+2.0],look:[sx-.98,.75,BZ+.55]}});
 
-  /* portrait corner: paper sweep, octabox on a stand, ring light, stool */
-  const P=new THREE.Group(); S.add(P); const bx=-7.15, bz=BZ+.3;
-  const paperM=std({color:0x8b8883,roughness:1});
-  const sweep=new THREE.Mesh(new THREE.PlaneGeometry(1.75,2.9,1,40),paperM); const pa=sweep.geometry.attributes.position;
-  for(let i=0;i<pa.count;i++){ const y=pa.getY(i); if(y<-.75){ const t=-.75-y; const k=Math.min(t,1.2)/1.2*Math.PI/2; pa.setY(i,-.75-Math.sin(k)*.7); pa.setZ(i,(1-Math.cos(k))*.7+Math.max(0,t-1.2)); } }
-  sweep.geometry.computeVertexNormals(); sweep.position.set(bx,1.47,bz); sweep.receiveShadow=true; P.add(sweep);
-  C(P,.045,.045,1.9,paperM,bx,2.9,bz-.02).rotation.z=Math.PI/2; C(P,.011,.011,2.05,mat.black,bx,2.95,bz-.02,12).rotation.z=Math.PI/2;
-  [-1,1].forEach(a=>{ C(P,.013,.013,2.95,mat.alu,bx+a*1.0,1.47,bz-.02,12); [0,2.1,4.2].forEach(r=>{ const leg=C(P,.008,.008,.48,mat.alu,bx+a*1.0+Math.cos(r)*.17,.16,bz-.02+Math.sin(r)*.17,8); leg.rotation.set(Math.sin(r)*.7,0,-Math.cos(r)*.7); }); });
+  /* portrait corner: seamless paper on two stands, strobe in an octabox, ring light, stool */
+  const P=new THREE.Group(); S.add(P); const bx=-6.7, bz=BZ+.14;
+  const paperTex=T(512,512,(g,w,h)=>{ g.fillStyle='#8a8781'; g.fillRect(0,0,w,h); for(let i=0;i<9000;i++){ const v=Math.random()*18-9; g.fillStyle=`rgba(${v>0?255:0},${v>0?255:0},${v>0?255:0},${Math.abs(v)/260})`; g.fillRect(Math.random()*w,Math.random()*h,1.5,1.5); } });
+  paperTex.wrapS=paperTex.wrapT=THREE.RepeatWrapping; paperTex.repeat.set(2,3);
+  const paperM=std({map:paperTex,color:0xffffff,roughness:1,side:THREE.DoubleSide});
+  // profile of the paper: straight down from the roll, a soft curve into the floor, then flat towards the camera
+  const PW=1.9, prof=[]; const top=2.72, R=.6, flat=1.45;
+  for(let i=0;i<=12;i++) prof.push([top-(top-R)*i/12,0]);
+  for(let i=1;i<=24;i++){ const a=i/24*Math.PI/2; prof.push([R-Math.sin(a)*R+.004*Math.sin(a), (1-Math.cos(a))*R]); }
+  for(let i=1;i<=10;i++) prof.push([.004, R+flat*i/10]);
+  const pos=[], uv=[], idx=[]; let L=0; const lens=[0]; for(let i=1;i<prof.length;i++){ L+=Math.hypot(prof[i][0]-prof[i-1][0],prof[i][1]-prof[i-1][1]); lens.push(L); }
+  prof.forEach(([y,z],i)=>{ pos.push(-PW/2,y,z, PW/2,y,z); uv.push(0,lens[i]/L, 1,lens[i]/L); if(i){ const a=(i-1)*2; idx.push(a,a+2,a+1, a+1,a+2,a+3); } });
+  const sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); sg.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); sg.setIndex(idx); sg.computeVertexNormals();
+  const sweep=new THREE.Mesh(sg,paperM); sweep.position.set(bx,0,bz); sweep.receiveShadow=true; P.add(sweep);
+  // roll, crossbar and stands
+  C(P,.05,.05,PW+.04,std({color:0x85827c,roughness:1}),bx,top+.04,bz-.04,32).rotation.z=Math.PI/2;
+  C(P,.012,.012,PW+.24,mat.black,bx,top+.04,bz-.04,12).rotation.z=Math.PI/2;
+  const stM2=std({color:0x18191b,roughness:.5,metalness:.35});
+  [-1,1].forEach(a=>{ const x=bx+a*(PW/2+.08); C(P,.014,.014,top+.1,stM2,x,(top+.1)/2,bz-.04,12); C(P,.024,.024,.05,stM2,x,top+.04,bz-.04,16);
+    [.3,2.4,4.5].forEach(r=>{ const f=new THREE.Vector3(x+Math.cos(r)*.3,.01,bz-.04+Math.abs(Math.sin(r))*.3); rod(P,new THREE.Vector3(x,.5,bz-.04),f,.008,stM2); }); });
   // strobe in a deep 16-sided octabox: black fabric outside, silver lining, ribs, recessed white front, on a black light stand
   const strobe=new THREE.Group(); P.add(strobe);
   const fab=std({color:0x161618,roughness:.95}), lining=std({color:0xcfd1d4,roughness:.35,metalness:.75,side:THREE.BackSide});
@@ -1693,18 +1705,18 @@ function initRoom(){
   B(strobe,.13,.14,.25,std({color:0xe9e9e7,roughness:.42}),0,0,-.405,.03);
   const bp=new THREE.Mesh(new THREE.PlaneGeometry(.09,.06),std({color:0x101214,emissive:0x2a6fd0,emissiveIntensity:.35,roughness:.3})); bp.position.set(0,.01,-.531); bp.rotation.y=Math.PI; strobe.add(bp);
   B(strobe,.03,.03,.012,std({color:0x111,roughness:.6}),0,.084,-.36,.004);
-  strobe.position.set(bx+1.18,1.72,bz+1.0); strobe.lookAt(bx,1.12,bz+.5); strobe.updateMatrixWorld(true);
+  strobe.position.set(bx-.66,1.8,bz+1.45); strobe.lookAt(bx-.05,1.2,bz+.75); strobe.updateMatrixWorld(true);
   const headP=strobe.localToWorld(new THREE.Vector3(0,0,-.405));
   // stand right under the strobe head
   const stM=std({color:0x18191b,roughness:.5,metalness:.35});
   const topY=headP.y-.08; C(P,.013,.013,topY-.5,stM,headP.x,.5+(topY-.5)/2,headP.z,12); C(P,.017,.017,.5,stM,headP.x,.29,headP.z,12);
   C(P,.022,.022,.04,stM,headP.x,topY,headP.z,16); B(P,.03,.07,.05,stM,headP.x,topY+.04,headP.z,.006);
   [0,2.1,4.2].forEach(r=>{ const f=new THREE.Vector3(headP.x+Math.cos(r)*.4,.01,headP.z+Math.sin(r)*.4); rod(P,new THREE.Vector3(headP.x,.52,headP.z),f,.008,stM); C(P,.012,.012,.012,std({color:0x0e0e0e,roughness:.9}),f.x,.006,f.z,12); });
-  const keyL=new THREE.SpotLight(0xfff4e6,6,6,.9,1,1.5); keyL.position.copy(strobe.localToWorld(new THREE.Vector3(0,0,.3))); keyL.target.position.set(bx,1,bz+.4); scene.add(keyL,keyL.target);
+  const keyL=new THREE.SpotLight(0xfff4e6,6,6,.9,1,1.5); keyL.position.copy(strobe.localToWorld(new THREE.Vector3(0,0,.3))); keyL.target.position.set(bx,1.05,bz+.7); scene.add(keyL,keyL.target);
   const ring=new THREE.Mesh(new THREE.TorusGeometry(.23,.026,18,72),std({color:0xffffff,emissive:0xfffaf0,emissiveIntensity:1.6}));
-  ring.position.set(bx-.55,1.52,bz+1.2); ring.rotation.y=.35; P.add(ring); C(P,.01,.01,1.45,mat.alu,bx-.55,.74,bz+1.2,10);
-  C(P,.16,.16,.035,mat.felt,bx,.64,bz+.7,40); C(P,.017,.017,.62,mat.alu,bx,.32,bz+.7,10); C(P,.19,.19,.015,mat.alu,bx,.01,bz+.7,40);
-  hs('portrait',P,[bx,2.3,bz+.3],{side:'studio',label:'Portrait studio',view:{pos:[bx+.55,1.42,1.6],look:[bx,1.1,bz+.25]}});
+  ring.position.set(bx+.82,1.45,bz+1.35); ring.rotation.y=-.75; P.add(ring); C(P,.01,.01,1.4,mat.alu,bx+.82,.71,bz+1.35,10); [0,2.1,4.2].forEach(r=>rod(P,new THREE.Vector3(bx+.82,.35,bz+1.35),new THREE.Vector3(bx+.82+Math.cos(r)*.25,.01,bz+1.35+Math.sin(r)*.25),.007,mat.alu));
+  C(P,.16,.16,.035,mat.felt,bx-.1,.64,bz+.75,40); C(P,.017,.017,.62,mat.alu,bx-.1,.32,bz+.75,10); C(P,.19,.19,.015,mat.alu,bx-.1,.012,bz+.75,40);
+  hs('portrait',P,[bx,2.3,bz+.3],{side:'studio',label:'Portrait studio',view:{pos:[bx+.3,1.55,bz+5.3],look:[bx,1.25,bz+.55]}});
 
   /* print station and client wall, by the column */
   const PR=new THREE.Group(); S.add(PR); const px=-1.0, pz=BZ+.26;
@@ -1770,17 +1782,41 @@ function initRoom(){
   hs('software',BE,[ax,1.55,az-.22],{side:'atelier',label:'Software',view:{pos:[ax,1.3,az+1.35],look:[ax,1.12,az-.25]}});
 
   const WB=new THREE.Group(); A.add(WB);
-  const wbT=T(1280,760,(g,w,h)=>{ g.fillStyle='#fbfbf9'; g.fillRect(0,0,w,h);
-    g.fillStyle='#1d3f8f'; g.font='italic 40px Georgia,serif'; g.fillText('min  Σ c·x',70,100); g.fillText('s.t.  Σ x ≤ supply',70,165); g.fillText('Σ x ≥ demand,  x ≥ 0',150,225);
-    g.fillStyle='#b3261e'; g.font='600 34px -apple-system,Inter,sans-serif'; g.fillText('RMSE 0.731',760,110); g.strokeStyle='#b3261e'; g.lineWidth=4; g.strokeRect(740,64,240,64);
-    g.strokeStyle='#333'; g.lineWidth=3; g.beginPath(); g.moveTo(720,660); g.lineTo(720,330); g.moveTo(720,660); g.lineTo(1190,660); g.stroke();
-    g.strokeStyle='#1d3f8f'; g.lineWidth=5; g.beginPath(); for(let x=0;x<460;x+=6) g.lineTo(725+x,650-250*(1-Math.exp(-x/100))+Math.sin(x/10)*4); g.stroke();
-    g.fillStyle='#333'; g.font='30px -apple-system,Inter,sans-serif'; g.fillText('Gesture recognition, user-independent',70,380);
-    [['3-Cent',96.3],['BiLSTM',85.7],['DTW',82.7],['Edit dist.',74.6]].forEach(([n,v],i)=>{ g.fillStyle='#333'; g.fillText(n,70,440+i*56); g.fillStyle=i?'#888':'#1d3f8f'; g.fillRect(250,414+i*56,(v-60)*9,30); g.fillStyle='#333'; g.fillText(v+'%',262+(v-60)*9,440+i*56); }); });
+  // a whiteboard of project notes: marker sketches on the board, sticky notes stuck on top
+  const HAND='"Marker Felt","Segoe Print","Bradley Hand","Comic Sans MS",cursive';
+  const wbT=T(2048,1216,(g,w,h)=>{ g.fillStyle='#fbfbf9'; g.fillRect(0,0,w,h);
+    const ink=(c,lw)=>{ g.strokeStyle=c; g.fillStyle=c; g.lineWidth=lw; g.lineCap='round'; g.lineJoin='round'; };
+    const wob=(pts)=>{ g.beginPath(); pts.forEach(([x,y],i)=>{ const jx=x+Math.sin(i*1.7+x*.01)*1.5, jy=y+Math.cos(i*1.3+y*.01)*1.5; i?g.lineTo(jx,jy):g.moveTo(jx,jy); }); g.stroke(); };
+    const arrow=(x1,y1,x2,y2)=>{ wob([[x1,y1],[(x1+x2)/2,(y1+y2)/2+4],[x2,y2]]); const a=Math.atan2(y2-y1,x2-x1); wob([[x2-22*Math.cos(a-.45),y2-22*Math.sin(a-.45)],[x2,y2],[x2-22*Math.cos(a+.45),y2-22*Math.sin(a+.45)]]); };
+    ink('#1d1d1f',5); g.font=`64px ${HAND}`; g.fillText('Project notes',80,120); wob([[80,140],[300,146],[520,138]]);
+    // Sony Recognizer pipeline
+    ink('#1d3f8f',4); g.font=`40px ${HAND}`; g.fillText('Sony Recognizer',90,250);
+    const box=(x,y,t)=>{ g.strokeRect(x,y,190,78); g.font=`32px ${HAND}`; g.fillText(t,x+18,y+50); };
+    box(90,290,'camera'); arrow(290,329,350,329); box(360,290,'FTPS'); arrow(560,329,620,329); box(630,290,'faces'); arrow(830,329,890,329); box(900,290,'pgvector');
+    arrow(995,375,995,440); box(900,450,'selfie'); g.font=`30px ${HAND}`; g.fillText('guest gets every photo they are in',360,510);
+    // PushIt state machine
+    ink('#b3261e',4); g.font=`40px ${HAND}`; g.fillText('PushIt rep counter',90,650);
+    const circ=(x,y,t)=>{ g.beginPath(); g.ellipse(x,y,95,58,0,0,7); g.stroke(); g.font=`34px ${HAND}`; g.fillText(t,x-38,y+12); };
+    circ(220,780,'UP'); circ(620,780,'DOWN');
+    arrow(320,750,520,750); g.font=`28px ${HAND}`; g.fillText('elbow < 80°',350,725);
+    arrow(520,815,320,815); g.fillText('elbow > 150°  reps++',330,870);
+    // RMSE curve
+    ink('#1d1d1f',3); wob([[1180,1080],[1180,700]]); wob([[1180,1080],[1660,1080]]);
+    ink('#1d3f8f',5); g.beginPath(); for(let x=0;x<460;x+=8) g.lineTo(1185+x,1070-300*(1-Math.exp(-x/110))+Math.sin(x/9)*5); g.stroke();
+    ink('#1d1d1f',3); g.font=`30px ${HAND}`; g.fillText('RMSE vs configs',1240,1130); g.fillText('120+ tried',1480,760);
+    ink('#b3261e',4); g.beginPath(); g.ellipse(1600,820,105,40,-.1,0,7); g.stroke(); g.font=`34px ${HAND}`; g.fillText('0.7308',1540,832);
+  });
   B(WB,1.46,.88,.025,mat.alu,0,0,0,.006); const wbs=new THREE.Mesh(new THREE.PlaneGeometry(1.42,.84),std({map:wbT,roughness:.25})); wbs.position.z=.014; WB.add(wbs);
+  const notes=[['#ffe27a','SideTab','60 fps, hardware','H.264 over USB-C'],['#ffb3c7','3D gestures','$3 recogniser','96.3% user-indep.'],['#a8e6cf','ESG web mining','3 brands','3 strategies found'],['#a9d6ff','Privacy Guard','10 clause types','score 0 to 100'],['#ffe27a','GPIO trigger','GPIO 27 → OSC','5 light scenes'],['#ffd2a6','Bascule bot','OCR the menu','sent on Telegram']];
+  const nPos=[[.2,.27],[.6,.28],[.38,.21],[.6,.08],[.6,-.12],[.6,-.31]];
+  notes.forEach(([c,t,a,b],i)=>{ const nt=T(300,300,(g,w,h)=>{ g.fillStyle=c; g.fillRect(0,0,w,h); const sh=g.createLinearGradient(0,0,0,h); sh.addColorStop(0,'rgba(0,0,0,.06)'); sh.addColorStop(.12,'rgba(0,0,0,0)'); sh.addColorStop(1,'rgba(0,0,0,.08)'); g.fillStyle=sh; g.fillRect(0,0,w,h);
+      g.fillStyle='#1d1d1f'; g.font=`46px ${HAND}`; g.fillText(t,20,100); g.font=`34px ${HAND}`; g.fillText(a,20,175); g.fillText(b,20,232); });
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(.155,.155),std({map:nt,roughness:.9})); const [x,y]=nPos[i]; m.position.set(x,y,.017+i*.0008); m.rotation.z=(Math.sin(i*2.3)*.09); WB.add(m);
+    const mg=new THREE.Mesh(new THREE.CylinderGeometry(.011,.011,.008,20),std({color:[0x1d3f8f,0xb3261e,0x1d1d1f][i%3],roughness:.4,metalness:.2})); mg.rotation.x=Math.PI/2; mg.position.set(x,y+.068,.022+i*.0008); WB.add(mg); });
   B(WB,1.2,.025,.05,mat.alu,0,-.45,.03); [0x1d3f8f,0xb3261e,0x1d1d1f].forEach((c,i)=>{ C(WB,.007,.007,.11,std({color:c,roughness:.5}),-.4+i*.05,-.43,.04,10).rotation.z=Math.PI/2; });
+  B(WB,.12,.03,.05,std({color:0x2a2b2f,roughness:.8}),-.2,-.425,.04,.006);
   WB.position.set(1.0,1.75,BZ+.03);
-  hs('optim',WB,[1.0,2.3,BZ+.1],{side:'atelier',label:'Data and AI',view:{pos:[1.0,1.72,BZ+1.75],look:[1.0,1.72,BZ]}});
+  hs('optim',WB,[1.0,2.3,BZ+.1],{side:'atelier',label:'Data and AI',view:{pos:[1.0,1.74,BZ+2.75],look:[1.0,1.72,BZ]}});
 
   const EL=new THREE.Group(); A.add(EL); const ex=6.55, ez=BZ+.42;
   B(EL,1.5,.045,.72,mat.birch,ex,.74,ez+.04,.006);
