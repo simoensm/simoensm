@@ -132,14 +132,23 @@ body.playing .jstart{opacity:0;pointer-events:none}
 .mode{position:absolute;right:32px;top:84px;display:flex;padding:4px;border-radius:999px;z-index:5}
 .mode button{border:0;background:none;color:#a7aebb;font-size:13px;font-weight:500;padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .4s var(--ease)}
 .mode button.on{background:#eef1f6;color:#0b0d12}
-.jstats{position:absolute;left:40px;bottom:40px;display:flex;gap:12px;transition:opacity .6s}
-body.playing .jstats{opacity:0}
-.jstats div{border-radius:18px;padding:14px 18px;min-width:130px}
-.jstats b{display:block;font-size:26px;font-weight:600;letter-spacing:-.03em}
-.jstats span{font-family:var(--mono);font-size:10.5px;color:#9aa3b2;text-transform:uppercase;letter-spacing:.06em}
-.legend{position:absolute;right:32px;bottom:40px;display:flex;gap:14px;font-size:12px;color:#9aa3b2;padding:10px 16px;border-radius:999px;transition:opacity .6s}
+.jstats{position:absolute;left:40px;bottom:40px;width:300px;border-radius:22px;padding:18px 20px 16px;transition:opacity .6s,transform .8s var(--spring)}
+body.playing .jstats{opacity:0;transform:translateY(10px);pointer-events:none}
+.jtop{display:flex;justify-content:space-between;align-items:flex-end}
+.jtop b{font-size:40px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.jtop .of{font-size:13px;color:#9aa3b2;margin-left:6px}
+.jtop .pct{font-family:var(--mono);font-size:12px;color:#cfd6e2;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.07)}
+.jstats .bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);margin:14px 0 14px;overflow:hidden}
+.jstats .bar i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#4fd1c5,#60a5fa 45%,#a78bfa 70%,#fbbf24);transition:width 1.6s var(--ease2) .4s}
+.conts{display:flex;flex-wrap:wrap;gap:6px}
+.conts span{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#dfe4ec;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07)}
+.conts span i{width:8px;height:8px;border-radius:50%}
+.conts span em{font-style:normal;font-family:var(--mono);color:#9aa3b2}
+.legend{position:absolute;right:32px;bottom:40px;display:flex;gap:14px;font-size:12px;color:#c3cad6;padding:10px 16px;border-radius:999px;transition:opacity .6s}
 body.playing .legend{opacity:0}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.legend .lv{background:linear-gradient(135deg,#4fd1c5,#a78bfa 60%,#fbbf24)}
+.legend .ll{background:#24324f;border:1px solid #3b4d73}
 /* cinematic */
 .bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:0;background:#000;z-index:3;transition:height 1s var(--ease2);pointer-events:none}
 .bars::before{top:0}.bars::after{bottom:0}
@@ -185,6 +194,7 @@ body.playing .mode{display:none}
 
 
 .gtip .lockrow{display:flex;align-items:center;gap:10px}
+.gtip .vdot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 0 4px rgba(255,255,255,.06)}
 .gtip svg.lock{width:22px;height:22px;color:#9aa3b2;flex:none;padding:3px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
 /* fluid glass on hover */
 .hg{position:relative;isolation:isolate;transition:background .7s var(--ease),backdrop-filter .7s var(--ease),-webkit-backdrop-filter .7s var(--ease),box-shadow .7s var(--ease),border-color .7s var(--ease),transform .8s var(--spring)}
@@ -261,7 +271,7 @@ body.focused .sheet{transform:none}
   .world{min-height:340px}
   .row{grid-template-columns:1fr;gap:6px}
   .jtitle{left:22px;top:96px}.jstart{left:22px;top:230px}
-  .jstats{left:22px;bottom:24px}.jstats div{min-width:0;padding:10px 14px}
+  .jstats{left:16px;right:16px;bottom:16px;width:auto}
   .legend{display:none}
   .mode{right:16px;top:auto;bottom:24px}
   body.playing .mode{display:none}
@@ -348,8 +358,12 @@ body.focused .sheet{transform:none}
   <div id="plabel" class="plabel dglass"><b id="plT"></b><span id="plS"></span></div>
   <div class="jtitle"><h2>Journey.</h2><p id="jhint">Where I've studied and worked. Click Belgium to walk through it.</p></div>
   <div class="jstart"><button class="jbtn primary" id="play"><svg viewBox="0 0 14 14"><path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Start my journey</button></div>
-  <div class="jstats"><div class="dglass"><b id="nC">2</b><span>Countries explored</span></div><div class="dglass"><b>6</b><span>Stops</span></div><div class="dglass"><b id="nL">–</b><span>Still locked</span></div></div>
-  <div class="legend dglass"><span><i style="background:#eef1f6"></i>Explored</span><span><i style="background:#2a3346"></i>Locked</span></div>
+  <div class="jstats dglass">
+    <div class="jtop"><div><b id="nC">18</b><span class="of">/ 195 countries</span></div><div class="pct" id="nP">9%</div></div>
+    <div class="bar"><i id="nBar"></i></div>
+    <div class="conts" id="conts"></div>
+  </div>
+  <div class="legend dglass"><span><i class="lv"></i>Explored</span><span><i class="ll"></i>Not yet</span></div>
   <div class="caption dglass" id="cap"><div class="swap"><div class="meta"><span id="cIdx">01 / 06</span><span id="cKind">Education</span></div><div class="yr" id="cYr"></div><h3 id="cT"></h3><div class="org" id="cO"></div><p id="cP"></p><div class="addr" id="cA"></div></div></div>
   <div class="player dglass" id="player">
     <button id="pPrev" aria-label="Previous stop"><svg viewBox="0 0 14 14"><path d="M11 2v10L4 7zM2 2h2v10H2z"/></svg></button>
@@ -421,7 +435,14 @@ $$('.hg').forEach(el=>el.addEventListener('pointermove',e=>{ const r=el.getBound
 $$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.hg')?.classList.add('lift'))); 
 
 /* ============================ JOURNEY ============================ */
-const VISITED={ BE:1, NO:1 };   // ISO 3166 alpha-2 codes of countries you've been to
+// ISO 3166 alpha-2 codes of the countries I've been to, by continent
+const VISITED={ BE:'Europe', NO:'Europe', FR:'Europe', CH:'Europe', NL:'Europe', DE:'Europe', SE:'Europe', DK:'Europe', LU:'Europe', PT:'Europe', GR:'Europe', ES:'Europe', CZ:'Europe',
+  GE:'Asia', AZ:'Asia', TR:'Asia', TH:'Asia', CA:'North America' };
+const CONT_COL={ 'Europe':['#4fd1c5','#5eead4','#38bdf8','#34d399','#67e8f9','#2dd4bf','#60a5fa'], 'Asia':['#fbbf24','#fb923c','#f59e0b','#fdba74'], 'North America':['#a78bfa'] };
+const COL={}; Object.keys(CONT_COL).forEach(c=>{ Object.keys(VISITED).filter(k=>VISITED[k]===c).forEach((k,i)=>COL[k]=CONT_COL[c][i%CONT_COL[c].length]); });
+COL.BE='#60a5fa';
+const hexA=(h,a)=>{ const n=parseInt(h.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
+const lighten=(h,k=.35)=>{ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v+(255-v)*k); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; };
 const CH=[
   {kind:'Education', yr:'Sep 2022', t:'Bachelor in Business Engineering', o:'Louvain School of Management · UCLouvain FUCaM Mons', p:'Three years of management, economics, quantitative methods and IT on a campus founded in 1896 and part of UCLouvain since 2011.', a:'Chaussée de Binche, Mons', sites:['fucam'], lat:50.4537, lng:3.9826},
   {kind:'Business', yr:'Sep 2023', t:'Founded Above Belgium', o:'Photo, video and drone · Lessines', p:'My own business: corporate and event work, sports, aerial and astrophotography, run end to end from the first client call to delivery.', a:'Lessines, Hainaut', sites:[], area:'lessines', lat:50.7105, lng:3.8293},
@@ -441,9 +462,11 @@ async function geo(name){
 }
 (function stars(){ const c=$('#stars'), g=c.getContext('2d'); const draw=()=>{ c.width=innerWidth*devicePixelRatio; c.height=innerHeight*devicePixelRatio; g.fillStyle='#03050a'; g.fillRect(0,0,c.width,c.height);
   for(let i=0;i<900;i++){ const r=Math.random(); g.fillStyle=`rgba(255,255,255,${r*r*.8})`; g.fillRect(Math.random()*c.width,Math.random()*c.height,r>.97?2:1,r>.97?2:1); } }; draw(); addEventListener('resize',draw); })();
-function oceanTex(){ const mp=document.createElement('canvas'); mp.width=1024; mp.height=512; const pg=mp.getContext('2d'); const gr=pg.createLinearGradient(0,0,0,512); gr.addColorStop(0,'#0c1322'); gr.addColorStop(.5,'#0a1020'); gr.addColorStop(1,'#0c1322'); pg.fillStyle=gr; pg.fillRect(0,0,1024,512);
-  pg.strokeStyle='rgba(143,176,255,.06)'; pg.lineWidth=1; for(let i=1;i<12;i++){ pg.beginPath(); pg.moveTo(0,i*512/12); pg.lineTo(1024,i*512/12); pg.stroke(); } for(let i=1;i<24;i++){ pg.beginPath(); pg.moveTo(i*1024/24,0); pg.lineTo(i*1024/24,512); pg.stroke(); }
-  return mp.toDataURL('image/png'); }
+function oceanTex(){ const W=2048,H=1024; const mp=document.createElement('canvas'); mp.width=W; mp.height=H; const pg=mp.getContext('2d');
+  const gr=pg.createLinearGradient(0,0,0,H); gr.addColorStop(0,'#0b2346'); gr.addColorStop(.5,'#0d2c57'); gr.addColorStop(1,'#0b2346'); pg.fillStyle=gr; pg.fillRect(0,0,W,H);
+  for(let i=0;i<70;i++){ const x=Math.random()*W,y=Math.random()*H,r=80+Math.random()*260; const rg=pg.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(${Math.random()>.5?'40,110,180':'10,30,70'},.12)`); rg.addColorStop(1,'rgba(0,0,0,0)'); pg.fillStyle=rg; pg.fillRect(x-r,y-r,2*r,2*r); }
+  pg.strokeStyle='rgba(170,210,255,.07)'; pg.lineWidth=1.2; for(let i=1;i<18;i++){ pg.beginPath(); pg.moveTo(0,i*H/18); pg.lineTo(W,i*H/18); pg.stroke(); } for(let i=1;i<36;i++){ pg.beginPath(); pg.moveTo(i*W/36,0); pg.lineTo(i*W/36,H); pg.stroke(); }
+  return mp.toDataURL('image/jpeg',.9); }
 
 /* ---------- Place view: real OpenStreetMap buildings and streets, rendered in 3D ---------- */
 const Place = (()=>{
@@ -532,17 +555,19 @@ async function initGlobe(){
     let g=new window.Globe(el,{animateIn:true}); if(!el.querySelector('canvas')&&typeof g==='function') g=g(el);
     window.__G=g; Place.prefetch(); Place.warm(['fucam','berma','anderlecht']);
     const isV=f=>!!VISITED[f.properties.id]||f.properties.prov;
-    $('#nC').textContent=Object.keys(VISITED).length; $('#nL').textContent=world.length-Object.keys(VISITED).length;
+    const colOf=f=> f.properties.prov ? '#60a5fa' : (COL[f.properties.id]||'#60a5fa');
+    const nV=Object.keys(VISITED).length; $('#nC').textContent=nV; $('#nP').textContent=Math.round(nV/195*100)+'%'; setTimeout(()=>$('#nBar').style.width=Math.max(4,nV/195*100)+'%',300);
+    $('#conts').innerHTML=Object.keys(CONT_COL).map(c=>{ const n=Object.values(VISITED).filter(v=>v===c).length; return n?`<span><i style="background:${CONT_COL[c][0]}"></i>${c}<em>${n}</em></span>`:''; }).join('');
     let hoverF=null, detail=false, provinces=null, areaF=null;
-    g.width(el.clientWidth).height(el.clientHeight).backgroundColor('rgba(0,0,0,0)').globeImageUrl(oceanTex()).showAtmosphere(true).atmosphereColor('#8fb0ff').atmosphereAltitude(.14);
-    const apply=()=>g.polygonCapColor(f=> f.properties.area ? 'rgba(143,176,255,.30)' : isV(f) ? (f===hoverF?'#ffffff':(f.properties.prov?'#dde4f1':'#e6ebf5')) : (f===hoverF?'#34405a':'#222b3d'))
-      .polygonSideColor(f=> f.properties.area ? 'rgba(143,176,255,.5)' : isV(f)?'rgba(143,176,255,.45)':'rgba(30,38,56,.9)')
-      .polygonStrokeColor(f=> f.properties.area ? '#dce7ff' : f.properties.prov?'#7d93c4':(isV(f)?'#8fb0ff':'#3a4762'))
+    g.width(el.clientWidth).height(el.clientHeight).backgroundColor('rgba(0,0,0,0)').globeImageUrl(oceanTex()).showAtmosphere(true).atmosphereColor('#7cc4ff').atmosphereAltitude(.17);
+    const apply=()=>g.polygonCapColor(f=> f.properties.area ? 'rgba(251,191,36,.38)' : isV(f) ? (f===hoverF?lighten(colOf(f),.45):hexA(colOf(f), f.properties.prov?.82:.92)) : (f===hoverF?'#2f4068':'#1c2944'))
+      .polygonSideColor(f=> f.properties.area ? 'rgba(251,191,36,.55)' : isV(f)?hexA(colOf(f),.45):'rgba(24,34,58,.9)')
+      .polygonStrokeColor(f=> f.properties.area ? '#fde68a' : f.properties.prov?'rgba(255,255,255,.55)':(isV(f)?lighten(colOf(f),.5):'#33466e'))
       .polygonAltitude(f=> f.properties.area ? .0005 : f.properties.prov ? .00025 : isV(f) ? (detail ? .00025 : (f===hoverF?.028:.016)) : (detail? .00012 : (f===hoverF?.009:.005)));
     g.polygonsData(world).polygonsTransitionDuration(600).polygonLabel(()=> '')
      .onPolygonHover(f=>{ if(document.body.classList.contains('playing')) return; hoverF=f; apply(); el.style.cursor=f?'pointer':'grab'; const tip=$('#gtip');
-        if(f){ tip.innerHTML= isV(f) ? `<b>${f.properties.name}</b><small>Explored · click to start</small>` : `<div class="lockrow"><svg class="lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.2" r="1.3" fill="currentColor"/><path d="M12 16.4v1.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div><b>${f.properties.name}</b><small>Locked · not explored yet</small></div></div>`; tip.classList.add('on'); } else tip.classList.remove('on'); })
-     .onPolygonClick(f=>{ if(document.body.classList.contains('playing')) return; if(isV(f)) start(f.properties.id==='NO'?5:0); else toast(`${f.properties.name} is still locked.`); })
+        if(f){ tip.innerHTML= isV(f) ? `<div class="lockrow"><i class="vdot" style="background:${colOf(f)}"></i><div><b>${f.properties.name}</b><small>Explored${VISITED[f.properties.id]?' · '+VISITED[f.properties.id]:''}</small></div></div>` : `<div class="lockrow"><svg class="lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.2" r="1.3" fill="currentColor"/><path d="M12 16.4v1.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div><b>${f.properties.name}</b><small>Not explored yet</small></div></div>`; tip.classList.add('on'); } else tip.classList.remove('on'); })
+     .onPolygonClick(f=>{ if(document.body.classList.contains('playing')) return; const id=f.properties.id; if(id==='BE'||f.properties.prov) start(0); else if(id==='NO') start(5); else if(isV(f)) toast(`${f.properties.name}: been there. My studies and work are in Belgium and Norway.`); else toast(`${f.properties.name}: not explored yet.`); })
      .onGlobeClick(()=>{ if(!document.body.classList.contains('playing')) start(0); });
     el.addEventListener('pointermove',e=>{ const t=$('#gtip'); t.style.left=e.clientX+'px'; t.style.top=e.clientY+'px'; });
     apply();
