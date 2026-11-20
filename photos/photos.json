@@ -1,0 +1,43 @@
+{
+ "sports": [
+  {
+   "src": "photos/sports/24h-emile-007.jpg",
+   "thumb": "photos/sports/24h-emile-007-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Sports"
+  }
+ ],
+ "motorsports": [
+  {
+   "src": "photos/motorsports/apex-mettet-2026-5.jpg",
+   "thumb": "photos/motorsports/apex-mettet-2026-5-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Motorsports"
+  }
+ ],
+ "events": [
+  {
+   "src": "photos/events/abb02756.jpg",
+   "thumb": "photos/events/abb02756-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Events"
+  }
+ ],
+ "portraits": [
+  {
+   "src": "photos/portraits/chrisvers-141.jpg",
+   "thumb": "photos/portraits/chrisvers-141-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Portraits"
+  }
+ ],
+ "drone": [],
+ "realestate": [],
+ "macro": [],
+ "products": [],
+ "videos": []
+}
