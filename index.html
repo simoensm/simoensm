@@ -585,16 +585,19 @@ const Region = (()=>{
   const LAT0=50.6, LON0=4.4, KX=111320*Math.cos(LAT0*Math.PI/180), KZ=110540;
   const P=(lat,lon)=>[(lon-LON0)*KX, -(lat-LAT0)*KZ];
   const BG='#03050a', SEA='#0d2c57';
-  let renderer, scene, camera, sun, data=null, ready=null, visible=false, raf=0, current=null, idleSpin=false;
+  let renderer, scene, camera, sun, data=null, ready=null, visible=false, raf=0, current=null, idleSpin=false, alpha=1;
   const cam={x:0,z:0,d:573000,el:1.52,az:Math.PI/2};
   const site={}; const cityEls=[];
-  const CITIES=[['Mons',50.4542,3.9523],['Lessines',50.7121,3.8296],['Erpe-Mere',50.926,3.968],['Anderlecht',50.836,4.308],['Brussels',50.8467,4.3525],['Ghent',51.0543,3.7174],['Antwerp',51.2194,4.4025],['Liège',50.6326,5.5797],['Charleroi',50.4108,4.4446],['Tournai',50.6066,3.389],['Bruges',51.2093,3.2247],['Namur',50.4674,4.872]];
+  const CITIES=[['Mons',50.4542,3.9523],['Lessines',50.7121,3.8296],['Erpe-Mere',50.926,3.968],['Brussels',50.8467,4.3525],['Ghent',51.0543,3.7174],['Antwerp',51.2194,4.4025],['Liège',50.6326,5.5797],['Charleroi',50.4108,4.4446],['Tournai',50.6066,3.389],['Bruges',51.2093,3.2247],['Namur',50.4674,4.872]];
   const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons'}, berma:{t:'Berma',s:'Erpe-Mere'}, anderlecht:{t:'Berma',s:'Anderlecht'} };
 
   function shapeFrom(rings){ // rings: [outer, ...holes] in lon/lat
     const toV=r=>r.map(([lon,lat])=>{ const [x,z]=P(lat,lon); return new THREE.Vector2(x,-z); });
     const sh=new THREE.Shape(toV(rings[0])); rings.slice(1).forEach(h=>sh.holes.push(new THREE.Path(toV(h)))); return sh; }
-  function polys(f){ const g=f.geometry; if(!g) return []; return g.type==='Polygon'? [g.coordinates] : g.type==='MultiPolygon'? g.coordinates : []; }
+  const inRing=(pt,r)=>{ let c=false; for(let i=0,j=r.length-1;i<r.length;j=i++){ const [xi,yi]=r[i],[xj,yj]=r[j]; if(((yi>pt[1])!=(yj>pt[1]))&&(pt[0]<(xj-xi)*(pt[1]-yi)/(yj-yi)+xi)) c=!c; } return c; };
+  // a ring only counts as a hole if it really sits inside the outer ring; otherwise it is a separate part
+  function splitRings(rings){ const out=[[rings[0]]]; for(const r of rings.slice(1)){ if(inRing(r[0],rings[0])) out[0].push(r); else out.push([r]); } return out; }
+  function polys(f){ const g=f.geometry; if(!g) return []; const list= g.type==='Polygon'? [g.coordinates] : g.type==='MultiPolygon'? g.coordinates : []; return list.flatMap(splitRings); }
   function fillMesh(features, colorFn, y){ const grp=new THREE.Group(); features.forEach(f=>{ const shapes=polys(f).map(shapeFrom); if(!shapes.length) return;
       const geo=new THREE.ShapeGeometry(shapes,1); geo.rotateX(-Math.PI/2); const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:colorFn(f),depthTest:false,depthWrite:false,fog:true})); m.position.y=y; m.renderOrder=-10+y/10; grp.add(m); }); return grp; }
   function lineMesh(features, color, opacity, y){ const pts=[]; features.forEach(f=>polys(f).forEach(rs=>rs.forEach(r=>{ for(let i=0;i<r.length-1;i++){ const [x1,z1]=P(r[i][1],r[i][0]), [x2,z2]=P(r[i+1][1],r[i+1][0]); pts.push(x1,y,z1,x2,y,z2); } })));
@@ -670,9 +673,9 @@ const Region = (()=>{
     if(idleSpin&&!reduce) cam.az+=.00028;
     place();
     // labels
-    const showCities=cam.d>4000&&cam.d<900000;
+    const showCities=alpha>.97&&cam.d>4000&&cam.d<900000;
     cityEls.forEach(c=>{ tmp.copy(c.v).project(camera); const on=showCities&&tmp.z<1&&Math.abs(tmp.x)<1.1&&Math.abs(tmp.y)<1.1; c.e.classList.toggle('on',on); if(on){ c.e.style.transform=`translate(${(tmp.x+1)/2*innerWidth}px,${(1-tmp.y)/2*innerHeight}px)`; } });
-    const lab=$('#plabel'); if(current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
+    const lab=$('#plabel'); if(alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
     if(current&&site[current]){ const r=site[current].ring; const t=(now%2600)/2600; const k=30+t*70; r.scale.set(k,k,k); r.material.opacity=.5*(1-t); }
     renderer.render(scene,camera); }
   const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2, easeS=t=>-(Math.cos(Math.PI*t)-1)/2;
@@ -691,16 +694,27 @@ const Region = (()=>{
       if(t<1) requestAnimationFrame(step); else { idleSpin=!!opts.spin; res(true); } };
     requestAnimationFrame(step); }); }
   const OVER={x:0,z:0,d:573000,el:1.52,az:Math.PI/2};
-  async function show(world){ if(!ready) ready=init(world); await ready; Object.assign(cam,OVER); current=null; visible=true; if(!raf) raf=requestAnimationFrame(frame);
+  const R_EARTH=6371000;
+  const fade=alt=>Math.min(1,Math.max(0,(0.16-alt)/0.09));
+  function begin(key){ alpha=0; current=key||null; if(key){ $('#plT').textContent=SITE_INFO[key].t; $('#plS').textContent=SITE_INFO[key].s; } visible=true; if(!raf) raf=requestAnimationFrame(frame); const c=$('#place'); c.style.transition='none'; c.classList.add('on'); document.body.classList.add('inplace'); }
+  // follow the globe's camera, so both views move as one
+  function sync(lat,lng,alt,az,el){ const [x,z]=P(lat,lng); cam.x=x; cam.z=z; cam.d=Math.max(alt*R_EARTH,60); cam.el=el??elFor(cam.d); cam.az=az; idleSpin=false; alpha=fade(alt); $('#place').style.opacity=alpha; return alpha; }
+  function end(spin){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; alpha=1; idleSpin=!!spin; }
+  function camLL(){ return { lat: LAT0 - cam.z/KZ, lng: LON0 + cam.x/KX, altitude: cam.d/R_EARTH, az:cam.az }; }
+  function siteLL(key){ const s=data.sites[key]; const [ox,oz]=P(s.c[0],s.c[1]); return { lat: LAT0-(oz+s.tc[1])/KZ, lng: LON0+(ox+s.tc[0])/KX, d: key==='berma'?440:500 }; }
+  function areaLL(key){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); return { lat: LAT0-(z+1500)/KZ, lng: LON0+(x-900)/KX, d:17000 }; }
+  async function show(world){ if(!ready) ready=init(world); await ready; alpha=1; Object.assign(cam,OVER); current=null; visible=true; if(!raf) raf=requestAnimationFrame(frame);
     $('#place').classList.add('on'); document.body.classList.add('inplace'); }
-  function hide(){ $('#place').classList.remove('on'); $('#plabel').classList.remove('on'); cityEls.forEach(c=>c.e.classList.remove('on')); document.body.classList.remove('inplace'); current=null; setTimeout(()=>{ if(!$('#place').classList.contains('on')) visible=false; },1100); }
+  function hide(){ const c=$('#place'); c.style.transition=''; c.style.opacity=''; c.classList.remove('on'); $('#plabel').classList.remove('on'); cityEls.forEach(c=>c.e.classList.remove('on')); document.body.classList.remove('inplace'); current=null; setTimeout(()=>{ if(!$('#place').classList.contains('on')) visible=false; },1100); }
+  // draw every place once while hidden, so textures and shaders are on the GPU before the first zoom
+  function warm(){ try{ const keep={...cam}; for(const k of Object.keys(site)){ const S=site[k]; Object.assign(cam,{x:S.ox+S.s.tc[0],z:S.oz+S.s.tc[1],d:600,el:.6}); place(); renderer.render(scene,camera); } Object.assign(cam,OVER); place(); renderer.render(scene,camera); }catch(e){} }
   const AZ=[Math.PI/2-.35, Math.PI/2+1.0, Math.PI/2+2.3];
   async function toSite(key,variant,live){ const S=site[key]; current=key; $('#plT').textContent=SITE_INFO[key].t; $('#plS').textContent=SITE_INFO[key].s;
     return fly({x:S.ox+S.s.tc[0], z:S.oz+S.s.tc[1], d:key==='berma'?440:500, el:.6, az:AZ[variant%3]}, live, {spin:true}); }
   async function toArea(key,live){ const A=data.areas[key]; const [x,z]=P(A.center[0],A.center[1]); current=null;
     return fly({x:x-900,z:z+1500,d:17000,el:1.05,az:Math.PI/2+.25}, live, {spin:true}); }
   function toOverview(live){ current=null; return fly(OVER, live); }
-  return { show, hide, toSite, toArea, toOverview, prefetch:(world)=>{ if(!ready) ready=init(world); return ready; }, get visible(){ return visible && $('#place').classList.contains('on'); } };
+  return { OVER, elFor, show, hide, toSite, toArea, toOverview, begin, sync, end, camLL, siteLL, areaLL, AZ, get ready(){ return ready; }, prefetch:(world)=>{ if(!ready){ ready=init(world).then(()=>{ warm(); }); } return ready; }, get visible(){ return visible && $('#place').classList.contains('on'); } };
 })();
 
 async function initGlobe(){
@@ -713,7 +727,7 @@ async function initGlobe(){
     let g=new window.Globe(el,{animateIn:true}); if(!el.querySelector('canvas')&&typeof g==='function') g=g(el);
     try{ g.renderer().setPixelRatio(Math.min(devicePixelRatio,1.5)); }catch(e){}
     window.__G=g;
-    (window.requestIdleCallback||setTimeout)(()=>Region.prefetch(world),{timeout:2500});
+    setTimeout(()=>Region.prefetch(world),300);
     const isV=f=>!!VISITED[f.properties.id];
     const colOf=f=> COL[f.properties.id]||'#60a5fa';
     const nV=Object.keys(VISITED).length; $('#nC').textContent=nV; $('#nP').textContent=Math.round(nV/195*100)+'%'; setTimeout(()=>$('#nBar').style.width=Math.max(4,nV/195*100)+'%',300);
@@ -763,18 +777,46 @@ async function initGlobe(){
       requestAnimationFrame(step); }); }
     const offset=(lat,lng,alt)=>({lat:lat-(wide()?alt*3.2:alt*4.5), lng:lng-(wide()?alt*5.5:0), altitude:alt});
     function caption(i){ const cap=$('#cap'); cap.classList.add('out'); setTimeout(()=>{ const c=CH[i]; $('#cIdx').textContent=String(i+1).padStart(2,'0')+' / '+String(CH.length).padStart(2,'0'); $('#cKind').textContent=c.kind; $('#cYr').textContent=c.yr; $('#cT').textContent=c.t; $('#cO').textContent=c.o; $('#cP').textContent=c.p; $('#cA').textContent=c.a; cap.classList.remove('out'); },420); }
-    // globe -> map of Belgium: same view, cross-faded
-    async function intoBelgium(my){ if(Region.visible) return true; if(!await flight(BE_VIEW,my)) return false; await Region.show(world); await sleep(900); if(my!==token) return false; g.pauseAnimation(); return true; }
-    async function outOfBelgium(my){ if(!Region.visible) return true; const live=()=>my===token; if(!await Region.toOverview(live)) return false; g.pointOfView(BE_VIEW,0); g.resumeAnimation(); Region.hide(); await sleep(700); return my===token; }
+    // one continuous zoom: the globe and the detailed map follow the same camera,
+    // the map is already loaded and simply fades in under it as we go down
+    let globeOn=true;
+    const globeRun=on=>{ if(on===globeOn) return; globeOn=on; on?g.resumeAnimation():g.pauseAnimation(); };
+    function dive(to, my){ return new Promise(async res=>{
+      await Region.prefetch(world); if(my!==token) return res(false);
+      const inR=Region.visible, from= inR ? Region.camLL() : {...g.pointOfView(), az:Region.OVER.az};
+      const a0=Math.max(from.altitude,1e-5), a1=Math.max(to.altitude,1e-5), down=a1<a0;
+      const dLng=((to.lng-from.lng+540)%360)-180, dLat=to.lat-from.lat;
+      let daz=((to.az??Region.OVER.az)-from.az); daz=((daz+Math.PI*3)%(Math.PI*2))-Math.PI;
+      const ms= reduce?1 : Math.min(5600, 2000+Math.abs(Math.log(a1/a0))*340);
+      const cl=x=>Math.min(1,Math.max(0,x));
+      let mapOn=inR; const t0=performance.now(); ctr.enabled=false;
+      const step=now=>{ if(my!==token){ ctr.enabled=true; return res(false); }
+        const t=Math.min(1,(now-t0)/ms), ea=easeS(t);
+        // going down: travel sideways while high, then drop straight onto the place; going up: the reverse
+        const ep= down ? ease(cl(t/.5)) : ease(cl((t-.5)/.5));
+        const ez= down ? easeS(cl((t-.45)/.55)) : easeS(cl(t/.55));
+        const lat=from.lat+dLat*ep, lng=from.lng+dLng*ep, alt=Math.exp(Math.log(a0)+(Math.log(a1)-Math.log(a0))*ea);
+        const az=from.az+daz*ez;
+        if(alt<.2){ if(!mapOn){ Region.begin(to.key); mapOn=true; } const f=Region.sync(lat,lng,alt,az, to.el!=null&&down ? Region.elFor(alt*6371000)+(to.el-Region.elFor(a1*6371000))*ez : null); globeRun(f<1); }
+        else { if(mapOn){ Region.hide(); mapOn=false; } globeRun(true); }
+        if(globeOn) g.pointOfView({lat,lng,altitude:Math.max(alt,.004)},0);
+        if(t<1) requestAnimationFrame(step); else { ctr.enabled=true; if(mapOn) Region.end(down); res(true); } };
+      requestAnimationFrame(step); }); }
+    async function intoBelgium(my, i){ if(Region.visible) return true; const c=CH[i];
+      const T= c.sites.length ? {...Region.siteLL(c.sites[0]), az:Region.AZ[(c.view||0)%3], el:.6, key:c.sites[0]} : {...Region.areaLL(c.area), az:Math.PI/2+.25, el:1.05};
+      T.altitude=T.d/6371000; return dive(T,my); }
+    async function outOfBelgium(my, to){ if(!Region.visible){ return to ? flight(to,my,{peak:2.3}) : true; }
+      return dive(to||{lat:50.6,lng:4.4,altitude:.5}, my); }
     async function goTo(i){
       const my=++token; const live=()=>my===token; idx=i; clearTimeout(timer); caption(i); setRoute(i);
       segs.forEach((s,k)=>{ s.classList.toggle('done',k<i); const b=s.querySelector('i'); b.style.transition='none'; b.style.width=k<i?'100%':'0'; });
       const c=CH[i]; let d=DUR;
       if(c.sites.length||c.area){
-        if(!await intoBelgium(my)) return;
-        if(c.sites.length){ if(!await Region.toSite(c.sites[0], c.view||0, live)) return;
+        const fresh=!Region.visible;
+        if(!await intoBelgium(my,i)) return;
+        if(c.sites.length){ if(!fresh && !await Region.toSite(c.sites[0], c.view||0, live)) return;
           if(c.sites[1]){ d=DUR*.5; await sleep(DUR*.5); if(!live()||paused) return; if(!await Region.toSite(c.sites[1],0,live)) return; } }
-        else if(!await Region.toArea(c.area, live)) return;
+        else if(!fresh && !await Region.toArea(c.area, live)) return;
       } else {
         if(!await outOfBelgium(my)) return;
         if(!await flight(offset(c.lat,c.lng,.24), my, {peak:1.1})) return;
@@ -785,7 +827,7 @@ async function initGlobe(){
     function start(i=0){ playing=true; paused=false; document.body.classList.add('playing'); ctr.autoRotate=false; $('#gtip').classList.remove('on'); hoverF=null; apply(); setIcon(); goTo(i); }
     function finish(){ segs.forEach(s=>s.classList.add('done')); paused=true; setIcon(); }
     async function stop(){ const my=++token; clearTimeout(timer); playing=false; paused=false; document.body.classList.remove('playing'); setRoute(null);
-      if(!await outOfBelgium(my)) return; await flight(HOME,my,{peak:2.3}); ctr.autoRotate=!reduce; ctr.autoRotateSpeed=.5; }
+      if(!await outOfBelgium(my,HOME)) return; ctr.autoRotate=!reduce; ctr.autoRotateSpeed=.5; }
     Journey.stop=()=>{ if(playing){ token++; clearTimeout(timer); playing=false; document.body.classList.remove('playing'); Region.hide(); g.resumeAnimation(); g.pointOfView(HOME,0); ctr.autoRotate=!reduce; } };
     function setIcon(){ $('#pIcon').innerHTML= paused? '<path d="M3 1.5v11l9-5.5z"/>' : '<path d="M3 2h3v10H3zM8 2h3v10H8z"/>'; $('#pPlay').setAttribute('aria-label',paused?'Continue':'Pause'); }
     $('#play').onclick=()=>start(0);
