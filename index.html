@@ -290,6 +290,15 @@ body.playing .jstats{opacity:0;transform:translateY(10px);pointer-events:none}
 .conts span{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#dfe4ec;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07)}
 .conts span i{width:8px;height:8px;border-radius:50%}
 .conts span em{font-style:normal;font-family:var(--mono);color:#9aa3b2}
+.cmore{margin-top:12px;font:inherit;font-size:12.5px;color:#cfd6e2;background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;gap:6px}
+.cmore span{display:inline-block;transition:transform .5s var(--spring)}.jstats.open .cmore span{transform:rotate(180deg)}
+.clist{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s var(--ease2)}.clist>div{overflow:hidden}
+.jstats.open .clist{grid-template-rows:1fr}
+.clist h5{font-family:var(--mono);font-size:10.5px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:#9aa3b2;margin:14px 0 6px;display:flex;align-items:center;gap:7px}.clist h5 i{width:7px;height:7px;border-radius:50%}
+.clist ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.clist li button{display:flex;align-items:center;gap:9px;width:100%;font:inherit;font-size:13px;color:#eef1f6;background:none;border:0;border-radius:10px;padding:6px 7px;cursor:pointer;text-align:left;transition:background .3s}
+.clist li button:hover{background:rgba(255,255,255,.08)}
+.clist img{width:20px;height:14px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.12);flex:none}
 .legend{position:absolute;right:32px;bottom:40px;display:flex;gap:14px;font-size:12px;color:#c3cad6;padding:10px 16px;border-radius:999px;transition:opacity .6s}
 body.playing .legend{opacity:0}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px}
@@ -667,11 +676,13 @@ body.focused .sheet{transform:none}
   <div id="rlabels"></div>
   <div id="plabel" class="plabel"><img id="plL" alt=""><div><b id="plT"></b><span id="plS"></span></div></div>
   <div class="jtitle"><h2>Journey.</h2><p id="jhint">Where I've studied and worked. Click Belgium to walk through it.</p></div>
-  <div class="jstart"><button class="jbtn primary" id="play"><svg viewBox="0 0 14 14"><path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Start my journey</button><button class="jbtn" id="jall"><svg viewBox="0 0 14 14"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>All stops</button></div>
+  <div class="jstart"><button class="jbtn primary" id="play"><svg viewBox="0 0 14 14"><path d="M2 7h9M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Start my journey</button><button class="jbtn" id="jall"><svg viewBox="0 0 14 14"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>See all</button></div>
   <div class="jstats dglass">
     <div class="jtop"><div><b id="nC">18</b><span class="of">/ 195 countries</span></div><div class="pct" id="nP">9%</div></div>
     <div class="bar"><i id="nBar"></i></div>
     <div class="conts" id="conts"></div>
+    <button class="cmore" id="cmore">See the countries <span>&darr;</span></button>
+    <div class="clist" id="clist"><div></div></div>
   </div>
   <div class="legend dglass"><span><i class="lv"></i>Explored</span><span><i class="ll"></i>Not yet</span></div>
   <div class="caption dglass" id="cap"><div class="swap"><div class="meta"><span id="cIdx">01 / 06</span><span id="cKind">Education</span></div><div class="yr" id="cYr"></div><h3 id="cT"></h3><div class="org" id="cO"></div><p id="cP"></p><div class="addr" id="cA"></div></div></div>
@@ -1067,6 +1078,12 @@ async function initGlobe(){
     const colOf=f=> COL[f.properties.id]||'#60a5fa';
     const nV=Object.keys(VISITED).length; $('#nC').textContent=nV; $('#nP').textContent=Math.round(nV/195*100)+'%'; setTimeout(()=>$('#nBar').style.width=Math.max(4,nV/195*100)+'%',300);
     $('#conts').innerHTML=Object.keys(CONT_COL).map(c=>{ const n=Object.values(VISITED).filter(v=>v===c).length; return n?`<span><i style="background:${CONT_COL[c][0]}"></i>${c}<em>${n}</em></span>`:''; }).join('');
+    { const names=new Intl.DisplayNames(['en'],{type:'region'}); const nm=c=>c==='TR'?'Türkiye':c==='CZ'?'Czechia':names.of(c);
+      $('#clist>div').innerHTML=Object.keys(CONT_COL).map(c=>{ const list=Object.keys(VISITED).filter(k=>VISITED[k]===c).sort((a,b)=>nm(a).localeCompare(nm(b))); if(!list.length) return '';
+        return `<h5><i style="background:${CONT_COL[c][0]}"></i>${c}</h5><ul>${list.map(k=>`<li><button data-cc="${k}"><img src="https://flagcdn.com/w40/${k.toLowerCase()}.png" alt="" loading="lazy">${nm(k)}</button></li>`).join('')}</ul>`; }).join('');
+      $('#cmore').onclick=()=>{ const o=$('.jstats').classList.toggle('open'); $('#cmore').firstChild.textContent=o?'Hide the countries ':'See the countries '; };
+      $('#clist').addEventListener('click',e=>{ const b=e.target.closest('[data-cc]'); if(!b||playing) return; const f=world.find(x=>x.properties.id===b.dataset.cc); if(!f) return;
+        const G=f.geometry, L=G.type==='Polygon'?[G.coordinates]:G.coordinates; const big=L.reduce((m,p)=>p[0].length>m[0].length?p:m); let sx=0,sy=0,n=0; big[0].forEach(([lo,la])=>{ sx+=lo; sy+=la; n++; }); ctr.autoRotate=false; g.pointOfView({lat:sy/n,lng:sx/n,altitude:1.4},1600); clearTimeout(window.__ar); window.__ar=setTimeout(()=>{ if(!playing) ctr.autoRotate=!reduce; },6000); }); }
     let hoverF=null;
     g.width(el.clientWidth).height(el.clientHeight).backgroundColor('rgba(0,0,0,0)').globeImageUrl(oceanTex()).showAtmosphere(true).atmosphereColor('#7cc4ff').atmosphereAltitude(.17);
     const apply=()=>g.polygonCapColor(f=> isV(f) ? (f===hoverF?lighten(colOf(f),.45):hexA(colOf(f),.92)) : (f===hoverF?'#2f4068':'#1c2944'))
@@ -1156,6 +1173,7 @@ async function initGlobe(){
         if(!await outOfBelgium(my)) return;
         if(!await flight(offset(c.lat,c.lng,.24), my, {peak:1.1})) return;
       }
+      $$('#jlist button').forEach((b,k)=>b.classList.toggle('cur',k===i));
       const bar=segs[i].querySelector('i'); bar.style.transition=`width ${d}ms linear`; requestAnimationFrame(()=>bar.style.width= paused?'0':'100%');
       if(!paused) timer=setTimeout(()=>{ if(my!==token) return; i<CH.length-1 ? goTo(i+1) : finish(); }, d);
     }
@@ -1167,10 +1185,11 @@ async function initGlobe(){
     function setIcon(){ $('#pIcon').innerHTML= paused? '<path d="M3 1.5v11l9-5.5z"/>' : '<path d="M3 2h3v10H3zM8 2h3v10H8z"/>'; $('#pPlay').setAttribute('aria-label',paused?'Continue':'Pause'); }
     const KC={Education:'#8fb0ff',Experience:'#c4a1ff',Business:'#fbbf24'};
     const jl=$('#jlist'); jl.innerHTML=CH.map((c,i)=>`<button data-i="${i}"><span class="y">${c.yr}</span><span><b><i style="background:${KC[c.kind]||'#8fb0ff'}"></i>${c.t}</b><small>${c.o}</small></span></button>`).join('');
-    jl.addEventListener('click',e=>{ const b=e.target.closest('button[data-i]'); if(!b) return; jl.classList.remove('on'); const i=+b.dataset.i; playing? goTo(i) : start(i); });
-    const toggleList=e=>{ e.stopPropagation(); [...jl.children].forEach((b,k)=>b.classList.toggle('cur',playing&&k===idx)); jl.classList.toggle('on'); };
+    const markCur=()=>[...jl.children].forEach((b,k)=>b.classList.toggle('cur',playing&&k===idx));
+    jl.addEventListener('click',e=>{ e.stopPropagation(); const b=e.target.closest('button[data-i]'); if(!b) return; const i=+b.dataset.i; playing? goTo(i) : start(i); setTimeout(markCur,30); });
+    const toggleList=e=>{ e.stopPropagation(); markCur(); jl.classList.toggle('on'); };
     $('#jall').onclick=toggleList; $('#pList').onclick=toggleList;
-    document.addEventListener('click',e=>{ if(!e.target.closest('#jlist')) jl.classList.remove('on'); });
+    document.addEventListener('click',e=>{ if(!e.target.closest('#jlist,#jall,#pList,#player')) jl.classList.remove('on'); });
     Journey.startAt=i=>{ jl.classList.remove('on'); start(i); };
     if(Journey.pending!=null){ const i=Journey.pending; Journey.pending=null; setTimeout(()=>start(i),1400); }
     $('#play').onclick=()=>start(0);
