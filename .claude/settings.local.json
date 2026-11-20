@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 /Users/simoensm/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.5.0/.claude/skills/ui-ux-pro-max/scripts/search.py \"tech noir portfolio dark glassmorphism\" --design-system -p \"Mathias Simoens Portfolio\")",
+      "Bash(open /Users/simoensm/Documents/GitHub/simoensm/index.html)",
+      "Bash(node *)"
+    ]
+  }
+}
