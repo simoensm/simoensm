@@ -208,6 +208,34 @@ body.playing .mode{display:none}
 .world:hover .panel.dglass.hg{background:rgba(14,17,24,.3);border-color:rgba(255,255,255,.22)}
 .world:hover .panel.hg::after{opacity:1}
 
+
+.spec{list-style:none;margin:6px 0 10px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.5)}
+.spec li{display:flex;justify-content:space-between;gap:16px;padding:11px 14px!important;border-top:1px solid var(--line)!important;font-size:14px}
+.spec li:first-child{border-top:0!important}
+.spec li span{color:var(--ink3);font-family:var(--mono);font-size:12px;padding-top:2px}
+.spec li b{display:inline!important;font-size:14px!important;font-weight:500!important;text-align:right;margin:0!important}
+.gearnav,.chipsrow{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 16px}
+.gearnav button,.chipsrow button{border:1px solid var(--line);background:rgba(255,255,255,.55);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:500;cursor:pointer;color:#3d424a;transition:all .35s var(--ease)}
+.gearnav button:hover,.chipsrow button:hover{background:#fff}
+.gearnav button.on,.chipsrow button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chipsrow button em{font-style:normal;font-family:var(--mono);font-size:11px;opacity:.6;margin-left:6px}
+.masonry{columns:2;column-gap:8px}
+.masonry .th{display:block;width:100%;margin:0 0 8px;border:0;padding:0;border-radius:12px;overflow:hidden;cursor:zoom-in;background:#ddd;break-inside:avoid}
+.masonry .th img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--spring)}
+.masonry .th:hover img{transform:scale(1.04)}
+.masonry .ph-empty{break-inside:avoid;margin:0 0 8px;aspect-ratio:4/3;border-radius:12px;display:grid;place-items:center;font-size:12px;color:var(--ink3);border:1px dashed rgba(20,22,26,.15);background:rgba(255,255,255,.5)}
+#pf-portrait .th{border:0;padding:0;border-radius:12px;overflow:hidden;cursor:zoom-in}
+#pf-portrait .th img{width:100%;height:100%;object-fit:cover;display:block}
+.vid{margin:0 0 16px}.vid iframe,.vid video{width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:#000}.vid b{display:block;font-size:14px;margin-top:6px}
+.lb{position:fixed;inset:0;z-index:300;background:rgba(6,8,12,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:grid;place-items:center;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility 0s .5s}
+.lb.on{opacity:1;visibility:visible;transition:opacity .5s var(--ease)}
+.lb img{max-width:88vw;max-height:84vh;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);opacity:0;transform:scale(.98);transition:opacity .5s var(--ease),transform .7s var(--spring)}
+.lb img.in{opacity:1;transform:none}
+.lbx{position:absolute;top:20px;right:22px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}
+.lbn{position:absolute;right:22px;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:28px;cursor:pointer}
+.lbn.lbp{left:22px;right:auto}
+.lbcap{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;color:#aab2bf}
+
 /* room */
 #v-room{background:#0e0e0f}
 #room{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -387,6 +415,7 @@ body.focused .sheet{transform:none}
   <div class="rload" id="rload">Setting up the room</div>
 </section>
 
+<div class="lb" id="lb"><button class="lbx" id="lbX" aria-label="Close">&times;</button><button class="lbn lbp" id="lbP" aria-label="Previous">&#8249;</button><img id="lbImg" alt=""><button class="lbn" id="lbN" aria-label="Next">&#8250;</button><div class="lbcap" id="lbCap"></div></div>
 <div class="toast dglass" id="toast"></div>
 
 <script type="importmap">
@@ -665,6 +694,40 @@ async function initGlobe(){
   }catch(err){ console.error(err); el.innerHTML= /WebGL/i.test(String(err)) ? '<div class="gload">This browser has 3D graphics (WebGL) turned off,<br>so the globe can\'t be shown here.</div>' : '<div class="gload">The globe could not load.<br>Check your connection and reload the page.</div>'; }
 }
 
+/* ============================ PHOTOS ============================ */
+// Real photos come from photos/photos.json (built from the files you drop in photos-inbox/)
+const CATS=[['events','Events'],['automotive','Automotive'],['aerial','Aerial'],['macro','Macro'],['portraits','Portraits'],['night','Night']];
+const PHOTOS=fetch('photos/photos.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null);
+let PHOTOS_DATA=null; PHOTOS.then(m=>PHOTOS_DATA=m);
+const esc=t=>String(t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function thumbsHTML(list){ return list.map((it,i)=>`<button class="th" data-i="${i}" style="aspect-ratio:${it.w&&it.h?(it.w/it.h).toFixed(3):'4/3'}"><img loading="lazy" src="${esc(it.thumb||it.src)}" alt="${esc(it.alt)}"></button>`).join(''); }
+function portfolioSheet(cat){
+  const m=PHOTOS_DATA||{}; const has=CATS.some(([k])=>(m[k]||[]).length); const vids=m.videos||[];
+  const chips=`<div class="chipsrow"><button data-cat="all" class="${!cat?'on':''}">All</button>${CATS.map(([k,n])=>`<button data-cat="${k}" class="${cat===k?'on':''}">${n}<em>${(m[k]||[]).length||''}</em></button>`).join('')}</div>`;
+  return `<div class="k">Above Belgium</div><h3>Portfolio</h3>
+    <div class="tabs" id="ptabs"><button class="on" data-t="ph">Photos</button><button data-t="vi">Videos</button></div>
+    <div id="pg-ph">${chips}<div class="masonry" id="mas"></div>${has?'':`<p class="note">No photos online yet. Drop your best shots in the <b>photos-inbox</b> folder of your repository, one subfolder per category, and I'll optimise and publish them here.</p>`}</div>
+    <div id="pg-vi" style="display:none">${vids.length? vids.map(v=>`<div class="vid">${v.youtube?`<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(v.youtube)}" title="${esc(v.title)}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`:`<video src="${esc(v.src)}" controls preload="metadata" playsinline></video>`}<b>${esc(v.title)}</b></div>`).join('') : `<p class="note">Videos are best hosted on YouTube or Vimeo, then embedded here. Send me the links and their titles.</p>`}</div>`; }
+function listFor(cat){ const m=PHOTOS_DATA||{}; return cat&&cat!=='all' ? (m[cat]||[]) : CATS.flatMap(([k])=>m[k]||[]); }
+function fillMasonry(cat){ const mas=document.getElementById('mas'); if(!mas) return; const list=listFor(cat);
+  mas.innerHTML= list.length ? thumbsHTML(list) : CATS.filter(([k])=>!cat||cat==='all'||k===cat).map(([k,n])=>`<div class="ph-empty">${n}</div>`).join('');
+  mas.querySelectorAll('.th').forEach(b=>b.onclick=()=>openLB(list,+b.dataset.i)); }
+function wireSheet(sid,h){
+  if(sid==='portfolio'){ const pt=$('#ptabs'); pt.querySelectorAll('button').forEach(b=>b.onclick=()=>{ pt.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); $('#pg-ph').style.display=b.dataset.t==='ph'?'':'none'; $('#pg-vi').style.display=b.dataset.t==='vi'?'':'none'; });
+    $$('.chipsrow button').forEach(b=>b.onclick=()=>{ $$('.chipsrow button').forEach(x=>x.classList.toggle('on',x===b)); fillMasonry(b.dataset.cat); });
+    fillMasonry(h&&h.cat); }
+  if(sid==='portrait'){ const g=$('#pf-portrait'); const list=listFor('portraits'); g.innerHTML= list.length ? thumbsHTML(list.slice(0,6)) : '<div>Headshots</div><div>Portraits</div>'; g.querySelectorAll('.th').forEach(b=>b.onclick=()=>openLB(list,+b.dataset.i)); }
+}
+/* lightbox */
+let LB={list:[],i:0};
+function openLB(list,i){ LB={list,i}; $('#lb').classList.add('on'); showLB(); }
+function showLB(){ const it=LB.list[LB.i]; const img=$('#lbImg'); img.classList.remove('in'); const n=new Image(); n.onload=()=>{ img.src=n.src; requestAnimationFrame(()=>img.classList.add('in')); }; n.src=it.src; $('#lbCap').textContent=(it.alt||'')+'  '+(LB.i+1)+' / '+LB.list.length; }
+$('#lbX').onclick=()=>$('#lb').classList.remove('on');
+$('#lbP').onclick=()=>{ LB.i=(LB.i-1+LB.list.length)%LB.list.length; showLB(); };
+$('#lbN').onclick=()=>{ LB.i=(LB.i+1)%LB.list.length; showLB(); };
+$('#lb').addEventListener('click',e=>{ if(e.target.id==='lb') $('#lb').classList.remove('on'); });
+addEventListener('keydown',e=>{ if(!$('#lb').classList.contains('on')) return; if(e.key==='Escape'){ e.stopImmediatePropagation(); $('#lb').classList.remove('on'); } if(e.key==='ArrowRight') $('#lbN').click(); if(e.key==='ArrowLeft') $('#lbP').click(); },true);
+
 /* ============================ ROOM ============================ */
 let roomStarted=false; const Room={ setSide(){} };
 function initRoom(){
@@ -702,7 +765,7 @@ function initRoom(){
   const B=(p,w,h,d,m,x,y,z,r=0)=>{ const mesh=new THREE.Mesh(r?new RoundedBoxGeometry(w,h,d,3,r):new THREE.BoxGeometry(w,h,d),m); mesh.position.set(x,y,z); return add(p,mesh); };
   const C=(p,rt,rb,h,m,x,y,z,seg=40)=>{ const mesh=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),m); mesh.position.set(x,y,z); return add(p,mesh); };
   const screen=(tex,k=1)=>std({map:tex,emissive:0xffffff,emissiveMap:tex,emissiveIntensity:k,roughness:.2});
-  const hot=[]; const hs=(id,group,anchor,o)=>{ group.traverse(m=>{ if(m.isMesh) m.userData.hot=id; }); hot.push({id,anchor:new THREE.Vector3(...anchor),...o}); };
+  const hot=[]; const hs=(id,group,anchor,o)=>{ group.traverse(m=>{ if(m.isMesh&&!m.userData.hot) m.userData.hot=id; }); hot.push({id,anchor:new THREE.Vector3(...anchor),...o}); };
 
   /* shell */
   const W=16, D=6.4, H=3.2, BZ=-D/2;
@@ -728,124 +791,202 @@ function initRoom(){
 
   /* -------- STUDIO -------- */
   const S=new THREE.Group(); scene.add(S);
-  const scenes=[
-    (g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#2b3a55'); gr.addColorStop(.55,'#d98d5f'); gr.addColorStop(.62,'#3b2f2a'); gr.addColorStop(1,'#1a1614'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='rgba(20,15,12,.9)'; g.beginPath(); g.moveTo(0,h*.66); for(let x=0;x<=w;x+=10) g.lineTo(x,h*.62-Math.sin(x*.01)*h*.06-Math.random()*3); g.lineTo(w,h); g.lineTo(0,h); g.fill(); },
-    (g,w,h)=>{ const cols=['#6f7f4a','#a59a5b','#4e6a3d','#c2b57a','#5d7350','#8c8a4f']; for(let i=0;i<14;i++){ g.save(); g.translate(w/2,h/2); g.rotate(-.35); g.fillStyle=cols[i%6]; g.fillRect(-w,-h+i*h/7,2*w,h/7); g.restore(); } g.strokeStyle='rgba(255,255,255,.25)'; g.lineWidth=3; g.beginPath(); g.moveTo(0,h*.8); g.bezierCurveTo(w*.3,h*.6,w*.6,h*.9,w,h*.4); g.stroke(); },
-    (g,w,h)=>{ g.fillStyle='#0c1424'; g.fillRect(0,0,w,h); for(let i=0;i<40;i++){ const x=Math.random()*w,bw=20+Math.random()*50,bh=h*.3+Math.random()*h*.5; g.fillStyle='#141c2c'; g.fillRect(x,h-bh,bw,bh); for(let k=0;k<20;k++){ g.fillStyle=`rgba(255,${190+Math.random()*50|0},120,${Math.random()*.8})`; g.fillRect(x+Math.random()*bw,h-Math.random()*bh,3,4);} } },
-    (g,w,h)=>{ const gr=g.createRadialGradient(w*.5,h*.4,10,w*.5,h*.5,w*.8); gr.addColorStop(0,'#6b6560'); gr.addColorStop(1,'#1d1b1a'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='#141313'; g.beginPath(); g.ellipse(w*.5,h*.42,w*.16,h*.17,0,0,7); g.fill(); g.beginPath(); g.ellipse(w*.5,h*.95,w*.38,h*.3,0,0,7); g.fill(); },
-    (g,w,h)=>{ g.fillStyle='#05070d'; g.fillRect(0,0,w,h); const gr=g.createLinearGradient(0,h,w,0); gr.addColorStop(.3,'rgba(0,0,0,0)'); gr.addColorStop(.5,'rgba(170,150,200,.25)'); gr.addColorStop(.7,'rgba(0,0,0,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); for(let i=0;i<900;i++){ g.fillStyle=`rgba(255,255,255,${Math.random()})`; g.fillRect(Math.random()*w,Math.random()*h,Math.random()*1.6,Math.random()*1.6);} g.fillStyle='#000'; g.beginPath(); g.moveTo(0,h); g.lineTo(0,h*.85); for(let x=0;x<=w;x+=12) g.lineTo(x,h*.86-Math.random()*h*.04); g.lineTo(w,h); g.fill(); }
-  ];
-  const wallG=new THREE.Group(); S.add(wallG);
-  [{w:1.05,h:.7,x:-6.0,y:1.95,s:0},{w:.6,h:.8,x:-4.95,y:2.05,s:3},{w:.6,h:.4,x:-4.95,y:1.37,s:2},{w:.82,h:.55,x:-6.12,y:1.27,s:1},{w:.5,h:.66,x:-7.1,y:1.7,s:4}].forEach(f=>{
-    const t=T(640,Math.round(640*f.h/f.w),scenes[f.s]);
-    B(wallG,f.w+.07,f.h+.07,.035,mat.black,f.x,f.y,BZ+.025,.004);
-    const mt=new THREE.Mesh(new THREE.PlaneGeometry(f.w,f.h),mat.paper); mt.position.set(f.x,f.y,BZ+.044); wallG.add(mt);
-    const ph=new THREE.Mesh(new THREE.PlaneGeometry(f.w*.86,f.h*.86),std({map:t,roughness:.4})); ph.position.set(f.x,f.y,BZ+.046); wallG.add(ph); });
-  B(wallG,.5,.03,.07,mat.black,-6.0,2.42,BZ+.08,.01);
-  hs('portfolio',wallG,[-5.9,2.6,BZ+.1],{side:'studio',label:'Portfolio',view:{pos:[-5.75,1.75,.4],look:[-5.75,1.7,BZ]}});
+  // painterly placeholders, replaced by real photos once photos/photos.json exists
+  const scenes={
+    events:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#1c1a24'); gr.addColorStop(1,'#3a2c25'); g.fillStyle=gr; g.fillRect(0,0,w,h); for(let i=0;i<14;i++){ const x=Math.random()*w; const r=g.createRadialGradient(x,h*.25,0,x,h*.25,w*.18); r.addColorStop(0,`rgba(255,${180+Math.random()*60|0},120,.45)`); r.addColorStop(1,'rgba(0,0,0,0)'); g.fillStyle=r; g.fillRect(0,0,w,h);} g.fillStyle='rgba(8,8,10,.9)'; for(let i=0;i<9;i++){ const x=i*w/8+(Math.random()-.5)*20; g.beginPath(); g.ellipse(x,h*.78,w*.05,h*.12,0,0,7); g.fill(); g.beginPath(); g.arc(x,h*.6,w*.035,0,7); g.fill(); } },
+    automotive:(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#2a2f36'); gr.addColorStop(.6,'#15181c'); gr.addColorStop(1,'#0b0c0e'); g.fillStyle=gr; g.fillRect(0,0,w,h); g.fillStyle='#0e1013'; g.beginPath(); g.moveTo(w*.1,h*.72); g.quadraticCurveTo(w*.25,h*.48,w*.5,h*.46); g.quadraticCurveTo(w*.78,h*.47,w*.9,h*.66); g.lineTo(w*.92,h*.75); g.lineTo(w*.08,h*.75); g.fill(); g.strokeStyle='rgba(220,230,240,.55)'; g.lineWidth=2; g.beginPath(); g.moveTo(w*.12,h*.7); g.quadraticCurveTo(w*.3,h*.5,w*.52,h*.49); g.quadraticCurveTo(w*.75,h*.5,w*.88,h*.65); g.stroke(); g.fillStyle='#050506'; [.26,.74].forEach(k=>{ g.beginPath(); g.arc(w*k,h*.75,h*.08,0,7); g.fill(); }); },
+    aerial:(g,w,h)=>{ const cols=['#5f7146','#8f8a56','#43603a','#a9a06a','#506a46','#7a7a49']; g.save(); g.translate(w/2,h/2); g.rotate(-.42); for(let i=-8;i<10;i++){ g.fillStyle=cols[(i+20)%6]; g.fillRect(-w,i*h/9,2*w,h/9); } g.restore(); g.strokeStyle='rgba(230,226,214,.6)'; g.lineWidth=3; g.beginPath(); g.moveTo(0,h*.82); g.bezierCurveTo(w*.3,h*.55,w*.6,h*.95,w,h*.38); g.stroke(); },
+    macro:(g,w,h)=>{ const r=g.createRadialGradient(w*.5,h*.5,0,w*.5,h*.5,w*.7); r.addColorStop(0,'#3f6b3a'); r.addColorStop(1,'#0c140b'); g.fillStyle=r; g.fillRect(0,0,w,h); for(let i=0;i<9;i++){ const a=i/9*Math.PI*2; g.fillStyle=`rgba(${220+Math.random()*30|0},${120+Math.random()*60|0},${150+Math.random()*60|0},.85)`; g.beginPath(); g.ellipse(w*.5+Math.cos(a)*w*.14,h*.5+Math.sin(a)*h*.18,w*.12,h*.07,a,0,7); g.fill(); } g.fillStyle='#f2c94c'; g.beginPath(); g.arc(w*.5,h*.5,w*.06,0,7); g.fill(); },
+    portraits:(g,w,h)=>{ const r=g.createRadialGradient(w*.5,h*.4,10,w*.5,h*.5,w*.8); r.addColorStop(0,'#7a736c'); r.addColorStop(1,'#26231f'); g.fillStyle=r; g.fillRect(0,0,w,h); g.fillStyle='#1a1715'; g.beginPath(); g.ellipse(w*.5,h*.4,w*.17,h*.19,0,0,7); g.fill(); g.beginPath(); g.ellipse(w*.5,h*.98,w*.42,h*.32,0,0,7); g.fill(); },
+    night:(g,w,h)=>{ g.fillStyle='#05070d'; g.fillRect(0,0,w,h); const gr=g.createLinearGradient(0,h,w,0); gr.addColorStop(.3,'rgba(0,0,0,0)'); gr.addColorStop(.5,'rgba(170,150,210,.3)'); gr.addColorStop(.7,'rgba(0,0,0,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); for(let i=0;i<900;i++){ g.fillStyle=`rgba(255,255,255,${Math.random()})`; g.fillRect(Math.random()*w,Math.random()*h,Math.random()*1.6,Math.random()*1.6);} g.fillStyle='#000'; g.beginPath(); g.moveTo(0,h); g.lineTo(0,h*.85); for(let x=0;x<=w;x+=12) g.lineTo(x,h*.86-Math.random()*h*.04); g.lineTo(w,h); g.fill(); }
+  };
+  const labelTex=(lines,w=512,h=256,bg='#f6f4ef',fg='#1d1d1f')=>T(w,h,(g)=>{ g.fillStyle=bg; g.fillRect(0,0,w,h); g.fillStyle=fg; lines.forEach(([txt,size,weight,y,col])=>{ g.font=`${weight||500} ${size}px Geist,system-ui,sans-serif`; g.fillStyle=col||fg; g.fillText(txt,28,y); }); });
 
-  const desk=new THREE.Group(); S.add(desk); const dx=-4.3, dz=-2.45;
-  B(desk,1.9,.04,.8,mat.oak,dx,.74,dz,.008);
-  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>B(desk,.035,.72,.035,mat.black,dx+a*.88,.36,dz+b*.35));
-  B(desk,1.76,.03,.03,mat.black,dx,.7,dz-.35);
-  const mbTex=T(1200,780,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,w,h); gr.addColorStop(0,'#fbfbfd'); gr.addColorStop(1,'#eef0f4'); g.fillStyle=gr; g.fillRect(0,0,w,h);
-    g.fillStyle='#1d1d1f'; g.fillRect(0,0,w,26); g.fillStyle='#fff'; g.font='600 15px -apple-system,Inter,sans-serif'; g.fillText('Above Belgium',20,18);
-    g.fillStyle='#86868b'; g.font='600 22px -apple-system,Inter,sans-serif'; g.fillText('ABOVE BELGIUM',80,140);
-    g.fillStyle='#1d1d1f'; g.font='700 76px -apple-system,Inter,sans-serif'; g.fillText('Seen from above.',80,232); g.fillStyle='#6e6e73'; g.font='400 30px -apple-system,Inter,sans-serif'; g.fillText('Photo, video and drone. Since 2023.',80,290);
-    ['Corporate','Events','Sports','Drone','Astro','Studio'].forEach((s,i)=>{ const x=80+(i%3)*340,y=360+Math.floor(i/3)*170; g.fillStyle='#fff'; g.beginPath(); g.roundRect(x,y,310,140,22); g.fill(); g.fillStyle='#1d1d1f'; g.font='600 30px -apple-system,Inter,sans-serif'; g.fillText(s,x+26,y+80); }); });
+  /* gallery wall: six frames, one per category */
+  const gallery=new THREE.Group(); S.add(gallery);
+  const frameMat=std({color:0x151517,roughness:.35,metalness:.6});
+  const FR=[]; const gx=-4.6, gy=1.92;
+  CATS.forEach(([key,name],i)=>{ const col=i%3, row=Math.floor(i/3);
+    const w= col===1 ? .62 : .52, h= col===1 ? .42 : .36;
+    const x=gx+(col-1)*.72, y=gy+(row?-.28:.26) + (col===1 ? (row?-.03:.03) : 0);
+    const g=new THREE.Group(); gallery.add(g);
+    B(g,w+.04,h+.04,.028,frameMat,x,y,BZ+.02,.003);
+    const mt=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat.paper); mt.position.set(x,y,BZ+.035); g.add(mt);
+    const ph=new THREE.Mesh(new THREE.PlaneGeometry(w*.84,h*.8),std({map:T(640,Math.round(640*h/w),scenes[key]),roughness:.45})); ph.position.set(x,y+h*.02,BZ+.036); g.add(ph);
+    const glassP=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.05,metalness:0,transmission:0,transparent:true,opacity:.07,clearcoat:1})); glassP.position.set(x,y,BZ+.038); g.add(glassP);
+    FR.push({key,name,ph,w,h}); hs('pf-'+key,g,[x,y,BZ],{side:'studio',label:name,nomark:true,cat:key,view:{pos:[x,y-.02,BZ+1.25],look:[x,y,BZ]}});
+  });
+  // picture light over the gallery
+  B(gallery,2.1,.025,.06,frameMat,gx,2.42,BZ+.07,.01);
+  const pLight=new THREE.SpotLight(0xffe7c8,6,3,.95,.9,1.6); pLight.position.set(gx,2.38,BZ+.35); pLight.target.position.set(gx,1.7,BZ); scene.add(pLight,pLight.target);
+  hs('portfolio',gallery,[gx,2.62,BZ+.05],{side:'studio',label:'Portfolio',view:{pos:[gx,1.88,BZ+2.35],look:[gx,1.86,BZ]}});
+
+  /* desk: oak top, black steel frame, MacBook Pro, DJI Mini 3, notebook, lamp */
+  const desk=new THREE.Group(); S.add(desk); const dx=-4.6, dz=BZ+.48;
+  B(desk,1.8,.035,.76,mat.oak,dx,.74,dz,.006);
+  [[-1,1],[1,1],[-1,-1],[1,-1]].forEach(([a,b])=>B(desk,.03,.72,.03,mat.black,dx+a*.86,.36,dz+b*.34,.004));
+  [[-1],[1]].forEach(([a])=>B(desk,.03,.03,.68,mat.black,dx+a*.86,.08,dz,.004));
+  B(desk,1.72,.03,.03,mat.black,dx,.705,dz-.34,.004);
+  const mbTex=T(1400,900,(g,w,h)=>{ g.fillStyle='#0d0f13'; g.fillRect(0,0,w,h);
+    const gr=g.createLinearGradient(0,0,0,h*.62); gr.addColorStop(0,'#33506e'); gr.addColorStop(1,'#0d0f13'); g.fillStyle=gr; g.fillRect(0,0,w,h*.62);
+    g.fillStyle='rgba(255,255,255,.08)'; g.fillRect(0,0,w,30); g.fillStyle='#e9edf3'; g.font='600 17px Geist,system-ui,sans-serif'; g.fillText('Above Belgium',22,21);
+    g.fillStyle='#9fb6d3'; g.font='500 26px Geist Mono,monospace'; g.fillText('ABOVE BELGIUM · SINCE 2022',90,190);
+    g.fillStyle='#ffffff'; g.font='600 96px Geist,system-ui,sans-serif'; g.fillText('Seen from above.',90,310);
+    g.fillStyle='#b9c3d0'; g.font='400 34px Geist,system-ui,sans-serif'; g.fillText('Photo, video and drone. Official photographer of UCLouvain Mons.',90,372);
+    ['Events','Automotive','Aerial','Macro','Portraits','Prints'].forEach((s,i)=>{ const x=90+(i%3)*410,y=480+Math.floor(i/3)*170; g.fillStyle='rgba(255,255,255,.07)'; g.beginPath(); g.roundRect(x,y,380,140,24); g.fill(); g.strokeStyle='rgba(255,255,255,.12)'; g.stroke(); g.fillStyle='#fff'; g.font='600 36px Geist,system-ui,sans-serif'; g.fillText(s,x+30,y+84); }); });
   const mb=new THREE.Group(); desk.add(mb);
-  B(mb,.355,.012,.25,mat.spaceGrey,0,.006,0,.004);
-  const kb=new THREE.Mesh(new THREE.PlaneGeometry(.3,.11),std({map:T(600,220,(g,w,h)=>{ g.fillStyle='#2a2b2d'; g.fillRect(0,0,w,h); g.fillStyle='#0f0f10'; for(let r=0;r<6;r++) for(let c=0;c<14;c++) g.fillRect(4+c*42,4+r*36,38,32); }),roughness:.6}));
-  kb.rotation.x=-Math.PI/2; kb.position.set(0,.0125,-.04); mb.add(kb);
-  const tp=new THREE.Mesh(new THREE.PlaneGeometry(.12,.075),std({color:0x6b6d71,roughness:.35,metalness:.8})); tp.rotation.x=-Math.PI/2; tp.position.set(0,.0125,.075); mb.add(tp);
-  const lid=new THREE.Group(); lid.position.set(0,.012,-.124); lid.rotation.x=-.3; mb.add(lid);
-  B(lid,.355,.24,.006,mat.spaceGrey,0,.12,0,.003);
-  const bez=new THREE.Mesh(new THREE.PlaneGeometry(.347,.232),std({color:0x050505,roughness:.1})); bez.position.set(0,.12,.0032); lid.add(bez);
-  const scr=new THREE.Mesh(new THREE.PlaneGeometry(.335,.215),screen(mbTex,.9)); scr.position.set(0,.118,.0034); lid.add(scr);
-  mb.position.set(dx-.15,.762,dz+.05); mb.rotation.y=.1;
-  const a7=new THREE.Group(); desk.add(a7);
-  B(a7,.127,.08,.045,mat.matte,0,.04,0,.008); B(a7,.04,.085,.06,mat.matte,-.05,.043,.008,.012); B(a7,.05,.03,.05,mat.matte,.005,.093,-.004,.008);
-  C(a7,.008,.008,.012,mat.alu,.035,.087,0,20); C(a7,.03,.03,.012,mat.chrome,.01,.04,.028).rotation.x=Math.PI/2;
-  const lensG=new THREE.Group(); lensG.position.set(.01,.04,.08); lensG.rotation.x=Math.PI/2; a7.add(lensG);
-  C(lensG,.04,.034,.12,mat.matte,0,0,0); C(lensG,.041,.041,.035,mat.rubber,0,.01,0); C(lensG,.042,.042,.006,std({color:0xc9302c,roughness:.4}),0,-.055,0);
-  const fg=new THREE.Mesh(new THREE.CircleGeometry(.033,40),mat.glass); fg.rotation.x=Math.PI/2; fg.position.y=-.061; lensG.add(fg);
-  a7.position.set(dx+.55,.76,dz+.1); a7.rotation.y=-.7;
+  const sb_=std({color:0x2c2d30,roughness:.32,metalness:.9});
+  B(mb,.312,.0078,.221,sb_,0,.0039,0,.0035);
+  const kb=new THREE.Mesh(new THREE.PlaneGeometry(.27,.095),std({map:T(600,212,(g,w,h)=>{ g.fillStyle='#16171a'; g.fillRect(0,0,w,h); g.fillStyle='#050506'; for(let r=0;r<6;r++) for(let c=0;c<14;c++) g.fillRect(4+c*42.5,4+r*34.5,38,30); }),roughness:.7}));
+  kb.rotation.x=-Math.PI/2; kb.position.set(0,.0081,-.035); mb.add(kb);
+  const tp=new THREE.Mesh(new THREE.PlaneGeometry(.135,.075),std({color:0x3a3b3f,roughness:.3,metalness:.8})); tp.rotation.x=-Math.PI/2; tp.position.set(0,.0081,.064); mb.add(tp);
+  const lid=new THREE.Group(); lid.position.set(0,.0078,-.11); lid.rotation.x=-.28; mb.add(lid);
+  B(lid,.312,.215,.0055,sb_,0,.1075,0,.0025);
+  const bez=new THREE.Mesh(new THREE.PlaneGeometry(.306,.209),std({color:0x020203,roughness:.08})); bez.position.set(0,.1075,.0029); lid.add(bez);
+  const scr=new THREE.Mesh(new THREE.PlaneGeometry(.296,.192),screen(mbTex,.95)); scr.position.set(0,.105,.003); lid.add(scr);
+  mb.position.set(dx-.12,.7575,dz+.06); mb.rotation.y=.06;
+  // minimal desk lamp
   const lamp=new THREE.Group(); desk.add(lamp);
-  C(lamp,.07,.08,.015,mat.black,0,.008,0); const l1=B(lamp,.014,.42,.014,mat.black,-.05,.21,0); l1.rotation.z=.25;
-  const l2=B(lamp,.014,.32,.014,mat.black,.08,.47,0); l2.rotation.z=-.9; C(lamp,.035,.07,.1,mat.black,.22,.42,0).rotation.z=-.6;
-  lamp.position.set(dx+.78,.76,dz-.25);
-  const lampL=new THREE.PointLight(0xffd29a,.9,1.6,2); lampL.position.set(dx+.98,1.08,dz-.25); scene.add(lampL);
-  B(desk,.15,.012,.21,std({color:0x2b2e33,roughness:.8}),dx+.2,.766,dz+.18,.003).rotation.y=-.25;
-  C(desk,.004,.004,.14,mat.black,dx+.3,.774,dz+.2,8).rotation.z=Math.PI/2;
-  C(desk,.04,.035,.09,std({color:0xeae7e1,roughness:.5}),dx-.75,.805,dz+.12); C(desk,.034,.034,.005,std({color:0x3b2416,roughness:.2}),dx-.75,.848,dz+.12);
-  C(desk,.07,.055,.12,std({color:0xd8d2c7,roughness:.9}),dx-.78,.82,dz-.25);
-  for(let i=0;i<14;i++){ const lf=new THREE.Mesh(new THREE.SphereGeometry(.05,10,8),std({color:new THREE.Color().setHSL(.3,.35,.22+Math.random()*.1),roughness:.8})); lf.scale.set(.5,1.4,.15); lf.position.set(dx-.78+(Math.random()-.5)*.1,.93+Math.random()*.12,dz-.25+(Math.random()-.5)*.1); lf.rotation.set(Math.random(),Math.random()*3,Math.random()-.5); add(desk,lf); }
-  [[0x203a5c,.05],[0x7a2f2a,.04],[0x2f2f2f,.06]].forEach(([c,t],i)=>B(desk,.17,.23,t,std({color:c,roughness:.8}),dx-.42+i*.058,.875,dz-.33,.004));
-  for(let i=0;i<3;i++) B(desk,.024,.002,.032,std({color:i?0x1f4fbf:0x111111,roughness:.5}),dx+.44+i*.03,.762,dz+.27,.001);
+  C(lamp,.065,.07,.012,mat.black,0,.006,0,48); C(lamp,.006,.006,.46,mat.black,0,.24,0,12);
+  const arm=C(lamp,.005,.005,.3,mat.black,.13,.47,0,12); arm.rotation.z=Math.PI/2;
+  const head=C(lamp,.03,.03,.16,mat.black,.27,.45,0,24); head.rotation.z=Math.PI/2;
+  const glow=new THREE.Mesh(new THREE.CircleGeometry(.026,24),std({emissive:0xffe0b0,emissiveIntensity:2.5,color:0x000000})); glow.rotation.x=Math.PI/2; glow.position.set(.27,.429,0); lamp.add(glow);
+  lamp.position.set(dx+.62,.7575,dz-.24);
+  const lampL=new THREE.SpotLight(0xffd8a8,2.2,1.6,.9,1,1.5); lampL.position.set(dx+.89,1.18,dz-.24); lampL.target.position.set(dx+.75,.75,dz-.1); scene.add(lampL,lampL.target);
+  // notebook, pen, coffee, plant, SD cards
+  B(desk,.15,.012,.21,std({color:0x2b2e33,roughness:.8}),dx+.24,.763,dz+.16,.003).rotation.y=-.18;
+  C(desk,.0045,.0045,.14,std({color:0xd9d6cf,roughness:.3,metalness:.4}),dx+.33,.772,dz+.17,8).rotation.z=Math.PI/2;
+  C(desk,.04,.034,.09,std({color:0xeae7e1,roughness:.45}),dx-.72,.8,dz+.12,32); C(desk,.034,.034,.004,std({color:0x2a1810,roughness:.15}),dx-.72,.843,dz+.12,32);
+  C(desk,.07,.055,.12,std({color:0xd8d2c7,roughness:.95}),dx-.74,.82,dz-.24,32);
+  for(let i=0;i<16;i++){ const lf=new THREE.Mesh(new THREE.SphereGeometry(.05,12,8),std({color:new THREE.Color().setHSL(.29,.38,.2+Math.random()*.1),roughness:.8})); lf.scale.set(.42,1.35,.12); lf.position.set(dx-.74+(Math.random()-.5)*.11,.93+Math.random()*.13,dz-.24+(Math.random()-.5)*.11); lf.rotation.set(Math.random()*.8,Math.random()*3,Math.random()-.5); add(desk,lf); }
+  for(let i=0;i<3;i++) B(desk,.024,.0021,.032,std({color:i?0x1f4fbf:0x16171a,roughness:.5}),dx+.46+i*.03,.759,dz+.27,.001).rotation.y=(i-1)*.15;
+  hs('macbook',desk,[dx-.12,1.12,dz],{side:'studio',label:'The story and services',view:{pos:[dx-.1,1.13,dz+.72],look:[dx-.12,.9,dz-.04]}});
+
+  /* DJI Mini 3, unfolded, on the right of the desk */
+  const mini=new THREE.Group(); desk.add(mini);
+  const djiG=std({color:0xb9bcc0,roughness:.45,metalness:.15}), djiD=std({color:0x2b2d30,roughness:.5});
+  B(mini,.075,.052,.145,djiG,0,.034,0,.018);
+  B(mini,.06,.012,.08,djiD,0,.064,-.01,.006);
+  const gimb=new THREE.Group(); gimb.position.set(0,.03,.085); mini.add(gimb);
+  B(gimb,.034,.03,.03,djiD,0,0,0,.008); const gl=new THREE.Mesh(new THREE.CircleGeometry(.009,24),mat.glass); gl.position.z=.0155; gimb.add(gl);
+  [[1,1],[-1,1],[1,-1],[-1,-1]].forEach(([a,b])=>{ const armM=B(mini,.13,.012,.014,djiG,a*.068,.042,b*.05,.005); armM.rotation.y=-a*b*.55;
+    const mx=a*.125, mz=b*.085; C(mini,.011,.012,.022,djiD,mx,.052,mz,20);
+    for(let k=0;k<2;k++){ const blade=B(mini,.11,.002,.012,std({color:0x1d1e20,roughness:.4}),mx,.066,mz,.001); blade.rotation.y=k*Math.PI+a*b*.6; blade.position.x+=Math.cos(blade.rotation.y)*.0; }
+    C(mini,.004,.004,.035,djiG,mx,.012,mz,8); });
+  mini.position.set(dx+.62,.7575,dz+.12); mini.rotation.y=-.55;
+  hs('g-mini3',mini,[dx+.62,.86,dz+.12],{side:'studio',label:'DJI Mini 3',nomark:true,view:{pos:[dx+.7,1.02,dz+.55],look:[dx+.62,.79,dz+.12]}});
+
+  /* chair */
   const ch=new THREE.Group(); S.add(ch);
   B(ch,.5,.08,.48,mat.felt,0,.48,0,.03); B(ch,.47,.6,.07,mat.felt,0,.86,.25,.03); C(ch,.025,.025,.36,mat.alu,0,.26,0);
   for(let i=0;i<5;i++){ const a=i/5*Math.PI*2; const lg=B(ch,.3,.025,.035,mat.alu,Math.cos(a)*.15,.05,Math.sin(a)*.15,.01); lg.rotation.y=-a; C(ch,.022,.022,.03,mat.black,Math.cos(a)*.3,.02,Math.sin(a)*.3,12).rotation.x=Math.PI/2; }
-  ch.position.set(dx+.05,0,dz+.85); ch.rotation.y=.35;
-  hs('macbook',desk,[dx-.15,1.12,dz],{side:'studio',label:'The story and services',view:{pos:[dx-.12,1.16,dz+.78],look:[dx-.15,.9,dz-.05]}});
+  ch.position.set(dx+.05,0,dz+.82); ch.rotation.y=.3;
 
-  const shelf=new THREE.Group(); S.add(shelf); const sx=-1.9, sz=BZ+.24;
-  [[-.62,-.17],[.62,-.17],[-.62,.17],[.62,.17]].forEach(([a,b])=>B(shelf,.025,2.2,.025,mat.black,sx+a,1.1,sz+b));
-  [.18,.68,1.18,1.68,2.16].forEach(y=>B(shelf,1.27,.02,.38,mat.oak,sx,y,sz,.004));
-  const body=(x,y,r,kind)=>{ const g=new THREE.Group(); B(g,.127,.08,.045,mat.matte,0,.04,0,.008); B(g,.04,.085,.06,mat.matte,-.05,.043,.008,.012); B(g,.05,.03,.05,mat.matte,.005,.093,-.004,.008);
-    const L=new THREE.Group(); L.position.set(.01,.04,.06+(kind?.04:0)); L.rotation.x=Math.PI/2; g.add(L); C(L,.034,.032,kind?.13:.06,mat.matte,0,0,0); C(L,.035,.035,.02,mat.rubber,0,.01,0);
-    g.position.set(sx+x,y+.01,sz); g.rotation.y=r; shelf.add(g); };
-  body(-.32,1.18,.35,1); body(.1,1.18,-.2,0);
-  const lensP=(x,y,h,r=.036,red=false)=>{ C(shelf,r,r,h,mat.matte,sx+x,y+.01+h/2,sz); C(shelf,r+.001,r+.001,h*.3,mat.rubber,sx+x,y+.01+h*.62,sz); C(shelf,r*.85,r*.85,.01,mat.black,sx+x,y+.015+h,sz); if(red) C(shelf,r+.002,r+.002,.004,std({color:0xc9302c}),sx+x,y+.01+h*.9,sz); };
-  lensP(-.45,.68,.12,.038,true); lensP(-.3,.68,.09); lensP(-.17,.68,.16,.045,true); lensP(0,.68,.07,.033); lensP(.18,.68,.2,.042,true);
-  const dr=new THREE.Group(); shelf.add(dr);
-  B(dr,.1,.06,.2,mat.spaceGrey,0,.03,0,.02); [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([a,b])=>{ B(dr,.025,.02,.13,mat.spaceGrey,a*.06,.035,b*.03,.008).rotation.y=a*b*.15; });
-  B(dr,.03,.025,.03,mat.black,0,.02,.11,.008); dr.position.set(sx+.35,1.69,sz);
-  B(shelf,.14,.03,.07,mat.black,sx+.1,1.7,sz+.05,.012);
-  for(let i=0;i<3;i++) B(shelf,.04,.035,.08,mat.spaceGrey,sx-.35+i*.05,1.705,sz,.008);
-  B(shelf,.55,.22,.33,std({color:0x232427,roughness:.7}),sx-.3,.3,sz,.02); B(shelf,.42,.18,.3,std({color:0x2c2d31,roughness:.7}),sx+.3,.28,sz,.02);
-  B(shelf,.3,.1,.22,std({color:0xe9e6df,roughness:.8}),sx-.3,2.22,sz,.01); B(shelf,.25,.14,.2,std({color:0xcfc8bb,roughness:.9}),sx+.15,2.24,sz,.01);
-  hs('gear',shelf,[sx,2.45,sz],{side:'studio',label:'Gear',view:{pos:[sx,1.35,-.3],look:[sx,1.18,sz]}});
+  /* gear: three floating oak shelves with LED under-lighting */
+  const gear=new THREE.Group(); S.add(gear); const sx=-2.4;
+  const shelfYs=[1.1,1.55,2.0];
+  shelfYs.forEach(y=>{ B(gear,1.2,.035,.28,mat.oak,sx,y,BZ+.14,.004); const st=new THREE.Mesh(new THREE.BoxGeometry(1.1,.006,.01),std({color:0x000000,emissive:0xfff0dc,emissiveIntensity:2.4})); st.position.set(sx,y-.02,BZ+.25); gear.add(st); });
+  const gLight=new THREE.SpotLight(0xfff2e0,7,3.5,.7,.8,1.6); gLight.position.set(sx,2.9,BZ+1.4); gLight.target.position.set(sx,1.45,BZ+.1); gLight.castShadow=true; gLight.shadow.mapSize.set(1024,1024); gLight.shadow.bias=-.0004; scene.add(gLight,gLight.target);
+  // small label cards on the shelf edge
+  const card=(txt,x,y)=>{ const c=new THREE.Mesh(new THREE.PlaneGeometry(.16,.032),std({map:labelTex([[txt,58,600,95]],512,102,'#f3f1ec','#1d1d1f'),roughness:.8})); c.position.set(x,y-.004,BZ+.281); gear.add(c); };
+  hs('gear',gear,[sx,2.28,BZ+.12],{side:'studio',label:'Gear',view:{pos:[sx,1.55,BZ+2.15],look:[sx,1.52,BZ]}});
 
-  const P=new THREE.Group(); S.add(P); const bx=-6.9, bz=BZ+.35;
-  const paperM=std({color:0x8e8b86,roughness:1});
-  const sweep=new THREE.Mesh(new THREE.PlaneGeometry(2.2,2.9,1,40),paperM); const pa=sweep.geometry.attributes.position;
+  // --- Sony A7 III with the FE 24-240 mounted (real proportions) ---
+  const sonyBody=std({color:0x1b1c1e,roughness:.62,metalness:.1}), sonyRub=std({map:rubberTex,color:0x2a2a2c,roughness:.9}), sonyMetal=std({color:0x8d9096,roughness:.25,metalness:.95});
+  function a7iii(){ const g=new THREE.Group();
+    B(g,.127,.076,.041,sonyBody,0,.038,0,.006);                    // body (126.9 × 95.6 × 73.7 mm overall)
+    B(g,.042,.088,.07,sonyRub,-.045,.044,.012,.012);                // grip
+    const hump=B(g,.054,.03,.05,sonyBody,.004,.087,-.002,.006);     // EVF / prism hump
+    C(g,.012,.012,.009,sonyMetal,.042,.08,-.004,32);                // mode dial
+    C(g,.009,.009,.006,sonyMetal,-.05,.091,.022,24);               // shutter button
+    C(g,.008,.008,.008,sonyMetal,.03,.08,.014,24);                 // exposure comp. dial
+    const m=C(g,.031,.031,.006,sonyMetal,.006,.037,.0235,48); m.rotation.x=Math.PI/2; // E-mount ring
+    const badge=new THREE.Mesh(new THREE.PlaneGeometry(.03,.007),std({map:labelTex([['SONY',150,700,150,'#e8e8e8']],512,200,'#1b1c1e'),roughness:.6})); badge.position.set(.004,.093,.0231); g.add(badge);
+    const lcd=new THREE.Mesh(new THREE.PlaneGeometry(.075,.05),std({color:0x050506,roughness:.1})); lcd.rotation.y=Math.PI; lcd.position.set(.012,.036,-.0207); g.add(lcd);
+    return g; }
+  function fe24240(){ const g=new THREE.Group();                    // 80 × 118.5 mm
+    const L=new THREE.Group(); L.rotation.x=Math.PI/2; g.add(L);
+    C(L,.031,.031,.008,sonyMetal,0,.004,0,48);
+    C(L,.036,.04,.02,sonyBody,0,.018,0,48);
+    C(L,.04,.04,.05,sonyRub,0,.05,0,64);                              // zoom ring
+    C(L,.0405,.0405,.004,std({color:0xd9d9d9,roughness:.5}),0,.077,0,64);
+    C(L,.04,.04,.022,sonyBody,0,.09,0,64);
+    C(L,.04,.04,.016,sonyRub,0,.108,0,64);                            // focus ring
+    C(L,.039,.04,.006,sonyBody,0,.118,0,64);
+    const fe=new THREE.Mesh(new THREE.CircleGeometry(.033,48),std({color:0x1a1530,roughness:.02,metalness:1})); fe.rotation.x=-Math.PI/2; fe.position.y=.1215; L.add(fe);
+    return g; }
+  const a7=new THREE.Group(); gear.add(a7); a7.add(a7iii()); const z1=fe24240(); z1.position.set(.006,.037,.024); a7.add(z1);
+  a7.position.set(sx-.2,shelfYs[2]+.0175,BZ+.12); a7.rotation.y=.55;
+  hs('g-24240',z1,[sx-.2,shelfYs[2]+.1,BZ+.2],{side:'studio',label:'FE 24-240',nomark:true,view:{pos:[sx-.1,shelfYs[2]+.11,BZ+.8],look:[sx-.2,shelfYs[2]+.05,BZ+.15]}});
+  card('Sony A7 III + FE 24-240',sx-.2,shelfYs[2]);
+  hs('g-a7',a7,[sx-.2,shelfYs[2]+.12,BZ+.12],{side:'studio',label:'Sony A7 III',nomark:true,view:{pos:[sx-.12,shelfYs[2]+.12,BZ+.85],look:[sx-.2,shelfYs[2]+.05,BZ+.12]}});
+  // spare 24-240 cap and battery next to it
+  B(gear,.038,.023,.057,std({color:0x111214,roughness:.6}),sx+.25,shelfYs[2]+.029,BZ+.1,.004);
+  B(gear,.038,.023,.057,std({color:0x111214,roughness:.6}),sx+.3,shelfYs[2]+.029,BZ+.1,.004);
+
+  // --- Laowa 100mm f/2.8 2X Ultra Macro APO, standing on its rear cap ---
+  const laowa=new THREE.Group(); gear.add(laowa);
+  const lw=std({color:0x18191b,roughness:.45,metalness:.3});
+  C(laowa,.03,.03,.012,std({color:0x111,roughness:.7}),0,.006,0,48);
+  C(laowa,.035,.035,.03,lw,0,.027,0,64); C(laowa,.0352,.0352,.004,std({color:0x2f6bdc,roughness:.4}),0,.043,0,64);
+  C(laowa,.0355,.0355,.05,sonyRub,0,.07,0,64); C(laowa,.035,.033,.036,lw,0,.113,0,64);
+  const lg=new THREE.Mesh(new THREE.CircleGeometry(.024,48),std({color:0x14201c,roughness:.02,metalness:1})); lg.rotation.x=-Math.PI/2; lg.position.y=.1315; laowa.add(lg);
+  laowa.position.set(sx-.25,shelfYs[1]+.0175,BZ+.12);
+  card('Laowa 100mm 2X Macro',sx-.25,shelfYs[1]);
+  hs('g-laowa',laowa,[sx-.25,shelfYs[1]+.17,BZ+.12],{side:'studio',label:'Laowa 100mm Macro',nomark:true,view:{pos:[sx-.18,shelfYs[1]+.1,BZ+.75],look:[sx-.25,shelfYs[1]+.07,BZ+.12]}});
+  // DJI RC-N1 controller and two Mini 3 batteries
+  const rc=new THREE.Group(); gear.add(rc);
+  B(rc,.105,.032,.06,std({color:0x2a2b2e,roughness:.5}),0,.016,0,.014); [-1,1].forEach(a=>C(rc,.006,.006,.012,std({color:0x111}),a*.025,.036,0,12)); B(rc,.08,.008,.04,djiG,0,.003,-.035,.003);
+  rc.position.set(sx+.22,shelfYs[1]+.0175,BZ+.12); rc.rotation.y=-.3;
+  [0,1].forEach(i=>B(gear,.04,.02,.072,djiG,sx+.06+i*.05,shelfYs[1]+.0275,BZ+.1,.005));
+  card('DJI Mini 3 · RC',sx+.15,shelfYs[1]);
+  hs('g-mini3b',rc,[sx+.2,shelfYs[1]+.09,BZ+.12],{side:'studio',label:'DJI Mini 3',nomark:true,sheet:'g-mini3',view:{pos:[sx+.2,shelfYs[1]+.1,BZ+.75],look:[sx+.18,shelfYs[1]+.04,BZ+.12]}});
+  // bottom shelf: SD cases, lens cloth, books
+  [[0x1f4fbf,.05],[0x7a2f2a,.04],[0x2f2f2f,.06],[0xd9d4c8,.03]].forEach(([c,t],i)=>B(gear,.16,.22,t,std({color:c,roughness:.85}),sx-.4+i*.06,shelfYs[0]+.128,BZ+.1,.004));
+  B(gear,.09,.025,.06,std({color:0x111214,roughness:.6}),sx+.25,shelfYs[0]+.03,BZ+.12,.006);
+
+  /* portrait corner: paper sweep, octabox on a stand, ring light, stool */
+  const P=new THREE.Group(); S.add(P); const bx=-7.15, bz=BZ+.3;
+  const paperM=std({color:0x8b8883,roughness:1});
+  const sweep=new THREE.Mesh(new THREE.PlaneGeometry(1.75,2.9,1,40),paperM); const pa=sweep.geometry.attributes.position;
   for(let i=0;i<pa.count;i++){ const y=pa.getY(i); if(y<-.75){ const t=-.75-y; const k=Math.min(t,1.2)/1.2*Math.PI/2; pa.setY(i,-.75-Math.sin(k)*.7); pa.setZ(i,(1-Math.cos(k))*.7+Math.max(0,t-1.2)); } }
   sweep.geometry.computeVertexNormals(); sweep.position.set(bx,1.47,bz); sweep.receiveShadow=true; P.add(sweep);
-  C(P,.05,.05,2.4,paperM,bx,2.88,bz-.02).rotation.z=Math.PI/2; C(P,.012,.012,2.6,mat.black,bx,2.94,bz-.02,12).rotation.z=Math.PI/2;
-  [-1.25,1.25].forEach(a=>{ C(P,.014,.014,2.95,mat.alu,bx+a,1.47,bz-.02,12); [0,2.1,4.2].forEach(r=>{ C(P,.008,.008,.5,mat.alu,bx+a+Math.cos(r)*.18,.16,bz-.02+Math.sin(r)*.18,8).rotation.set(Math.sin(r)*.7,0,-Math.cos(r)*.7); }); });
+  C(P,.045,.045,1.9,paperM,bx,2.9,bz-.02).rotation.z=Math.PI/2; C(P,.011,.011,2.05,mat.black,bx,2.95,bz-.02,12).rotation.z=Math.PI/2;
+  [-1,1].forEach(a=>{ C(P,.013,.013,2.95,mat.alu,bx+a*1.0,1.47,bz-.02,12); [0,2.1,4.2].forEach(r=>{ const leg=C(P,.008,.008,.48,mat.alu,bx+a*1.0+Math.cos(r)*.17,.16,bz-.02+Math.sin(r)*.17,8); leg.rotation.set(Math.sin(r)*.7,0,-Math.cos(r)*.7); }); });
   const strobe=new THREE.Group(); P.add(strobe);
-  const oct=new THREE.Mesh(new THREE.CylinderGeometry(.45,.08,.38,8,1,true),std({color:0x111112,roughness:.9,side:THREE.DoubleSide})); oct.rotation.x=Math.PI/2; oct.castShadow=true; strobe.add(oct);
-  const diff=new THREE.Mesh(new THREE.CircleGeometry(.44,8),std({color:0xffffff,emissive:0xfff4e6,emissiveIntensity:1.4})); diff.position.z=.19; strobe.add(diff);
+  const oct=new THREE.Mesh(new THREE.CylinderGeometry(.42,.07,.36,8,1,true),std({color:0x111112,roughness:.9,side:THREE.DoubleSide})); oct.rotation.x=Math.PI/2; oct.castShadow=true; strobe.add(oct);
+  const diff=new THREE.Mesh(new THREE.CircleGeometry(.41,8),std({color:0xffffff,emissive:0xfff4e6,emissiveIntensity:1.3,side:THREE.DoubleSide})); diff.position.z=.18; strobe.add(diff);
   B(strobe,.1,.12,.18,mat.white,0,0,-.25,.02);
-  strobe.position.set(bx+1.6,1.75,bz+.95); strobe.lookAt(bx,1.1,bz+.3);
-  C(P,.012,.012,1.7,mat.alu,bx+1.6,.85,bz+1.05,10);
-  [0,2.1,4.2].forEach(r=>{ C(P,.008,.008,.6,mat.alu,bx+1.6+Math.cos(r)*.2,.2,bz+1.05+Math.sin(r)*.2,8).rotation.set(Math.sin(r)*.6,0,-Math.cos(r)*.6); });
+  strobe.position.set(bx+1.25,1.7,bz+1.05); strobe.lookAt(bx,1.1,bz+.4);
+  C(P,.011,.011,1.62,mat.alu,bx+1.25,.81,bz+1.1,10);
+  [0,2.1,4.2].forEach(r=>{ const leg=C(P,.008,.008,.56,mat.alu,bx+1.25+Math.cos(r)*.19,.19,bz+1.1+Math.sin(r)*.19,8); leg.rotation.set(Math.sin(r)*.6,0,-Math.cos(r)*.6); });
   const key=new THREE.SpotLight(0xfff4e6,6,6,.9,1,1.5); key.position.copy(strobe.position); key.target.position.set(bx,1,bz); scene.add(key,key.target);
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(.24,.028,18,72),std({color:0xffffff,emissive:0xfffaf0,emissiveIntensity:1.6}));
-  ring.position.set(bx-.95,1.55,bz+1.1); ring.rotation.y=.6; P.add(ring); C(P,.01,.01,1.5,mat.alu,bx-.95,.75,bz+1.1,10);
-  C(P,.17,.17,.035,mat.felt,bx,.66,bz+.75); C(P,.018,.018,.64,mat.alu,bx,.33,bz+.75,10); C(P,.2,.2,.015,mat.alu,bx,.01,bz+.75);
-  hs('portrait',P,[bx,2.2,bz+.4],{side:'studio',label:'Portrait studio',view:{pos:[bx+.6,1.45,1.7],look:[bx,1.15,bz+.2]}});
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.23,.026,18,72),std({color:0xffffff,emissive:0xfffaf0,emissiveIntensity:1.6}));
+  ring.position.set(bx-.55,1.52,bz+1.2); ring.rotation.y=.35; P.add(ring); C(P,.01,.01,1.45,mat.alu,bx-.55,.74,bz+1.2,10);
+  C(P,.16,.16,.035,mat.felt,bx,.64,bz+.7,40); C(P,.017,.017,.62,mat.alu,bx,.32,bz+.7,10); C(P,.19,.19,.015,mat.alu,bx,.01,bz+.7,40);
+  hs('portrait',P,[bx,2.3,bz+.3],{side:'studio',label:'Portrait studio',view:{pos:[bx+.55,1.42,1.6],look:[bx,1.1,bz+.25]}});
 
-  const PR=new THREE.Group(); S.add(PR); const px=-3.0, pz=BZ+.3;
-  B(PR,.95,.7,.45,std({color:0x2a2a2c,roughness:.6}),px,.35,pz,.01);
-  [-.24,.24].forEach(o=>B(PR,.005,.6,.005,mat.alu,px+o,.38,pz+.226));
-  B(PR,.6,.2,.38,mat.white,px,.8,pz,.03); B(PR,.5,.012,.14,std({color:0xd6d2ca}),px,.9,pz-.12,.004);
-  const out=new THREE.Mesh(new THREE.PlaneGeometry(.2,.28),mat.paper); out.rotation.x=-Math.PI/2+.12; out.position.set(px,.86,pz+.27); PR.add(out);
-  const pph=new THREE.Mesh(new THREE.PlaneGeometry(.17,.12),std({map:T(340,240,scenes[0]),roughness:.5})); pph.rotation.x=-Math.PI/2+.12; pph.position.set(px,.862,pz+.3); PR.add(pph);
-  const led=new THREE.Mesh(new THREE.SphereGeometry(.006,8,8),std({emissive:0x30d158,emissiveIntensity:3})); led.position.set(px+.24,.86,pz+.19); PR.add(led);
-  for(let i=0;i<4;i++){ const pp=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),std({map:T(300,200,scenes[(i+1)%5]),roughness:.5})); pp.rotation.x=-Math.PI/2; pp.rotation.z=(Math.random()-.5)*.3; pp.position.set(px-.36,.702+i*.002,pz+.08); PR.add(pp); }
-  hs('printer',PR,[px,1.12,pz],{side:'studio',label:'Prints and live printing',view:{pos:[px+.2,1.35,pz+1.35],look:[px,.82,pz]}});
+  /* print station and client wall, by the column */
+  const PR=new THREE.Group(); S.add(PR); const px=-1.0, pz=BZ+.26;
+  B(PR,.9,.68,.42,std({color:0x232326,roughness:.55}),px,.34,pz,.008);
+  [-.225,.225].forEach(o=>B(PR,.004,.56,.004,mat.alu,px+o,.37,pz+.212));
+  B(PR,.4,.16,.3,mat.white,px-.12,.76,pz,.02);                             // dye-sub photo printer
+  B(PR,.3,.01,.12,std({color:0xd6d2ca}),px-.12,.845,pz-.1,.003);
+  const tray=B(PR,.18,.004,.13,std({color:0xe8e5df}),px-.12,.71,pz+.2,.002);
+  const pr1=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),std({map:T(300,200,scenes.events),roughness:.5})); pr1.rotation.x=-Math.PI/2; pr1.position.set(px-.12,.714,pz+.2); PR.add(pr1);
+  const led=new THREE.Mesh(new THREE.SphereGeometry(.005,8,8),std({emissive:0x30d158,emissiveIntensity:3})); led.position.set(px+.05,.83,pz+.151); PR.add(led);
+  ['automotive','aerial','portraits'].forEach((k,i)=>{ const pp=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),std({map:T(300,200,scenes[k]),roughness:.5})); pp.rotation.x=-Math.PI/2; pp.rotation.z=(i-1)*.12; pp.position.set(px+.25,.681+i*.002,pz+.05); PR.add(pp); });
+  hs('printer',PR,[px-.12,1.02,pz],{side:'studio',label:'Prints and live printing',view:{pos:[px-.05,1.32,pz+1.25],look:[px-.05,.78,pz]}});
 
-  const RV=new THREE.Group(); S.add(RV); const rx=-3.0, ry=1.85;
-  B(RV,.92,.62,.03,mat.oak,rx,ry,BZ+.02,.004);
-  B(RV,.86,.56,.01,std({map:fabricTex('#b59a74'),roughness:1}),rx,ry,BZ+.036);
-  const starT=T(100,16,g=>{ g.fillStyle='#fff'; g.fillRect(0,0,100,16); g.fillStyle='#f5a623'; for(let k=0;k<5;k++){ g.beginPath(); const cx=10+k*20; for(let a=0;a<10;a++){ const r=a%2?3:7; g.lineTo(cx+Math.cos(a*Math.PI/5-Math.PI/2)*r,8+Math.sin(a*Math.PI/5-Math.PI/2)*r);} g.fill(); } });
-  for(let i=0;i<6;i++){ const card=new THREE.Mesh(new THREE.PlaneGeometry(.22,.15),std({color:0xfdfcf9,roughness:.9}));
-    card.position.set(rx-.28+(i%3)*.28,ry+.12-Math.floor(i/3)*.24,BZ+.043); card.rotation.z=(Math.random()-.5)*.08; RV.add(card);
-    const st=new THREE.Mesh(new THREE.PlaneGeometry(.1,.016),std({map:starT,roughness:.9})); st.position.set(card.position.x-.04,card.position.y+.045,BZ+.044); RV.add(st);
-    const pin=new THREE.Mesh(new THREE.SphereGeometry(.008,10,10),std({color:0x1d1d1f,roughness:.3})); pin.position.set(card.position.x,card.position.y+.07,BZ+.05); RV.add(pin); }
-  hs('reviews',RV,[rx,ry+.42,BZ+.1],{side:'studio',label:'Client reviews',view:{pos:[rx,ry,BZ+1.6],look:[rx,ry,BZ]}});
+  const CL=new THREE.Group(); S.add(CL);
+  const plaque=(lines,x,y,w,h)=>{ B(CL,w+.03,h+.03,.02,frameMat,x,y,BZ+.015,.003); const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),std({map:labelTex(lines,768,Math.round(768*h/w),'#f6f4ef'),roughness:.7})); p.position.set(x,y,BZ+.026); CL.add(p); };
+  plaque([['CLIENT',30,500,62,'#8a909a'],['UCLouvain FUCaM Mons',58,600,138],['Official photographer',36,400,206,'#5b616b'],['since September 2024',36,400,252,'#5b616b']],px,1.86,.5,.2);
+  plaque([['CLIENT',30,500,62,'#8a909a'],['APEX',72,700,148],['Automotive group',36,400,212,'#5b616b'],['for several years',36,400,258,'#5b616b']],px,1.42,.5,.2);
+  hs('clients',CL,[px,2.12,BZ+.05],{side:'studio',label:'Clients and reviews',view:{pos:[px,1.64,BZ+1.45],look:[px,1.64,BZ]}});
 
+  PHOTOS.then(m=>{ if(!m) return; const ld=new THREE.TextureLoader(); FR.forEach(f=>{ const it=(m[f.key]||[])[0]; if(!it) return; ld.load(it.thumb||it.src, t=>{ t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=8;
+    const fa=(f.w*.84)/(f.h*.8), ia=t.image.width/t.image.height; if(ia>fa){ t.repeat.set(fa/ia,1); t.offset.set((1-fa/ia)/2,0); } else { t.repeat.set(1,ia/fa); t.offset.set(0,(1-ia/fa)/2); }
+    f.ph.material.map=t; f.ph.material.needsUpdate=true; }); }); });
   /* -------- ATELIER -------- */
   const A=new THREE.Group(); scene.add(A);
   const BE=new THREE.Group(); A.add(BE); const ax=3.4, az=-2.55;
@@ -930,7 +1071,7 @@ function initRoom(){
   composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.25,.6,.92)); composer.addPass(new OutputPass());
 
   /* camera */
-  const V={ studio:{pos:[-4.15,1.62,4.2],look:[-4.15,1.28,-2.5]}, atelier:{pos:[3.85,1.62,4.2],look:[3.85,1.28,-2.5]}, far:{pos:[0,2.2,8.5],look:[0,1.3,-2.5]} };
+  const V={ studio:{pos:[-4.25,1.6,5.1],look:[-4.25,1.32,-2.5]}, atelier:{pos:[3.85,1.62,4.2],look:[3.85,1.28,-2.5]}, far:{pos:[0,2.2,8.5],look:[0,1.3,-2.5]} };
   const mob=()=>innerWidth<900; if(mob()){ V.studio.pos[2]=6.4; V.atelier.pos[2]=6.4; }
   const cur={p:new THREE.Vector3(...V.far.pos),l:new THREE.Vector3(...V.far.look)}; camera.position.copy(cur.p); camera.lookAt(cur.l);
   let tw=null; const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
@@ -940,7 +1081,7 @@ function initRoom(){
   let side='studio', focused=null;
   const segB=$$('#seg button'), hl=$('#hl');
   const placeHl=()=>{ const b=segB.find(x=>x.dataset.side===side); hl.style.width=b.offsetWidth+'px'; hl.style.transform=`translateX(${b.offsetLeft-3}px)`; segB.forEach(x=>x.classList.toggle('on',x===b)); };
-  const CAP={ studio:['Studio','Above Belgium.','Portfolio, gear, prints and the portrait corner. Click a dot.'], atelier:['Atelier','Projects.','Code on the screens, models on the board, hardware on the bench.'] };
+  const CAP={ studio:['Studio','Above Belgium.','Portfolio on the wall, gear on the shelves, the story on the laptop.'], atelier:['Atelier','Projects.','Code on the screens, models on the board, hardware on the bench.'] };
   const setCap=()=>{ const [k,h,p]=CAP[side]; $('#rk').textContent=k; $('#rh').textContent=h; $('#rp').textContent=p; };
   Room.setSide=(s,fromOutside)=>{ const changed=s!==side; side=s; closeF(true); placeHl(); setCap(); fly(V[side], fromOutside?2.2:1.7, (!fromOutside&&changed)?1:0); };
   segB.forEach(b=>b.onclick=()=>go(b.dataset.side));
@@ -948,24 +1089,29 @@ function initRoom(){
   let ts0=null; canvas.addEventListener('touchstart',e=>{ ts0=[e.touches[0].clientX,e.touches[0].clientY]; },{passive:true});
   canvas.addEventListener('touchend',e=>{ if(!ts0||focused) return; const dx=e.changedTouches[0].clientX-ts0[0], dy=e.changedTouches[0].clientY-ts0[1]; if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)) go(dx<0?'atelier':'studio'); ts0=null; },{passive:true});
   let wl=0; addEventListener('wheel',e=>{ if((route!=='studio'&&route!=='atelier')||focused) return; const n=performance.now(); if(n<wl) return; if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>25){ go(e.deltaX>0?'atelier':'studio'); wl=n+1400; } },{passive:true});
-  const marks=$('#marks'); hot.forEach(h=>{ const el=document.createElement('div'); el.className='mk'; el.innerHTML=`<span class="d"></span><span class="l">${h.label}</span>`; el.onclick=()=>focusF(h.id); marks.appendChild(el); h.el=el; });
+  const marks=$('#marks'); hot.filter(h=>!h.nomark).forEach(h=>{ const el=document.createElement('div'); el.className='mk'; el.innerHTML=`<span class="d"></span><span class="l">${h.label}</span>`; el.onclick=()=>focusF(h.id); marks.appendChild(el); h.el=el; });
 
+  const SPEC=(rows)=>`<ul class="spec">${rows.map(([k,v])=>`<li><span>${k}</span><b>${v}</b></li>`).join('')}</ul>`;
+  const GEARNAV=(cur)=>`<div class="gearnav">${[['g-a7','Sony A7 III'],['g-24240','FE 24-240'],['g-laowa','Laowa 100mm'],['g-mini3','DJI Mini 3']].map(([id,n])=>`<button data-focus="${id}" class="${id===cur?'on':''}">${n}</button>`).join('')}</div>`;
   const SHEETS={
-    portfolio:`<div class="k">Above Belgium</div><h3>Portfolio</h3>
-      <div class="tabs" id="ptabs"><button class="on" data-t="ph">Photos</button><button data-t="vi">Videos</button></div>
-      <div id="pg-ph"><p>Corporate, events, sports, drone and astrophotography.</p><div class="gal"><div class="w">Featured</div><div>Corporate</div><div>Events</div><div>Sports</div><div>Drone</div><div>Astro</div><div>Portraits</div></div></div>
-      <div id="pg-vi" style="display:none"><p>Aftermovies, aerial footage and short brand films.</p><div class="gal"><div class="w">Showreel</div><div>Aftermovies</div><div>Aerial</div></div></div>
-      <p class="note">These frames are placeholders. Send me your selection and each category fills with your own work.</p>`,
-    macbook:`<div class="k">Above Belgium · Since 2023</div><h3>Seen from above.</h3>
-      <p>Above Belgium is my photo, video and drone business, based in Lessines in Hainaut. I started it in September 2023 and run everything myself: finding clients, pricing, shooting, editing and delivery.</p>
-      <ul><li><b>Corporate and events</b>Conferences, company events, team and brand imagery.</li><li><b>Sports</b>Action coverage for clubs and competitions.</li><li><b>Drone</b>Licensed aerial photo and video.</li><li><b>Astrophotography</b>Night skies and landscapes.</li><li><b>Portrait studio</b>Headshots and portraits in my own studio.</li><li><b>Prints and live printing</b>Prints in several formats, and on-site printing at events.</li></ul>
-      <p><a href="https://www.abovebelgium.be" target="_blank" rel="noopener" style="color:#0071e3">abovebelgium.be ›</a></p>`,
-    gear:`<div class="k">Above Belgium</div><h3>Gear</h3>
-      <ul><li><b>Sony A7 III</b><span class="s">Full-frame mirrorless body</span></li><li><b>Lenses</b><span class="s">Your list goes here</span></li><li><b>Drone</b><span class="s">Model to add</span></li><li><b>Lighting</b><span class="s">Strobe, octabox, ring light</span></li></ul>
-      <p class="note">Send me the exact bodies, lenses, drone and lights. Each one becomes its own object on the shelf, with what you use it for.</p>`,
-    portrait:`<div class="k">Above Belgium</div><h3>Portrait studio</h3><p>A dedicated corner with a paper backdrop, a strobe in an octabox and a ring light, for headshots, portraits and product shots.</p><div class="gal"><div>Headshots</div><div>Portraits</div></div><p class="note">Add two to four studio shots and the sessions you offer.</p>`,
-    printer:`<div class="k">Above Belgium</div><h3>Prints and live printing</h3><p>Prints in several formats, and live printing at events: guests leave with their photo, printed on the spot.</p><p class="note">Tell me your formats and how a live printing setup works, and I will detail it here.</p>`,
-    reviews:`<div class="k">Above Belgium</div><h3>What clients say</h3><p>Your Google reviews will be pinned here with the rating, first name and date, next to the logos of clients who agree to be shown.</p><p class="note">I will not invent reviews. Paste me the text of your Google reviews and I will fill the board.</p>`,
+    portfolio:(h)=>portfolioSheet(h&&h.cat),
+    macbook:`<div class="k">Above Belgium · Since 2022</div><h3>Seen from above.</h3>
+      <p>Photography has always been my passion. Like many people, I started with my phone. In 2022 I decided to take it further and bought my first drone, and that is where the idea of Above Belgium came from: a name that literally means what it says.</p>
+      <p>The project grew a lot once I bought my first real camera. I learned to master it through online videos, and I haven't grown tired of it since. Today I combine it with my Master's in Business Analytics at UCLouvain FUCaM Mons.</p>
+      <p>My goal is simple: gain experience today, to give you an even better result tomorrow.</p>
+      <ul><li><b>Events and institutions</b>Official photographer of UCLouvain in Mons since September 2024.</li><li><b>Automotive</b>Vehicles and showrooms, for the APEX automotive group for several years.</li><li><b>Aerial</b>Photo and 4K HDR video with the DJI Mini 3.</li><li><b>Macro</b>True 2:1 close-ups with the Laowa 100mm.</li><li><b>Portraits</b>Headshots and portraits in my own studio corner.</li><li><b>Prints and live printing</b>Prints in several formats, and on-site printing at events.</li></ul>
+      <p><a href="https://www.abovebelgium.be" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">abovebelgium.be ›</a></p>`,
+    gear:`<div class="k">Above Belgium</div><h3>Professional work,<br>professional gear.</h3><p>Everything I shoot with. Click an item on the shelves, or pick one here.</p>${GEARNAV('')}
+      <ul><li><b>Sony A7 III</b><span class="s">Full-frame mirrorless camera</span></li><li><b>Sony FE 24-240mm</b><span class="s">10x travel zoom</span></li><li><b>Laowa 100mm 2X</b><span class="s">Ultra macro, APO</span></li><li><b>DJI Mini 3</b><span class="s">4K HDR drone</span></li></ul>`,
+    'g-a7':`<div class="k">Camera</div><h3>Sony A7 III</h3>${GEARNAV('g-a7')}<p>The body behind almost every shot: a full-frame sensor that stays clean in low light, which matters at indoor events.</p>${SPEC([['Sensor','Full frame, 24.2 MP'],['Autofocus','693 points'],['Burst','10 fps'],['Video','4K HDR'],['Stabilisation','5-axis in-body'],['Battery','About 710 shots'],['Cards','Dual SD slots'],['Mount','Sony E-mount']])}`,
+    'g-24240':`<div class="k">Telephoto zoom</div><h3>Sony FE 24-240mm</h3>${GEARNAV('g-24240')}<p>One lens from wide to long telephoto, so I never miss a moment changing lenses during an event.</p>${SPEC([['Zoom','10x, 24 to 240 mm'],['Aperture','f/3.5 to 6.3'],['Stabilisation','Optical'],['Autofocus','Fast and silent'],['Mount','Full-frame E-mount']])}`,
+    'g-laowa':`<div class="k">Macro lens</div><h3>Laowa 100mm 2X</h3>${GEARNAV('g-laowa')}<p>For details invisible to the naked eye: twice life-size on the sensor, without any extension tube.</p>${SPEC([['Magnification','2:1, no extension tube'],['Aperture','f/2.8'],['Focus','From 25 cm to infinity'],['Optics','Apochromatic (APO)'],['Mount','Full-frame E-mount']])}`,
+    'g-mini3':`<div class="k">Drone</div><h3>DJI Mini 3</h3>${GEARNAV('g-mini3')}<p>Where Above Belgium started: light enough to take anywhere, with true vertical shooting for social media.</p>${SPEC([['Camera','4K HDR at 60 fps'],['Sensor','1/1.3"'],['Flight time','Up to 38 min'],['Transmission','Up to 10 km'],['Shooting','Vertical and horizontal']])}`,
+    portrait:`<div class="k">Above Belgium</div><h3>Portrait studio</h3><p>A corner with a paper backdrop, a strobe in an octabox and a ring light, for headshots, portraits and product shots.</p><div class="gal" id="pf-portrait"></div>`,
+    printer:`<div class="k">Above Belgium</div><h3>Prints and live printing</h3><p>Prints in several formats, and live printing at events: guests leave with their photo, printed on the spot.</p><p class="note">Tell me your print formats and how your live printing works, and I'll detail it here.</p>`,
+    clients:`<div class="k">Above Belgium</div><h3>Clients</h3>
+      <ul><li><b>UCLouvain FUCaM Mons</b>Official photographer of the Mons campus since September 2024: events, ceremonies and campus life.</li><li><b>APEX</b>Automotive group I have been working with for several years.</li></ul>
+      <p class="note">Your Google reviews can be pinned here too. Paste me their text and I'll add them, I won't write any myself.</p>`,
     software:`<div class="k">Atelier</div><h3>Software and data</h3>
       <ul><li><b>PushIt</b>Android app that counts push-ups in real time with on-device pose estimation, with friends and leaderboards.<br><span class="s">Kotlin · Jetpack Compose · MediaPipe · Firebase</span><br><a href="https://github.com/simoensm/pushit" target="_blank" rel="noopener">View on GitHub ›</a></li>
       <li><b>SideTab</b>Turns an Android tablet into an extended Mac display over USB-C, hardware H.264 at 60 fps.<br><span class="s">Swift · ScreenCaptureKit · VideoToolbox</span><br><a href="https://github.com/simoensm/sidetab" target="_blank" rel="noopener">View on GitHub ›</a></li>
@@ -981,9 +1127,9 @@ function initRoom(){
   const sb=$('#sb');
   function focusF(id){ const h=hot.find(x=>x.id===id); if(!h) return;
     if(h.side!==side){ side=h.side; history.replaceState(null,'','#'+side); route=side; $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===side)); placeHl(); setCap(); }
-    focused=id; document.body.classList.add('focused'); sb.innerHTML=SHEETS[id]; $('#sheet').scrollTop=0;
-    const pt=$('#ptabs'); if(pt) pt.querySelectorAll('button').forEach(b=>b.onclick=()=>{ pt.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); $('#pg-ph').style.display=b.dataset.t==='ph'?'':'none'; $('#pg-vi').style.display=b.dataset.t==='vi'?'':'none'; });
+    focused=id; document.body.classList.add('focused'); const sid=h.sheet||(/^pf-/.test(id)?'portfolio':id); const sh=SHEETS[sid]; sb.innerHTML= typeof sh==='function' ? sh(h) : sh; $('#sheet').scrollTop=0; wireSheet(sid,h);
     const v={pos:[...h.view.pos],look:[...h.view.look]}; if(!mob()){ v.pos[0]+=.32; v.look[0]+=.32; } fly(v,1.5); }
+  sb.addEventListener('click',e=>{ const f=e.target.closest('[data-focus]'); if(f){ focusF(f.dataset.focus); } });
   function closeF(silent){ if(!focused) return; focused=null; document.body.classList.remove('focused'); if(!silent) fly(V[side],1.3); }
   $('#sx').onclick=()=>closeF();
 
@@ -1000,8 +1146,8 @@ function initRoom(){
     if(tw){ const k=Math.min(1,(now-tw.t0)/tw.d), e=ease(k); cur.p.lerpVectors(tw.fp,tw.tp,e); cur.l.lerpVectors(tw.fl,tw.tl,e); if(tw.dolly) cur.p.z+=Math.sin(e*Math.PI)*.8; if(k>=1) tw=null; }
     const pk=focused?.015:.09; tgt.set(mouse.x<5?mouse.x*pk:0, mouse.y<5?mouse.y*pk*.5:0); par.lerp(tgt,.04);
     camera.position.set(cur.p.x+par.x,cur.p.y+par.y,cur.p.z); camera.lookAt(cur.l);
-    if(!focused){ const id=pick(); if(id!==hov){ hov=id; canvas.style.cursor=id?'pointer':'default'; hot.forEach(h=>h.el.classList.toggle('hot',h.id===id)); } }
-    hot.forEach(h=>{ tmp.copy(h.anchor).project(camera); const vis=tmp.z<1&&Math.abs(tmp.x)<.95&&Math.abs(tmp.y)<.95&&h.side===side&&!tw; h.el.classList.toggle('vis',vis); h.el.style.left=((tmp.x+1)/2*innerWidth)+'px'; h.el.style.top=((1-tmp.y)/2*innerHeight)+'px'; });
+    if(!focused){ const id=pick(); if(id!==hov){ hov=id; canvas.style.cursor=id?'pointer':'default'; hot.forEach(h=>h.el&&h.el.classList.toggle('hot',h.id===id||(h.id==='gear'&&/^g-/.test(id||''))||(h.id==='portfolio'&&/^pf-/.test(id||'')))); } }
+    hot.forEach(h=>{ if(!h.el) return; tmp.copy(h.anchor).project(camera); const vis=tmp.z<1&&Math.abs(tmp.x)<.95&&Math.abs(tmp.y)<.95&&h.side===side&&!tw; h.el.classList.toggle('vis',vis); h.el.style.left=((tmp.x+1)/2*innerWidth)+'px'; h.el.style.top=((1-tmp.y)/2*innerHeight)+'px'; });
     led.material.emissiveIntensity=2+Math.sin(t*3)*1.2; ring.material.emissiveIntensity=1.55+Math.sin(t*1.2)*.05;
     if(duck.userData.spin){ duck.userData.spin+=.08; duck.rotation.y=-2.4+Math.sin(duck.userData.spin*2)*.6; duck.position.y=.762+Math.abs(Math.sin(duck.userData.spin*3))*.03; if(duck.userData.spin>4){ duck.userData.spin=0; duck.rotation.y=-2.4; duck.position.y=.762; } }
     composer.render();
