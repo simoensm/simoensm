@@ -192,6 +192,15 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .tags{display:flex;flex-wrap:wrap;gap:8px;padding:14px 0 18px}
 .tags span,.tags button{font:inherit;font-size:13px;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:background .4s var(--ease),color .4s var(--ease),transform .5s var(--spring),border-color .4s}
 .tags button:hover{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-1px)}
+.ai{padding:20px 0 90px}
+.aigrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+.aic{border-radius:26px;padding:26px 24px;transition:scale .9s var(--spring),box-shadow .7s var(--ease)}
+.aic:hover{scale:1.015;box-shadow:0 28px 60px -28px rgba(20,30,60,.35)}
+.aic .n{font-family:var(--mono);font-size:11px;color:#3f6bff;letter-spacing:.06em}
+.aic h3{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-top:14px}
+.aic p{font-size:14.5px;line-height:1.6;color:var(--ink2);margin-top:8px}
+.ainote{font-size:14.5px;color:var(--ink2);margin-top:22px;max-width:680px;line-height:1.55}.ainote a{color:var(--accent);font-weight:500}
+@media (max-width:900px){.aigrid{grid-template-columns:1fr}}
 .skgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:40px}
 .skc{position:relative;border-radius:26px;padding:24px 24px 22px;overflow:hidden;isolation:isolate;transition:scale .9s var(--spring),transform 1.1s var(--spring),box-shadow .7s var(--ease),opacity 1s var(--ease) var(--d),translate 1.1s var(--spring) var(--d)}
 .skc.reveal{opacity:0;translate:0 26px}.skc.reveal.seen{opacity:1;translate:0 0}
@@ -603,6 +612,18 @@ body.focused .sheet{transform:none}
     <p class="lead reveal">Click a skill to open the projects where I used it. The number shows how many.</p>
     <div class="skgrid" id="skills"></div>
   </section>
+
+  <section class="ai wrap">
+    <div class="label reveal">How I build</div>
+    <h2 class="big reveal">Built with Claude,<br>understood by me.</h2>
+    <p class="lead reveal">I use Claude, Anthropic's AI assistant, as a pair programmer and research partner. Most of the tools on this site were built that way, this website included.</p>
+    <div class="aigrid">
+      <div class="aic glass reveal"><span class="n">01</span><h3>Smart</h3><p>I bring the problem, the plan and the decisions. Claude speeds up everything around them: drafting code, exploring an API I don't know yet, reviewing a design, writing tests. I describe exactly what I want, read every change, and run and test it myself.</p></div>
+      <div class="aic glass reveal"><span class="n">02</span><h3>Ethical</h3><p>I'm open about it, like here. For coursework I follow each course's rules and say where AI helped. Nothing personal or confidential goes into a prompt, I check facts and sources instead of taking them on trust, and I only hand in work I can explain line by line.</p></div>
+      <div class="aic glass reveal"><span class="n">03</span><h3>A way to learn</h3><p>I ask why, not only what. When Claude writes something new to me, I have it explain the approach, then I change or rebuild it myself. It works like a patient tutor: languages and tools I didn't know became projects I can now build on my own.</p></div>
+    </div>
+    <p class="ainote reveal">The clearest example is <a href="https://github.com/simoensm/research_vault" target="_blank" rel="noopener">Research Vault</a>: an AI research agent that answers only from my own notes, with citations, and never invents a source.</p>
+  </section>
   <footer><div class="wrap"><span>Mathias Simoens · Belgium</span><span><a data-go="contact" href="#contact">Contact</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.abovebelgium.be" target="_blank" rel="noopener">abovebelgium.be</a></span></div></footer>
 </main>
 
@@ -829,7 +850,7 @@ const loadScript=src=>new Promise((res,rej)=>{ const s=document.createElement('s
     const shade=g.createRadialGradient(cx-R*.45,cy-R*.5,R*.2,cx,cy,R*1.05); shade.addColorStop(0,'rgba(255,255,255,.08)'); shade.addColorStop(.6,'rgba(0,0,0,0)'); shade.addColorStop(1,'rgba(0,0,0,.45)'); g.fillStyle=shade; g.fillRect(cx-R,cy-R,2*R,2*R);
     g.restore(); g.strokeStyle='rgba(159,186,255,.35)'; g.lineWidth=1.2; g.beginPath(); g.arc(cx,cy,R,0,7); g.stroke(); };
   const tick=now=>{ if(!run) return; requestAnimationFrame(tick); if(now-last<33) return; const dt=last?Math.min(100,now-last):0; last=now; if(!reduce) lon0-=dt*.006; draw(); };
-  size(); draw(); addEventListener('resize',()=>{ size(); draw(); });
+  size(); draw(); new ResizeObserver(()=>{ size(); draw(); }).observe(cv); // stays round while the panel widens
   new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; if(on&&!run){ run=true; last=0; requestAnimationFrame(tick); } else if(!on) run=false; })).observe(cv);
 })();
 async function geo(name){
@@ -1751,7 +1772,7 @@ function initRoom(){
   const composer=new EffectComposer(renderer); composer.addPass(new RenderPass(scene,camera));
   let gtao=null; try{ gtao=new GTAOPass(scene,camera,innerWidth,innerHeight); gtao.blendIntensity=.9; gtao.updateGtaoMaterial?.({radius:.35,distanceExponent:1.5,thickness:1,scale:1.2,samples:12}); composer.addPass(gtao); }catch(e){ console.warn('GTAO off',e); }
   // a soft outline shows which zone the mouse is on
-  const outline=new OutlinePass(new THREE.Vector2(innerWidth,innerHeight),scene,camera); outline.edgeStrength=0; outline.edgeGlow=.6; outline.edgeThickness=1.6; outline.pulsePeriod=0; outline.visibleEdgeColor.set('#ffffff'); outline.hiddenEdgeColor.set('#3a3a3a'); composer.addPass(outline);
+  const outline=new OutlinePass(new THREE.Vector2(innerWidth,innerHeight),scene,camera); outline.edgeStrength=0; outline.edgeGlow=.6; outline.edgeThickness=1.6; outline.pulsePeriod=0; outline.visibleEdgeColor.set('#6f95ff'); outline.hiddenEdgeColor.set('#22305a'); composer.addPass(outline);
   composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.25,.6,.92)); composer.addPass(new OutputPass());
 
   /* camera */
@@ -1844,7 +1865,7 @@ function initRoom(){
     camera.position.set(cur.p.x+par.x+offP.x,cur.p.y+par.y+offP.y,cur.p.z+offP.z); tmp.copy(cur.l).add(offL); camera.lookAt(tmp);
     // outline of the zone under the mouse, faded in and out
     const hg= hz ? hz : null; if(hg&&hg.group!==outlined){ outlined=hg.group; outline.selectedObjects=[outlined]; }
-    outline.edgeStrength+=((hg?2.4:0)-outline.edgeStrength)*.12; outline.enabled=outline.edgeStrength>.02;
+    outline.edgeStrength+=((hg?3.2:0)-outline.edgeStrength)*.12; outline.enabled=outline.edgeStrength>.02;
     // desk lamp: on while hovered, or while the desk is open
     LAMP.want= (onLamp&&!focused) || focused==='macbook' ? 1 : 0; if(Math.abs(LAMP.want-LAMP.on)>.002){ LAMP.set(LAMP.on+(LAMP.want-LAMP.on)*.08); dirty=2; shadowFrames=Math.max(shadowFrames,1); }
     if(!focused&&moved&&now-lastPick>50){ moved=false; lastPick=now; const id=pick(); if(id!==hov){ hov=id; canvas.style.cursor=id?'pointer':'default'; hot.forEach(h=>h.el&&h.el.classList.toggle('hot',h.id===id||(h.id==='gear'&&/^g-/.test(id||''))||(h.id==='portfolio'&&/^pf-/.test(id||'')))); } }
@@ -1853,15 +1874,15 @@ function initRoom(){
     if(duck.userData.spin){ duck.userData.spin+=.08; duck.rotation.y=-2.4+Math.sin(duck.userData.spin*2)*.6; duck.position.y=.762+Math.abs(Math.sin(duck.userData.spin*3))*.03; if(duck.userData.spin>4){ duck.userData.spin=0; duck.rotation.y=-2.4; duck.position.y=.762; } }
     if(duck.userData.spin) dirty=2;
     camera.updateMatrixWorld(); { const A=camera.matrixWorld.elements, L=lastCam.elements; let d=0; for(let i=0;i<16;i++) d=Math.max(d,Math.abs(A[i]-L[i])); if(d>2e-5){ lastCam.copy(camera.matrixWorld); dirty=Math.max(dirty,1); } }
-    if(outline.enabled&&Math.abs(outline.edgeStrength-((hov&&!focused)?2.4:0))>.01) dirty=Math.max(dirty,1);
+    if(outline.enabled&&Math.abs(outline.edgeStrength-((hov&&!focused)?3.2:0))>.01) dirty=Math.max(dirty,1);
     if(shadowFrames>0){ renderer.shadowMap.needsUpdate=true; shadowFrames--; dirty=Math.max(dirty,1); }
     if(now-(loop.f||0)>700){ loop.f=now; dirty=Math.max(dirty,1); } // picks up photos that finished loading
     if(dirty>0){ dirty--; composer.render(); } else AD.idle();
   }
   requestAnimationFrame(loop);
   // the room only redraws when something on screen changes, at a resolution that keeps it smooth
-  const AD=Adaptive(pr=>{ renderer.setPixelRatio(pr); composer.setPixelRatio(pr); composer.setSize(innerWidth,innerHeight); dirty=6; },{max:1.35,min:.7,heavy:on=>{ if(gtao) gtao.enabled=on; dirty=6; }});
   let dirty=10; const lastCam=new THREE.Matrix4();
+  const AD=Adaptive(pr=>{ renderer.setPixelRatio(pr); composer.setPixelRatio(pr); composer.setSize(innerWidth,innerHeight); dirty=6; },{max:1.35,min:.7,heavy:on=>{ if(gtao) gtao.enabled=on; dirty=6; }});
   addEventListener('resize',()=>{ renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight); outline.setSize(innerWidth,innerHeight); dirty=6; camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); placeHl(); });
   requestAnimationFrame(()=>{ placeHl(); const rl=$('#rload'); rl.style.opacity=0; setTimeout(()=>rl.remove(),800); });
 }
