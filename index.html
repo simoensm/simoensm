@@ -692,7 +692,7 @@ const Region = (()=>{
   function lineLayer(list,pick,color,px,order,opacity=1){ const pos=[];
     for(const [t,f] of list){ if(!pick(t)) continue; for(let i=0;i<f.length-2;i+=2) pos.push(f[i],2,f[i+1],f[i+2],2,f[i+3]); }
     if(!pos.length) return; const geo=new LineSegmentsGeometry(); geo.setPositions(new Float32Array(pos));
-    const mat=new LineMaterial({color,linewidth:px,transparent:true,opacity,depthTest:false,depthWrite:false}); mat.resolution.set(innerWidth,innerHeight); LMATS.push(mat);
+    const mat=new LineMaterial({color,linewidth:px,transparent:true,opacity,depthTest:false,depthWrite:false,fog:true}); mat.resolution.set(innerWidth,innerHeight); LMATS.push(mat);
     const L=new LineSegments2(geo,mat); L.renderOrder=order; L.frustumCulled=false; scene.add(L); }
   // belgium.json stores each line as deltas in units of 10 m
   const dec=f=>{ const o=new Array(f.length); let x=0,z=0; for(let i=0;i<f.length;i+=2){ x+=f[i]; z+=f[i+1]; o[i]=x*10; o[i+1]=z*10; } return o; };
