@@ -143,6 +143,7 @@ body.dark .burger{color:#eef1f6}
 .chips{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:64px;opacity:0;animation:up 1s var(--spring) .8s forwards}
 .chip{position:relative;border-radius:20px;padding:18px 20px;cursor:pointer}
 .chips{align-items:start}
+.chips .chip{min-height:var(--chh,0)}
 .chip .cpl{position:absolute;right:16px;top:16px;width:14px;height:14px;color:var(--ink3);transition:transform .6s var(--spring),color .3s}
 .chip.open .cpl{transform:rotate(45deg);color:var(--ink)}
 .chip .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease2,cubic-bezier(.22,1,.36,1))}.chip .more>div{overflow:hidden}
@@ -169,7 +170,7 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .world .go{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:500;margin-top:14px}
 .w1 .bg{background:radial-gradient(circle at 60% 120%,#1d3a7a 0,#0a0f1d 55%,#05070d 100%)}
 .w2 .bg{background:radial-gradient(120% 90% at 30% 0%,#22262f 0,#111317 55%,#0a0b0d 100%)}
-.w2 .bg img.ablogo{position:absolute;left:14%;right:14%;top:19%;width:72%;height:auto;object-fit:contain;filter:invert(1);opacity:.92;transition:transform 1.2s var(--spring),opacity .6s}
+.w2 .bg img.ablogo{position:absolute;left:50%;right:auto;top:47%;width:68%;max-width:340px;translate:-50% -50%;height:auto;object-fit:contain;filter:invert(1);opacity:.92;transition:transform 1.2s var(--spring),opacity .6s}
 .world:hover .bg img.ablogo{transform:scale(1.05);opacity:1}
 .w2 .bg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.4s var(--spring)}
 .world:hover .bg img{transform:scale(1.04)}
@@ -593,7 +594,7 @@ body.focused .sheet{transform:none}
   body.focused .rhead{opacity:0;pointer-events:none}
   .sheet{top:auto;left:10px;right:10px;bottom:10px;width:auto;max-height:58vh;border-radius:24px;transform:translateY(calc(100% + 20px))}
   body.focused .sheet{transform:none}
-  .w2 .bg img.ablogo{left:24%;right:24%;width:52%;top:14%}
+  .w2 .bg img.ablogo{width:58%;top:45%}
   .ctc b{font-size:15px;display:block}.ctc:has(.cp) b{padding-right:62px}
   .jlist{left:16px;right:16px;width:auto;top:290px}
   .clist>div{max-height:36vh;overflow:auto;overscroll-behavior:contain}
@@ -665,8 +666,7 @@ html,body{overflow-x:clip}
       <div class="world w3 reveal" id="w3"><div class="bg"></div>
         <div class="wstat"><b>12</b><span>projects on GitHub</span></div>
         <div class="term" id="term"><div class="cbar"><i></i><i></i><i></i><span>mathias@atelier: ~</span></div>
-<pre id="tout"><span class="c"># apps, data and AI models, and a bit of hardware</span>
-<span class="c"># every project opens with its story and its code</span>
+<pre id="tout"><span class="c"># apps, data and AI, and a bit of hardware</span>
 
 <span class="k">ls</span> projects/
 pushit  sidetab  sony_recognizer  movielens_recommender
@@ -854,6 +854,7 @@ $$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.
   $('#aibtn').onclick=()=>open(true); $('#aix').onclick=()=>open(false); $('#aimodal').addEventListener('click',e=>{ if(e.target.id==='aimodal') open(false); }); addEventListener('keydown',e=>{ if(e.key==='Escape') open(false); }); })();
 /* the projects card is a small terminal: type /enter to go in */
 (()=>{ const inp=$('#tin'), out=$('#tout'); if(!inp) return;
+  const bottom=()=>{ out.scrollTop=out.scrollHeight; }; bottom(); addEventListener('resize',bottom); new ResizeObserver(bottom).observe(out);
   $('#w3').addEventListener('click',()=>inp.focus({preventScroll:true}));
   inp.addEventListener('keydown',e=>{ if(e.key!=='Enter') return; const v=inp.value.trim(); inp.value='';
     const line=(t,c)=>{ out.insertAdjacentHTML('beforeend','\n'+(c?`<span class="${c}">${t}</span>`:t)); out.scrollTop=out.scrollHeight; };
@@ -864,6 +865,9 @@ $$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.
 })();
 
 /* top chips open in place, with a button to go further */
+// all four chips share the height of the tallest one when closed
+(()=>{ const box=$('.chips'); if(!box) return; const fit=()=>{ box.style.removeProperty('--chh'); let m=0; box.querySelectorAll('.chip:not(.open)').forEach(c=>m=Math.max(m,c.offsetHeight)); if(m) box.style.setProperty('--chh',m+'px'); };
+  fit(); addEventListener('resize',fit); document.fonts&&document.fonts.ready.then(fit); })();
 $$('.chips .chip').forEach(c=>{ const t=()=>c.classList.toggle('open'); c.addEventListener('click',e=>{ if(e.target.closest('.cgo')) return; t(); }); c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } }); });
 $$('.chips .cgo[data-ch]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const i=+b.dataset.ch; if(Journey.startAt){ go('journey'); setTimeout(()=>Journey.startAt(i),700); } else { Journey.pending=i; go('journey'); } }));
 
