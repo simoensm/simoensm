@@ -125,10 +125,11 @@ body.dark .burger{color:#eef1f6}
 .idhint .tm{display:none}
 @media (hover:none){.idhint .hm{display:none}.idhint .tm{display:inline}}
 @media (max-width:900px){.idhint{left:auto;right:12px}.idhint::after{left:auto;right:18px}}
-.idwrap .idcard{position:absolute;left:0;top:0;width:330px;padding:8px;border-radius:40px;cursor:default;outline:none;overflow:hidden;animation:idgrow 1.1s var(--spring) .35s backwards;
+.idwrap .idcard{position:absolute;left:0;top:0;width:330px;padding:8px;border-radius:40px;cursor:default;outline:none;animation:idgrow 1.1s var(--spring) .35s backwards;
   transition:width .8s var(--spring),border-radius .8s var(--spring),padding .8s var(--spring),background .7s var(--ease),backdrop-filter .7s var(--ease),-webkit-backdrop-filter .7s var(--ease),box-shadow .7s var(--ease),border-color .7s var(--ease)}
 .idhead{display:flex;align-items:center;gap:14px;transition:gap .8s var(--spring)}
 @keyframes idgrow{from{width:72px}}
+.idwrap .idcard.grow{overflow:hidden}.idcard.grow .idt{white-space:nowrap;min-width:0}.idcard.grow .idt span{white-space:nowrap}
 .idhead .idt{animation:idtxt .8s var(--ease) .75s backwards}
 @keyframes idtxt{from{opacity:0;transform:translateX(-10px);filter:blur(4px)}}
 .idcard img{width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:50% 18%;background:#fff;flex:none;transition:width .8s var(--spring),height .8s var(--spring),border-radius .8s var(--spring),box-shadow .8s var(--ease)}
@@ -167,8 +168,24 @@ body.dark .burger{color:#eef1f6}
 .hero h1 .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .03em .22em;margin:0 -.03em -.22em}
 .hero h1 .w>span{display:inline-block;transform:translateY(108%) rotate(4deg);transform-origin:0 100%;filter:blur(6px);opacity:0;animation:wrise 1.15s var(--spring) forwards;animation-delay:calc(.45s + var(--i)*75ms)}
 @keyframes wrise{60%{filter:blur(0);opacity:1}to{transform:none;filter:blur(0);opacity:1}}
-.hero h1 em .w>span{background:linear-gradient(100deg,var(--ink3) 0 40%,#6f95ff 48%,#b49cff 52%,var(--ink3) 60% 100%);background-size:260% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;animation:wrise 1.15s var(--spring) forwards,sweep 1.6s var(--ease) forwards;animation-delay:calc(.45s + var(--i)*75ms),1.6s}
-@keyframes sweep{to{background-position:0 0}}
+/* after the rise the title is left with no effects at all, so nothing paints over the badge */
+.hero h1.done .w{overflow:visible}.hero h1.done .w>span{animation:none;transform:none;filter:none;opacity:1}
+/* Data: digits decode into the word */
+.hero h1 .fx-data{display:inline-block;text-align:left}
+.hero h1 .fx-data i{font-style:normal;transition:color .3s}
+.hero h1 .fx-data i.on{color:#6f95ff}
+/* code: typed in, with a caret */
+.hero h1 .fx-code b{font-weight:inherit;opacity:0}
+.hero h1 .fx-code b.on{opacity:1}
+.hero h1 .caret{display:inline-block;width:.07em;height:.82em;margin-left:.04em;background:#6f95ff;vertical-align:-.04em;border-radius:2px;animation:blink .9s steps(1) infinite}
+.hero h1 .caret.out{opacity:0;transition:opacity .4s;animation:none}
+@keyframes blink{50%{opacity:0}}
+/* light: letters flicker on like a lamp warming up, then glow once */
+.hero h1 .fx-light b{font-weight:inherit;display:inline-block}
+.hero h1 .fx-light b.f{animation:flick .9s steps(1) both}
+@keyframes flick{0%{opacity:.15}10%{opacity:1}14%{opacity:.2}22%{opacity:.9}26%{opacity:.3}40%{opacity:1}100%{opacity:1}}
+.hero h1 .fx-light.glow{animation:lglow 1.8s var(--ease)}
+@keyframes lglow{30%{color:#fff;text-shadow:0 0 .18em rgba(255,214,140,.95),0 0 .55em rgba(255,180,90,.6),0 0 1.1em rgba(255,170,80,.35)}100%{text-shadow:0 0 0 rgba(255,190,100,0)}}
 .hero h1.nojs{opacity:0;animation:up 1.1s var(--spring) .25s forwards}
 .hero h1 em{font-style:normal;color:var(--ink3)}
 .hero .sub{font-size:clamp(17px,1.5vw,20px);line-height:1.5;color:var(--ink2);max-width:560px;margin-top:22px;opacity:0;animation:up 1s var(--spring) .45s forwards}
@@ -752,7 +769,7 @@ html,body{overflow-x:clip}
 
 <main id="v-overview" class="view on">
   <section class="hero wrap">
-    <div class="idwrap"><div class="idhint" id="idhint" aria-hidden="true"><span class="hm">Hover to discover me</span><span class="tm">Tap to discover me</span></div><div class="idcard glass hg" id="idcard" tabindex="0">
+    <div class="idwrap"><div class="idhint" id="idhint" aria-hidden="true"><span class="hm">Hover to discover me</span><span class="tm">Tap to discover me</span></div><div class="idcard glass hg grow" id="idcard" tabindex="0">
       <div class="idhead"><img src="portrait.jpg" alt="Mathias Simoens"><div class="idt"><b>Mathias Simoens</b><span><i class="live"></i>On exchange at NHH Bergen</span><span class="role">MSc Business Engineering student · Data &amp; AI · Photographer</span></div></div>
       <div class="more"><div class="in">
         <p>MSc student in Business Engineering, between data science and business. I like turning a messy question into a model, an app or a clean dashboard, and I've been photographing Belgium from above since 2022.</p>
@@ -952,10 +969,26 @@ function Adaptive(apply,{max=1.25,min=.7,heavy=null}={}){ let pr=Math.min(device
       else if(ema<14.5){ if(pr<Math.min(devicePixelRatio,max)){ pr=Math.min(Math.min(devicePixelRatio,max),pr+.08); apply(pr); } } },
     idle(){ last=0; } }; }
 
+setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700);
 /* hero title: wrap every word so it can rise in on its own */
 (()=>{ const h=document.getElementById('htitle'); if(!h) return; let i=0;
   const wrap=node=>{ [...node.childNodes].forEach(n=>{ if(n.nodeType===3){ const f=document.createDocumentFragment(); n.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)){ f.appendChild(document.createTextNode(' ')); return; } const w=document.createElement('span'); w.className='w'; const x=document.createElement('span'); x.textContent=t; x.style.setProperty('--i',i++); w.appendChild(x); f.appendChild(w); }); n.replaceWith(f); } else if(n.nodeType===1&&n.tagName!=='BR') wrap(n); }); };
-  wrap(h); h.classList.remove('nojs'); })();
+  wrap(h); h.classList.remove('nojs');
+  // the three words of the second line each do their own thing once they have risen in
+  const em=h.querySelector('em'), ws=em?[...em.querySelectorAll('.w>span')]:[]; const find=t=>ws.find(x=>x.textContent.replace(/[^a-z]/gi,'').toLowerCase()===t);
+  const D=find('data'), Cc=find('code'), L=find('light'); const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const settle=()=>h.classList.add('done');
+  if(RM||!D||!Cc||!L){ setTimeout(settle,2200); return; }
+  // set the words up before they rise: Data as digits, code as a lone caret, light dimmed
+  const dt=D.textContent; D.classList.add('fx-data'); D.innerHTML=[...dt].map(c=>`<i data-c="${c}">${/[a-z]/i.test(c)?'0123456789'[Math.random()*10|0]:c}</i>`).join('');
+  const ct=Cc.textContent; Cc.classList.add('fx-code'); Cc.innerHTML='<span class="caret"></span>'+[...ct].map(c=>`<b>${c}</b>`).join('');
+  const lt=L.textContent; L.classList.add('fx-light'); L.innerHTML=[...lt].map(c=>`<b style="opacity:.15">${c}</b>`).join('');
+  const at=x=>(450+(+x.style.getPropertyValue('--i'))*75+650);
+  setTimeout(()=>{ [...D.children].forEach((el,k)=>{ const real=el.dataset.c; if(!/[a-z]/i.test(real)) return; el.classList.add('on'); let n=0; const iv=setInterval(()=>{ el.textContent='0123456789'[Math.random()*10|0]; if(++n>6+k*4){ clearInterval(iv); el.textContent=real; el.classList.remove('on'); } },50); }); },at(D));
+  setTimeout(()=>{ const bs=[...Cc.querySelectorAll('b')], car=Cc.querySelector('.caret'); let k=0;
+    (function ty(){ if(k<bs.length){ bs[k].classList.add('on'); Cc.insertBefore(car,bs[k].nextSibling); k++; setTimeout(ty,80+Math.random()*90); } else setTimeout(()=>{ car.classList.add('out'); setTimeout(()=>car.remove(),500); },1500); })(); },at(Cc)+250);
+  setTimeout(()=>{ [...L.children].forEach((b,j)=>{ b.style.animationDelay=(j*90+Math.random()*120|0)+'ms'; b.style.opacity=''; b.classList.add('f'); }); setTimeout(()=>L.classList.add('glow'),900+L.children.length*90); },at(L)+300);
+  setTimeout(settle,at(L)+400); })();
 
 /* ============================ DISCOVERY GAME ============================ */
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
