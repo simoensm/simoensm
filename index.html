@@ -2081,7 +2081,12 @@ function initRoom(){
   const phT=T(300,620,(g,w,h)=>{ g.fillStyle='#000'; g.fillRect(0,0,w,h); g.strokeStyle='#30d158'; g.lineWidth=14; g.lineCap='round'; g.beginPath(); g.arc(w/2,h*.4,92,-Math.PI/2,Math.PI*.95); g.stroke(); g.fillStyle='#fff'; g.font='700 86px -apple-system,Inter,sans-serif'; g.textAlign='center'; g.fillText('24',w/2,h*.43); g.font='500 24px -apple-system,Inter,sans-serif'; g.fillStyle='#86868b'; g.fillText('PUSH-UPS',w/2,h*.5); g.fillStyle='#fff'; g.font='600 30px -apple-system,Inter,sans-serif'; g.fillText('PushIt',w/2,h*.88); });
   const phS=new THREE.Mesh(new THREE.PlaneGeometry(.066,.142),screen(phT,.9)); phS.rotation.set(-Math.PI/2,0,.35); phS.position.set(ax-.55,.7725,az+.2); BE.add(phS);
   const tab=new THREE.Group(); B(tab,.28,.19,.008,mat.black,0,0,0,.008); const tsc=new THREE.Mesh(new THREE.PlaneGeometry(.265,.175),screen(codeTex(33,'SideTab · extended display',true),.85)); tsc.position.z=.0045; tab.add(tsc);
-  tab.position.set(ax-1.05,.85,az+.02); tab.rotation.set(-.32,.45,0); BE.add(tab); B(BE,.12,.02,.1,mat.black,ax-1.05,.765,az-.02,.005);
+  // the tablet stands on an aluminium stand: bottom edge in the stand's lip, leaning back on its support
+  { const TS=new THREE.Group(), y0=.7625, tilt=.32;
+    B(TS,.17,.006,.15,mat.alu,0,.003,-.03,.002); B(TS,.3,.026,.012,mat.alu,0,.013,.035,.003); B(TS,.3,.006,.03,mat.alu,0,.003,.024,.002);
+    const leg=B(TS,.13,.16,.008,mat.alu,0,0,0,.002); leg.position.set(0,.075,-.035); leg.rotation.x=-.55;
+    tab.position.set(0,.006+.095*Math.cos(tilt),.03-.095*Math.sin(tilt)); tab.rotation.x=-tilt; TS.add(tab);
+    TS.position.set(ax-1.0,y0,az+.06); TS.rotation.y=.42; TS.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); BE.add(TS); }
   // desk mat, mug, notebook and an articulated lamp
   B(BE,.92,.003,.36,std({color:0x2a2c31,roughness:.95}),ax+.05,.7635,az+.19,.002);
   { const cer=std({color:0xeeeae2,roughness:.35}); C(BE,.038,.034,.09,cer,ax+.9,.808,az+.22,24); C(BE,.033,.033,.002,std({color:0x3b2418,roughness:.2}),ax+.9,.848,az+.22,20);
@@ -2102,7 +2107,7 @@ function initRoom(){
   dp(new THREE.SphereGeometry(.03,20,16),yel,0,.026,0).scale.set(1.25,.85,1); dp(new THREE.SphereGeometry(.019,20,16),yel,.022,.06,0); dp(new THREE.ConeGeometry(.007,.018,12),std({color:0xe8731a}),.043,.058,0).rotation.z=-Math.PI/2;
   duck.position.set(ax+.62,.762,az+.25); duck.rotation.y=-2.4; A.add(duck);
   const ch2=ch.clone(true); ch2.position.set(ax+.05,0,az+.95); ch2.rotation.y=-.2; const CHAIR2={home:new THREE.Vector3(ax+.05,0,az+.95),away:new THREE.Vector3(ax-1.25,0,az+1.15),r0:-.2,r1:-1.2,k:0}; ch2.traverse(o=>{ if(o.isMesh) delete o.userData.hot; }); A.add(ch2);
-  hs('software',BE,[ax,1.55,az-.22],{side:'atelier',label:'Software',view:{pos:[ax,1.5,az+2.75],look:[ax,1.08,az-.25]}});
+  hs('software',BE,[ax,1.45,az-.2],{side:'atelier',label:'Software',view:{pos:[ax,1.5,az+2.75],look:[ax,1.08,az-.25]}});
 
   const WB=new THREE.Group(); A.add(WB);
   // a whiteboard of project notes: marker sketches on the board, sticky notes stuck on top
@@ -2139,7 +2144,7 @@ function initRoom(){
   B(WB,1.2,.025,.05,mat.alu,0,-.45,.03); [0x1d3f8f,0xb3261e,0x1d1d1f].forEach((c,i)=>{ C(WB,.007,.007,.11,std({color:c,roughness:.5}),-.4+i*.05,-.43,.04,10).rotation.z=Math.PI/2; });
   B(WB,.12,.03,.05,std({color:0x2a2b2f,roughness:.8}),-.2,-.425,.04,.006);
   WB.position.set(1.0,1.75,BZ+.03);
-  hs('optim',WB,[1.0,2.3,BZ+.1],{side:'atelier',label:'Data and AI',view:{pos:[1.0,1.74,BZ+2.75],look:[1.0,1.72,BZ]}});
+  hs('optim',WB,[1.0,2.24,BZ+.08],{side:'atelier',label:'Data and AI',view:{pos:[1.0,1.74,BZ+2.75],look:[1.0,1.72,BZ]}});
 
   const EL=new THREE.Group(); A.add(EL); const ex=6.55, ez=BZ+.42;
   B(EL,1.5,.045,.72,mat.birch,ex,.74,ez+.04,.006);
@@ -2198,7 +2203,7 @@ function initRoom(){
     B(MK,.03,.03,.03,std({color:0xff6a13,roughness:.5}),mx+.3,.768,mz+.17,.003); const bn=new THREE.Mesh(new THREE.TorusKnotGeometry(.014,.005,40,8),std({color:0x30d158,roughness:.5})); bn.position.set(mx+.3,.775,mz+.08); MK.add(bn);
     B(MK,.62,.025,.17,mat.birch,mx,1.62,BZ+.095,.004); [-.24,.24].forEach(o=>B(MK,.02,.06,.12,mat.black,mx+o,1.585,BZ+.07));
     [[0xf2f2f2,-.19],[0xff6a13,0],[0x2d2e33,.19]].forEach(([c,o])=>{ spool(mx+o,1.705,BZ+.1,c).rotation.y=Math.PI/2; }); }
-  hs('hardware',EL,[ex,2.1,BZ+.1],{side:'atelier',label:'Electronics and hardware',view:{pos:[ex-.45,1.5,ez+2.7],look:[ex-.45,1.08,ez-.1]}});
+  hs('hardware',EL,[ex,2.03,BZ+.08],{side:'atelier',label:'Electronics and hardware',view:{pos:[ex-.45,1.5,ez+2.7],look:[ex-.45,1.08,ez-.1]}});
 
   /* post */
   const composer=new EffectComposer(renderer); composer.addPass(new RenderPass(scene,camera));
