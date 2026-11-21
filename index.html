@@ -948,9 +948,9 @@ const TL=[
     $('#cto').href=`https://outlook.live.com/mail/0/deeplink/compose?to=${E(to)}&subject=${E(su)}&body=${E(bo)}`;
     $('#ctc').onclick=()=>navigator.clipboard?.writeText(`To: ${to}\nSubject: ${su}\n\n${bo}`).then(()=>{ $('#ctc').textContent='Copied'; setTimeout(()=>$('#ctc').textContent='Copy the message',1800); });
     $('#ctalt').classList.add('on');
-    // the arrow becomes a paper plane and flies off, then the email app opens
+    // the email app opens right away (browsers block it if it is delayed after the click) while the arrow becomes a paper plane and flies off
+    const ml=document.createElement('a'); ml.href=`mailto:${to}?subject=${E(su)}&body=${E(bo)}`; ml.style.display='none'; document.body.appendChild(ml); ml.click(); ml.remove();
     const sb=$('#sendb'); sb.classList.remove('go'); void sb.offsetWidth; sb.classList.add('go'); setTimeout(()=>sb.querySelector('.lbl').textContent='Sent',360);
-    setTimeout(()=>{ location.href=`mailto:${to}?subject=${E(su)}&body=${E(bo)}`; },reduce?0:900);
     setTimeout(()=>{ sb.classList.remove('go'); sb.querySelector('.lbl').textContent='Send'; },3200); });
   f.addEventListener('input',e=>e.target.classList.remove('bad'));
   document.addEventListener('click',e=>{ const c=e.target.closest('[data-copy]'); if(!c) return; e.preventDefault(); e.stopPropagation(); navigator.clipboard?.writeText(c.dataset.copy).then(()=>{ c.textContent='Copied'; setTimeout(()=>c.textContent='Copy',1600); }); },true);
