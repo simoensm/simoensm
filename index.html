@@ -947,21 +947,26 @@ const loadScript=src=>new Promise((res,rej)=>{ const s=document.createElement('s
 (async()=>{ const cv=$('#miniGlobe'); if(!cv) return; let world;
   try{ world=(await geo('worldLow')).filter(f=>f.properties&&f.properties.id!=='AQ'); }catch(e){ return; }
   const D=Math.PI/180, shapes=world.map(f=>{ const g=f.geometry, L= g.type==='Polygon'?[g.coordinates]:g.type==='MultiPolygon'?g.coordinates:[]; return {id:f.properties.id, rings:L.map(p=>p[0]).filter(r=>r&&r.length>2)}; });
-  const g=cv.getContext('2d'); let W=0,H=0,R=0,cx=0,cy=0,lon0=-10,run=false,last=0; const lat0=24*D, s0=Math.sin(lat0), c0=Math.cos(lat0);
+  const g=cv.getContext('2d'); let W=0,H=0,R=0,cx=0,cy=0,lon0=-10,run=false,last=0, s0=Math.sin(24*D), c0=Math.cos(24*D);
+  // the mouse turns the globe: left and right spin it, up and down tilt it
+  let spin=0, tilt=24, wSpin=0, wTilt=24, over=false; const card=cv.closest('.world');
+  card.addEventListener('pointermove',e=>{ const r=card.getBoundingClientRect(), mx=(e.clientX-r.left)/r.width-.5, my=(e.clientY-r.top)/r.height-.5; wSpin=-mx*90; wTilt=24+my*-40; over=true; });
+  card.addEventListener('pointerleave',()=>{ wTilt=24; over=false; });
   const size=()=>{ const r=cv.getBoundingClientRect(), k=Math.min(devicePixelRatio,2); W=cv.width=Math.round(r.width*k); H=cv.height=Math.round(r.height*k); R=Math.min(W,H*.92)*.34; cx=W/2; cy=H*.44; };
   const draw=()=>{ g.clearRect(0,0,W,H);
     const halo=g.createRadialGradient(cx,cy,R*.9,cx,cy,R*1.32); halo.addColorStop(0,'rgba(160,185,255,.26)'); halo.addColorStop(1,'rgba(160,185,255,0)'); g.fillStyle=halo; g.beginPath(); g.arc(cx,cy,R*1.32,0,7); g.fill();
     const sea=g.createRadialGradient(cx-R*.35,cy-R*.4,R*.1,cx,cy,R); sea.addColorStop(0,'#1a2130'); sea.addColorStop(.7,'#0c111a'); sea.addColorStop(1,'#06080c'); g.fillStyle=sea; g.beginPath(); g.arc(cx,cy,R,0,7); g.fill();
     g.save(); g.beginPath(); g.arc(cx,cy,R,0,7); g.clip(); g.lineJoin='round';
     for(const sh of shapes){ const v=VISITED[sh.id]; let any=false; g.beginPath();
-      for(const r of sh.rings){ let vis=0; for(let i=0;i<r.length;i++){ const l=(r[i][0]-lon0)*D, f=r[i][1]*D, cf=Math.cos(f), sf=Math.sin(f), cl=Math.cos(l);
+      for(const r of sh.rings){ let vis=0; for(let i=0;i<r.length;i++){ const l=(r[i][0]-lon0-spin)*D, f=r[i][1]*D, cf=Math.cos(f), sf=Math.sin(f), cl=Math.cos(l);
           let x=cf*Math.sin(l), y=c0*sf-s0*cf*cl; const cc=s0*sf+c0*cf*cl; if(cc<0){ const n=Math.hypot(x,y)||1; x/=n; y/=n; } else vis++;
           const X=cx+x*R, Y=cy-y*R; i?g.lineTo(X,Y):g.moveTo(X,Y); }
         g.closePath(); if(vis) any=true; }
       if(!any) continue; g.fillStyle= v ? hexA(COL[sh.id]||'#7aa2ff',.95) : '#171c26'; g.fill(); g.lineWidth= v?1.1:.6; g.strokeStyle= v ? lighten(COL[sh.id]||'#7aa2ff',.45) : 'rgba(95,105,125,.5)'; g.stroke(); }
     const shade=g.createRadialGradient(cx-R*.45,cy-R*.5,R*.2,cx,cy,R*1.05); shade.addColorStop(0,'rgba(255,255,255,.08)'); shade.addColorStop(.6,'rgba(0,0,0,0)'); shade.addColorStop(1,'rgba(0,0,0,.45)'); g.fillStyle=shade; g.fillRect(cx-R,cy-R,2*R,2*R);
     g.restore(); g.strokeStyle='rgba(180,195,230,.28)'; g.lineWidth=1.2; g.beginPath(); g.arc(cx,cy,R,0,7); g.stroke(); };
-  const tick=now=>{ if(!run) return; requestAnimationFrame(tick); if(now-last<33) return; const dt=last?Math.min(100,now-last):0; last=now; if(!reduce) lon0-=dt*.006; draw(); };
+  const tick=now=>{ if(!run) return; requestAnimationFrame(tick); if(now-last<16) return; const dt=last?Math.min(100,now-last):0; last=now;
+    if(!reduce&&!over) lon0-=dt*.006; spin+=(wSpin-spin)*Math.min(1,dt*.006); tilt+=(wTilt-tilt)*Math.min(1,dt*.006); s0=Math.sin(tilt*D); c0=Math.cos(tilt*D); draw(); };
   size(); draw(); new ResizeObserver(()=>{ size(); draw(); }).observe(cv); // stays round while the panel widens
   new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; if(on&&!run){ run=true; last=0; requestAnimationFrame(tick); } else if(!on) run=false; })).observe(cv);
 })();
