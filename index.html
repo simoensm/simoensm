@@ -942,7 +942,10 @@ const CH=[
 ];
 const SITE_INFO={ fucam:{t:'UCLouvain FUCaM Mons',s:'Campus · Mons',logo:'uclouvain.png'}, berma:{t:'Berma',s:'Erpe-Mere',logo:'berma.png'}, anderlecht:{t:'Berma',s:'Anderlecht',logo:'berma.png'}, nhh:{t:'NHH',s:'Sandviken · Bergen',logo:'nhh.png',tall:true}, lessines:{t:'Above Belgium',s:'Lessines',logo:'above-belgium.svg'}, fjc:{t:'FUCaM Junior Consulting',s:'Campus · Mons',logo:'fjc.png',tall:true} };
   let labelOverride=null;
-  const setLabel=key=>{ const I=SITE_INFO[labelOverride||key]; if(!I) return; $('#plT').textContent=I.t; $('#plS').textContent=I.s; const L=$('#plL'); L.src='logos/'+I.logo; L.className=I.tall?'tall':''; };
+  // the label keeps showing the place it is fading out from; the new name is only written once it shows again
+  let labelWant=null, labelShown=null;
+  const setLabel=key=>{ labelWant=labelOverride||key; };
+  const showLabel=lab=>{ if(labelWant!==labelShown){ const I=SITE_INFO[labelWant]; if(I){ $('#plT').textContent=I.t; $('#plS').textContent=I.s; const L=$('#plL'); L.src='logos/'+I.logo; L.className=I.tall?'tall':''; } labelShown=labelWant; } lab.classList.add('on'); };
 const SITE_LL={ fucam:[50.4537,3.9826], berma:[50.9323,3.9584], anderlecht:[50.8449,4.3096] };
 const Journey={};
 let globeStarted=false;
@@ -1130,8 +1133,8 @@ const Region = (()=>{
     const showCities=alpha>.97&&cam.d>4000&&cam.d<900000;
     cityEls.forEach(c=>{ tmp.copy(c.v).project(camera); const on=showCities&&tmp.z<1&&Math.abs(tmp.x)<1.1&&Math.abs(tmp.y)<1.1; c.e.classList.toggle('on',on); if(on){ c.e.style.transform=`translate(${(tmp.x+1)/2*innerWidth}px,${(1-tmp.y)/2*innerHeight}px)`; } });
     const lab=$('#plabel'); const A=areaKey&&data.areas[areaKey];
-    if(settled&&performance.now()-settledAt>550&&alpha>.97&&A&&cam.d<60000){ const [ax,az]=P(A.center[0],A.center[1]); tmp.set(ax,0,az).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); }
-    else if(settled&&performance.now()-settledAt>550&&alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; lab.classList.add('on'); } else lab.classList.remove('on');
+    if(settled&&performance.now()-settledAt>550&&alpha>.97&&A&&cam.d<60000){ const [ax,az]=P(A.center[0],A.center[1]); tmp.set(ax,0,az).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; showLabel(lab); }
+    else if(settled&&performance.now()-settledAt>550&&alpha>.97&&current&&site[current]&&cam.d<5000){ const S=site[current]; tmp.set(S.ox+S.s.tc[0],S.s.th+12,S.oz+S.s.tc[1]).project(camera); lab.style.left=((tmp.x+1)/2*innerWidth)+'px'; lab.style.top=((1-tmp.y)/2*innerHeight)+'px'; showLabel(lab); } else lab.classList.remove('on');
     if(current&&site[current]){ const r=site[current].ring; const t=(now%2600)/2600; const k=30+t*70; r.scale.set(k,k,k); r.material.opacity=.5*(1-t); }
     // buildings only cast visible shadows up close: refresh the shadow map only then
     if(cam.d<5000) renderer.shadowMap.needsUpdate=true;
@@ -1848,7 +1851,7 @@ function initRoom(){
   hs('printer',PR,[px-.12,1.02,pz],{side:'studio',label:'Prints and live printing',view:{pos:[px+.05,1.45,pz+2.0],look:[px+.05,.84,pz]}});
 
   const CL=new THREE.Group(); S.add(CL);
-  const plaque=(lines,x,y,w,h,link)=>{ const fr=B(CL,w+.03,h+.03,.02,frameMat,x,y,BZ+.015,.003); const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),std({map:labelTex(lines,768,Math.round(768*h/w),'#f6f4ef'),roughness:.7})); p.position.set(x,y,BZ+.026); CL.add(p); if(link){ [fr,p].forEach(m=>{ m.userData.link=link; LINKS.push(m); }); } };
+  const plaque=(lines,x,y,w,h,link)=>{ const fr=B(CL,w+.03,h+.03,.02,frameMat,x,y,BZ+.015,.003); const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),std({map:labelTex(lines,768,Math.round(768*h/w),'#f6f4ef'),roughness:.7})); p.position.set(x,y,BZ+.026); CL.add(p); if(link){ [fr,p].forEach(m=>{ m.userData.link=link; m.userData.when='clients'; LINKS.push(m); }); } };
   plaque([['CLIENT',30,500,62,'#8a909a'],['UCLouvain FUCaM Mons',58,600,138],['Official photographer',36,400,206,'#5b616b'],['since September 2024',36,400,252,'#5b616b']],px,1.86,.5,.2,'https://uclouvain.be/fr');
   plaque([['CLIENT',30,500,62,'#8a909a'],['APEX',72,700,148],['Automotive group',36,400,212,'#5b616b'],['for several years',36,400,258,'#5b616b']],px,1.42,.5,.2,'https://www.apex-racing.be');
   plaque([['GOOGLE REVIEWS',30,500,62,'#8a909a'],[REVIEWS.avg.toFixed(2).replace(/0$/,'')+' / 5',84,700,160],[REVIEWS.count+' reviews',36,400,226,'#5b616b']],px+.62,1.64,.34,.2);
