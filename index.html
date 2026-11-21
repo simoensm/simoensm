@@ -78,6 +78,15 @@ body.dark .burger{color:#eef1f6}
 .ctf input:focus,.ctf textarea:focus{border-color:rgba(63,107,255,.55);box-shadow:0 0 0 4px rgba(63,107,255,.12);background:#fff}
 .ctf .bad{border-color:#e5484d}
 .ctf .btn{justify-self:start;margin-top:4px}
+.sendb{position:relative;overflow:visible}
+.sendb .ico{position:relative;display:inline-grid;width:18px;height:18px;place-items:center}
+.sendb .ar{transition:opacity .25s var(--ease),transform .4s var(--spring)}
+.sendb .plane{position:absolute;width:17px;height:17px;opacity:0;transform:scale(.4) rotate(-30deg);color:#fff}
+.sendb.go .ar{opacity:0;transform:scale(.3) rotate(-40deg)}
+.sendb.go .plane{animation:plane 1.15s cubic-bezier(.5,0,.2,1) .15s forwards}
+@keyframes plane{0%{opacity:0;transform:scale(.4) rotate(-30deg)}18%{opacity:1;transform:scale(1.15) rotate(0)}34%{transform:translate(-6px,4px) scale(1.05) rotate(8deg)}100%{opacity:0;transform:translate(150px,-120px) scale(.55) rotate(-18deg)}}
+.sendb.go .lbl{animation:lbl .9s var(--ease) forwards}
+@keyframes lbl{40%{opacity:0;transform:translateY(-6px)}41%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
 .ctnote{font-size:12.5px;color:var(--ink3)}.ctnote b{font-weight:500;color:var(--ink2)}
 .ctalt{display:none;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--ink2);padding-top:4px}
 .ctalt.on{display:flex;animation:up .6s var(--spring)}
@@ -310,6 +319,11 @@ body.playing .jstart{opacity:0;pointer-events:none}
 .jbtn.primary{background:#eef1f6;color:#0b0d12;border-color:#eef1f6}
 .jbtn:not(.primary){background:rgba(14,17,24,.4);color:#eef1f6;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .jbtn svg{width:14px;height:14px}
+.msun{position:absolute;left:0;top:0;z-index:3;width:0;height:0;border:0;background:none;padding:0;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .8s var(--ease)}
+.msun.on{pointer-events:auto}
+.msun i{position:absolute;left:-26px;top:-26px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fffbe8 0,#ffe7a3 32%,#ffb84d 62%,#ff8a2a 100%);box-shadow:0 0 30px 8px rgba(255,190,90,.55),0 0 90px 30px rgba(255,160,60,.22);animation:sunp 4s ease-in-out infinite}
+@keyframes sunp{50%{box-shadow:0 0 38px 10px rgba(255,190,90,.65),0 0 120px 40px rgba(255,160,60,.28)}}
+.msun span{position:absolute;left:-20px;top:36px;width:40px;text-align:center;font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:#ffe2a8}
 .jlist{position:absolute;left:40px;top:310px;width:min(380px,calc(100vw - 32px));border-radius:22px;padding:8px;z-index:6;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transform-origin:top left;transition:opacity .45s var(--ease),transform .6s var(--spring)}
 .jlist.on{opacity:1;pointer-events:auto;transform:none}
 body.playing .jlist{top:auto;left:50%;bottom:92px;transform-origin:bottom center;transform:translate(-50%,8px) scale(.98)}
@@ -733,7 +747,7 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
       <label><span>Your name</span><input name="n" autocomplete="name" required></label>
       <label><span>Your email</span><input name="e" type="email" autocomplete="email" required></label>
       <label><span>Message</span><textarea name="m" rows="6" required></textarea></label>
-      <button class="btn solid" type="submit">Send <span class="ar">&rarr;</span></button>
+      <button class="btn solid sendb" type="submit" id="sendb"><span class="lbl">Send</span><span class="ico"><span class="ar">&rarr;</span><svg class="plane" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 11.2 21 3.5l-6.3 17-3.4-7.1-8.8-2.2z" fill="currentColor"/><path d="M11.3 13.4 21 3.5" stroke="#14161a" stroke-width="1.2"/></svg></span></button>
       <p class="ctnote" id="ctnote">This opens your email app with everything filled in, ready to send to <b id="ctto">mathias.simoens@student.uclouvain.be</b>.</p>
       <div class="ctalt" id="ctalt"><span>Nothing opened? Send it with</span><a id="ctg" target="_blank" rel="noopener">Gmail</a><a id="cto" target="_blank" rel="noopener">Outlook</a><button type="button" id="ctc">Copy the message</button></div>
     </form>
@@ -771,6 +785,7 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
   </div>
   <div class="legend dglass"><span><i class="lv"></i>Explored</span><span><i class="ll"></i>Not yet</span></div>
   <div class="caption dglass" id="cap"><div class="swap"><div class="meta"><span id="cIdx">01 / 06</span><span id="cKind">Education</span></div><div class="chead"><span class="clogo"><img id="cL" alt=""></span><div><div class="yr" id="cYr"></div><div class="dur" id="cD"></div></div></div><h3 id="cT"></h3><div class="org" id="cO"></div><p id="cP"></p><ul class="cb" id="cB"></ul><div class="ctags" id="cG"></div><div class="addr" id="cA"></div><span class="tapmore">TAP FOR DETAILS</span></div></div>
+  <button class="msun" id="msun" aria-label="M"><i></i><span>M</span></button>
   <div class="jlist dglass" id="jlist"></div>
   <div class="player dglass" id="player">
     <button id="pList" aria-label="All stops"><svg viewBox="0 0 14 14"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></button>
@@ -933,7 +948,10 @@ const TL=[
     $('#cto').href=`https://outlook.live.com/mail/0/deeplink/compose?to=${E(to)}&subject=${E(su)}&body=${E(bo)}`;
     $('#ctc').onclick=()=>navigator.clipboard?.writeText(`To: ${to}\nSubject: ${su}\n\n${bo}`).then(()=>{ $('#ctc').textContent='Copied'; setTimeout(()=>$('#ctc').textContent='Copy the message',1800); });
     $('#ctalt').classList.add('on');
-    location.href=`mailto:${to}?subject=${E(su)}&body=${E(bo)}`; });
+    // the arrow becomes a paper plane and flies off, then the email app opens
+    const sb=$('#sendb'); sb.classList.remove('go'); void sb.offsetWidth; sb.classList.add('go'); setTimeout(()=>sb.querySelector('.lbl').textContent='Sent',360);
+    setTimeout(()=>{ location.href=`mailto:${to}?subject=${E(su)}&body=${E(bo)}`; },reduce?0:900);
+    setTimeout(()=>{ sb.classList.remove('go'); sb.querySelector('.lbl').textContent='Send'; },3200); });
   f.addEventListener('input',e=>e.target.classList.remove('bad'));
   document.addEventListener('click',e=>{ const c=e.target.closest('[data-copy]'); if(!c) return; e.preventDefault(); e.stopPropagation(); navigator.clipboard?.writeText(c.dataset.copy).then(()=>{ c.textContent='Copied'; setTimeout(()=>c.textContent='Copy',1600); }); },true);
   const clk=()=>{ const t=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Brussels'}).format(new Date()); $('#ctclock').textContent=`It's ${t} here.`; }; clk(); setInterval(clk,30000);
@@ -1212,7 +1230,7 @@ async function initGlobe(){
     await loadScript('https://cdn.jsdelivr.net/npm/globe.gl@2/dist/globe.gl.min.js');
     const world=(await geo('worldLow')).filter(f=>f.properties&&f.properties.id!=='AQ');
     el.innerHTML='';
-    let g=new window.Globe(el,{animateIn:true}); if(!el.querySelector('canvas')&&typeof g==='function') g=g(el);
+    let g=new window.Globe(el,{animateIn:false}); if(!el.querySelector('canvas')&&typeof g==='function') g=g(el);
     try{ g.renderer().setPixelRatio(Math.min(devicePixelRatio,1.25)); }catch(e){}
     window.__G=g;
     let regionOK=false; setTimeout(()=>Region.prefetch(world).then(()=>regionOK=true),300);
@@ -1225,7 +1243,7 @@ async function initGlobe(){
         return `<h5><i style="background:${CONT_COL[c][0]}"></i>${c}</h5><ul>${list.map(k=>`<li><button data-cc="${k}"><img src="https://flagcdn.com/w40/${k.toLowerCase()}.png" alt="" loading="lazy">${nm(k)}</button></li>`).join('')}</ul>`; }).join('');
       $('#cmore').onclick=e=>{ e.stopPropagation(); const o=$('.jstats').classList.toggle('open'); if(o&&innerWidth<900) $('#jlist').classList.remove('on'); $('#cmore').firstChild.textContent=o?'Hide the countries ':'See the countries '; };
       $('#clist').addEventListener('click',e=>{ const b=e.target.closest('[data-cc]'); if(!b||playing) return; const f=world.find(x=>x.properties.id===b.dataset.cc); if(!f) return;
-        const G=f.geometry, L=G.type==='Polygon'?[G.coordinates]:G.coordinates; const big=L.reduce((m,p)=>p[0].length>m[0].length?p:m); let sx=0,sy=0,n=0; big[0].forEach(([lo,la])=>{ sx+=lo; sy+=la; n++; }); ctr.autoRotate=false; g.pointOfView({lat:sy/n,lng:sx/n,altitude:1.4},1600); clearTimeout(window.__ar); window.__ar=setTimeout(()=>{ if(!playing) ctr.autoRotate=!reduce; },6000); }); }
+        const G=f.geometry, L=G.type==='Polygon'?[G.coordinates]:G.coordinates; const big=L.reduce((m,p)=>p[0].length>m[0].length?p:m); let sx=0,sy=0,n=0; big[0].forEach(([lo,la])=>{ sx+=lo; sy+=la; n++; }); ctr.autoRotate=false; g.pointOfView({lat:sy/n,lng:sx/n,altitude:1.4},1600); clearTimeout(window.__ar); window.__ar=setTimeout(()=>{ if(!playing) ctr.autoRotate=false; },6000); }); }
     let hoverF=null;
     g.width(el.clientWidth).height(el.clientHeight).backgroundColor('rgba(0,0,0,0)').globeImageUrl(oceanTex()).showAtmosphere(true).atmosphereColor('#a9bfff').atmosphereAltitude(.14);
     const apply=()=>g.polygonCapColor(f=> isV(f) ? (f===hoverF?lighten(colOf(f),.45):hexA(colOf(f),.92)) : (f===hoverF?'#262e3c':'#151a23'))
@@ -1243,12 +1261,21 @@ async function initGlobe(){
     const setRoute=i=>{ const far=i===5; const segs=far?[{a:CH[4],b:CH[5]}]:[];
       g.arcsData(segs).arcStartLat(d=>d.a.lat).arcStartLng(d=>d.a.lng).arcEndLat(d=>d.b.lat).arcEndLng(d=>d.b.lng).arcColor(()=>['rgba(143,176,255,.2)','#ffffff']).arcStroke(.3).arcDashLength(.5).arcDashGap(.15).arcDashAnimateTime(1800).arcAltitudeAutoScale(.25);
       g.ringsData(far?[CH[5]]:[]).ringLat('lat').ringLng('lng').ringColor(()=>t=>`rgba(143,176,255,${1-t})`).ringMaxRadius(2.5).ringPropagationSpeed(1.2).ringRepeatPeriod(1300); };
-    const HOME={lat:35,lng:12,altitude:innerWidth<900?4.1:2.3}, BE_VIEW={lat:50.6,lng:4.4,altitude:.09};
+    const HOME={lat:47.5,lng:5,altitude:innerWidth<900?2.6:1.55}, BE_VIEW={lat:50.6,lng:4.4,altitude:.09};
     g.pointOfView(HOME,0);
-    const ctr=g.controls(); ctr.autoRotate=!reduce; ctr.autoRotateSpeed=.5; ctr.enableDamping=true; ctr.dampingFactor=.08;
+    const ctr=g.controls(); ctr.autoRotate=false; ctr.enableDamping=true; ctr.maxDistance=100*(1+7.5);
+    // easter egg: zoom all the way out and a small sun called M rises next to the globe
+    { const sun=$('#msun'); let shown=false;
+      sun.onclick=()=>toast('M. Every journey needs a sun to orbit.');
+      const tickSun=()=>{ requestAnimationFrame(tickSun); if(route!=='journey'||playing){ if(shown){ sun.style.opacity=0; sun.classList.remove('on'); shown=false; } return; }
+        const pv=g.pointOfView(), k=Math.min(1,Math.max(0,(pv.altitude-5.6)/1.4));
+        if(k<=0){ if(shown){ sun.style.opacity=0; sun.classList.remove('on'); shown=false; } return; }
+        const c=g.getScreenCoords(Math.max(-70,Math.min(70,pv.lat+15)), pv.lng+58, 2.6); if(!c) return;
+        sun.style.transform=`translate(${c.x}px,${c.y}px)`; sun.style.opacity=k; if(!shown){ sun.classList.add('on'); shown=true; } };
+      requestAnimationFrame(tickSun); } ctr.dampingFactor=.08;
     let hoverT=null;
-    el.addEventListener('pointerenter',()=>{ if(document.body.classList.contains('playing')) return; clearTimeout(hoverT); hoverT=setTimeout(()=>{ if(document.body.classList.contains('playing')) return; ctr.autoRotate=false; g.pointOfView({lat:47,lng:3,altitude:1.6},2600); $('#jhint').textContent='Click Belgium to walk through my journey.'; },350); });
-    el.addEventListener('pointerleave',()=>{ clearTimeout(hoverT); if(document.body.classList.contains('playing')) return; ctr.autoRotate=!reduce; ctr.autoRotateSpeed=.5; });
+    el.addEventListener('pointerenter',()=>{ if(document.body.classList.contains('playing')) return; clearTimeout(hoverT); hoverT=setTimeout(()=>{ if(document.body.classList.contains('playing')) return; ctr.autoRotate=false; $('#jhint').textContent='Click Belgium to walk through my journey.'; },350); });
+    el.addEventListener('pointerleave',()=>{ clearTimeout(hoverT); });
     addEventListener('resize',()=>g.width(el.clientWidth).height(el.clientHeight));
 
     /* ---------- walking through the journey ---------- */
@@ -1329,8 +1356,8 @@ async function initGlobe(){
     function start(i=0){ gOffTo(.2); playing=true; paused=false; document.body.classList.add('playing'); ctr.autoRotate=false; $('#gtip').classList.remove('on'); hoverF=null; apply(); setIcon(); goTo(i); }
     function finish(){ segs.forEach(s=>s.classList.add('done')); paused=true; setIcon(); }
     async function stop(){ gOffTo(-.1); const my=++token; clearTimeout(timer); playing=false; paused=false; document.body.classList.remove('playing'); setRoute(null);
-      if(!await outOfBelgium(my,HOME)) return; ctr.autoRotate=!reduce; ctr.autoRotateSpeed=.5; }
-    Journey.stop=()=>{ gOffTo(-.1); if(playing){ token++; clearTimeout(timer); playing=false; document.body.classList.remove('playing'); Region.hide(); g.resumeAnimation(); g.pointOfView(HOME,0); ctr.autoRotate=!reduce; } };
+      if(!await outOfBelgium(my,HOME)) return; }
+    Journey.stop=()=>{ gOffTo(-.1); if(playing){ token++; clearTimeout(timer); playing=false; document.body.classList.remove('playing'); Region.hide(); g.resumeAnimation(); g.pointOfView(HOME,0); ctr.autoRotate=false; } };
     function setIcon(){ $('#pIcon').innerHTML= paused? '<path d="M3 1.5v11l9-5.5z"/>' : '<path d="M3 2h3v10H3zM8 2h3v10H8z"/>'; $('#pPlay').setAttribute('aria-label',paused?'Continue':'Pause'); }
     const KC={Education:'#8fb0ff',Experience:'#c4a1ff',Business:'#6fe3ff'};
     const jl=$('#jlist'); jl.innerHTML=CH.map((c,i)=>`<button data-i="${i}"><span class="y">${c.yr}</span><span><b><i style="background:${KC[c.kind]||'#8fb0ff'}"></i>${c.t}</b><small>${c.o}</small></span></button>`).join('');
@@ -2023,7 +2050,7 @@ function initRoom(){
   const marks=$('#marks'); hot.filter(h=>!h.nomark).forEach(h=>{ const el=document.createElement('div'); el.className='mk'; el.innerHTML=`<span class="d"></span><span class="l">${h.label}</span>`; el.onclick=()=>focusF(h.id); marks.appendChild(el); h.el=el; });
 
   const SPEC=(rows)=>`<ul class="spec">${rows.map(([k,v])=>`<li><span>${k}</span><b>${v}</b></li>`).join('')}</ul>`;
-  const GEARNAV=(cur)=>`<div class="gearnav">${[['g-a7','Sony A7 III'],['g-24240','FE 24-240'],['g-35','FE 35mm'],['g-laowa','Laowa 100mm'],['g-mini3','DJI Mini 3'],['g-godox','Godox flash'],['g-mic','DJI Mic Mini'],['g-tripod','Tripod'],['g-kit','Filters and drives']].map(([id,n])=>`<button data-focus="${id}" class="${id===cur?'on':''}">${n}</button>`).join('')}</div>`;
+  const GEARNAV=(cur)=>`<div class="gearnav">${[['g-a7','Sony A7 III'],['g-24240','FE 24-240'],['g-35','FE 35mm'],['g-laowa','Laowa 100mm'],['g-mini3','DJI Mini 3'],['g-godox','Godox flash'],['g-mic','DJI Mic Mini']].map(([id,n])=>`<button data-focus="${id}" class="${id===cur?'on':''}">${n}</button>`).join('')}</div>`;
   const SHEETS={
     portfolio:(h)=>portfolioSheet(h&&h.cat),
     macbook:`<div class="k">Above Belgium · Since 2022</div><h3>Seen from above.</h3>
@@ -2037,7 +2064,7 @@ function initRoom(){
       <p style="margin-top:14px">Prints in several formats, and live printing at events, are available too.</p>
       <p><a href="https://www.abovebelgium.be" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">abovebelgium.be ›</a></p>`,
     gear:`<div class="k">Above Belgium</div><h3>Professional work,<br>professional gear.</h3><p>Everything I shoot with. Click an item on the shelves, or pick one here.</p>${GEARNAV('')}
-      <ul><li><b>Sony A7 III</b><span class="s">Full-frame mirrorless camera</span></li><li><b>Sony FE 24-240mm</b><span class="s">10x travel zoom</span></li><li><b>Laowa 100mm 2X</b><span class="s">Ultra macro, APO</span></li><li><b>DJI Mini 3</b><span class="s">4K HDR drone</span></li></ul>`,
+      <ul><li><b>Sony A7 III</b><span class="s">Full-frame mirrorless camera</span></li><li><b>Sony FE 24-240mm</b><span class="s">10x travel zoom</span></li><li><b>Sony FE 35mm F2.8 ZA</b><span class="s">Prime lens for films</span></li><li><b>Laowa 100mm 2X</b><span class="s">Ultra macro, APO</span></li><li><b>DJI Mini 3</b><span class="s">4K HDR drone</span></li><li><b>Godox flash</b><span class="s">Speedlight for events</span></li><li><b>DJI Mic Mini</b><span class="s">Wireless audio</span></li></ul>`,
     'g-a7':`<div class="k">Camera</div><h3>Sony A7 III</h3>${GEARNAV('g-a7')}<p>The body behind almost every shot: a full-frame sensor that stays clean in low light, which matters at indoor events.</p>${SPEC([['Sensor','Full frame, 24.2 MP'],['Autofocus','693 points'],['Burst','10 fps'],['Video','4K HDR'],['Stabilisation','5-axis in-body'],['Battery','About 710 shots'],['Cards','Dual SD slots'],['Mount','Sony E-mount']])}`,
     'g-24240':`<div class="k">Telephoto zoom</div><h3>Sony FE 24-240mm</h3>${GEARNAV('g-24240')}<p>One lens from wide to long telephoto, so I never miss a moment changing lenses during an event.</p>${SPEC([['Zoom','10x, 24 to 240 mm'],['Aperture','f/3.5 to 6.3'],['Stabilisation','Optical'],['Autofocus','Fast and silent'],['Mount','Full-frame E-mount']])}`,
     'g-35':`<div class="k">Prime lens</div><h3>Sony FE 35mm F2.8 ZA</h3>${GEARNAV('g-35')}<p>The lens I put on for films: small and light enough for a gimbal or a long handheld day, with a natural field of view that feels like being in the scene.</p>${SPEC([['Type','Full-frame prime, E-mount'],['Optics','ZEISS Sonnar T*'],['Aperture','f/2.8 to f/22'],['Closest focus','0.35 m'],['Filter','49 mm'],['Size and weight','61.5 × 36.5 mm, 120 g'],['Used for','Films, aftermovies and interviews']])}`,
