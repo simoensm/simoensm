@@ -2323,9 +2323,52 @@ function initRoom(){
       g.fillStyle=brown?'#6e4527':'#1f1d1b'; [[-18,-18,16,12],[14,-6,18,13],[-36,-2,10,9],[30,-22,10,8]].forEach(([a,b,c,d])=>{ g.beginPath(); g.ellipse(a,b,c,d,.4,0,7); g.fill(); });
       g.fillStyle=brown?'#7a4d2d':'#f2efe8'; g.beginPath(); g.ellipse(58,-22,17,13,.3,0,7); g.fill(); g.fillStyle='#1f1d1b'; g.beginPath(); g.ellipse(62,-26,8,7,0,0,7); g.fill(); g.fillStyle='#d7a79a'; g.beginPath(); g.ellipse(70,-16,8,6,0,0,7); g.fill();
       g.strokeStyle='#1f1d1b'; g.lineWidth=3; g.beginPath(); g.moveTo(-50,-14); g.quadraticCurveTo(-60,6,-56,24); g.stroke(); g.restore(); };
-    cow(420,hz+420,1.1,false,false); cow(640,hz+400,.9,false,true); cow(1500,hz+460,1.35,true,false); cow(1720,hz+395,.8,false,true); cow(260,hz+360,.6,true,true);
+    cow(1220,hz+430,1.0,false,false); cow(960,hz+398,.75,false,true); cow(1500,hz+460,1.35,true,false); cow(1720,hz+395,.8,false,true); cow(260,hz+360,.6,true,true);
     g.strokeStyle='#6e5a42'; g.lineWidth=3; [hz+520,hz+550].forEach(y=>{ g.beginPath(); g.moveTo(0,y); g.lineTo(w,y-30); g.stroke(); });
-    for(let x=40;x<w;x+=170){ g.fillStyle='#5a4632'; g.fillRect(x,hz+490-x*.018,12,110); } });
+    for(let x=40;x<w;x+=170){ g.fillStyle='#5a4632'; g.fillRect(x,hz+490-x*.018,12,110); }
+    // two running mates at the fence, come to get me out for a run
+    const RR=(x,y,ww,hh,r)=>{ g.beginPath(); g.roundRect(x,y,ww,hh,r); g.fill(); };
+    const runner=(x,fy,o)=>{ const S='#e6bd9c', SD='#cf9f7e';
+      // legs, shorts, shoes
+      g.fillStyle=S; RR(x-34,fy-150,26,140,12); RR(x+8,fy-150,26,140,12);
+      g.fillStyle=o.shorts; RR(x-44,fy-205,88,80,14);
+      g.fillStyle='#f4f4f2'; RR(x-46,fy-20,40,22,10); RR(x+6,fy-20,40,22,10); g.fillStyle=o.sole; g.fillRect(x-46,fy-4,40,5); g.fillRect(x+6,fy-4,40,5);
+      // arms: one waving up, one relaxed
+      g.save(); g.translate(x-58,fy-330); g.rotate(o.wave); g.fillStyle=S; RR(-12,-150,24,150,12); g.fillStyle=o.shirt; RR(-17,-40,34,44,12); g.beginPath(); g.arc(0,-152,15,0,7); g.fillStyle=S; g.fill(); g.restore();
+      g.save(); g.translate(x+58,fy-330); g.rotate(-.18); g.fillStyle=S; RR(-12,0,24,140,12); g.fillStyle=o.shirt; RR(-17,-4,34,44,12); if(o.watch){ g.fillStyle='#1d1d1f'; RR(-15,104,30,18,5); } g.restore();
+      // shirt
+      g.fillStyle=o.shirt; RR(x-62,fy-345,124,155,26);
+      o.deco&&o.deco(x,fy-345);
+      // neck and head
+      g.fillStyle=SD; g.fillRect(x-14,fy-372,28,30); g.fillStyle=S; g.beginPath(); g.ellipse(x,fy-412,40,46,0,0,7); g.fill();
+      g.beginPath(); g.ellipse(x-40,fy-410,8,12,0,0,7); g.ellipse(x+40,fy-410,8,12,0,0,7); g.fill();
+      g.fillStyle='#2b2018'; g.beginPath(); g.ellipse(x,fy-440,40,22,0,Math.PI,0); g.fill();
+      o.face(x,fy-412); o.cap(x,fy-412); };
+    const bubble=(x,y,t,tail)=>{ g.font='600 30px Inter,Geist,Helvetica,Arial,sans-serif'; const tw=g.measureText(t).width+44; g.fillStyle='rgba(255,255,255,.95)'; RR(x-tw/2,y-34,tw,64,30);
+      g.beginPath(); g.moveTo(x+tail-14,y+28); g.lineTo(x+tail+8,y+58); g.lineTo(x+tail+16,y+28); g.fill(); g.fillStyle='#1d1f24'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(t,x,y); g.textAlign='left'; g.textBaseline='alphabetic'; };
+    const rY=1112;
+    // Arthur: F1 fan, navy cap and shirt with Max's number one
+    runner(560,rY,{shirt:'#1c2b4f',shorts:'#141414',sole:'#ff6a13',wave:-.42,
+      deco:(x,y)=>{ g.fillStyle='#d8262f'; g.fillRect(x-62,y+60,124,10); g.fillStyle='#f5c400'; g.fillRect(x-62,y+72,124,5);
+        g.fillStyle='#f5c400'; g.font='800 46px Inter,Geist,Helvetica,Arial,sans-serif'; g.textAlign='center'; g.fillText('1',x,y+52); g.fillStyle='#fff'; g.font='700 22px Inter,Geist,Helvetica,Arial,sans-serif'; g.fillText('MAX',x,y+108); g.textAlign='left'; },
+      face:(x,y)=>{ g.fillStyle='#2b2018'; g.beginPath(); g.arc(x-14,y-4,4.5,0,7); g.arc(x+14,y-4,4.5,0,7); g.fill();
+        g.strokeStyle='#8a4a3a'; g.lineWidth=4; g.lineCap='round'; g.beginPath(); g.arc(x,y+12,14,.15*Math.PI,.85*Math.PI); g.stroke(); g.fillStyle='#fff'; g.beginPath(); g.arc(x,y+13,11,.2*Math.PI,.8*Math.PI); g.fill(); },
+      cap:(x,y)=>{ g.fillStyle='#1c2b4f'; g.beginPath(); g.ellipse(x,y-30,43,30,0,Math.PI,0); g.fill(); g.fillRect(x-43,y-32,86,8); g.beginPath(); g.ellipse(x-34,y-26,34,9,-.08,0,7); g.fill();
+        g.fillStyle='#d8262f'; g.fillRect(x-42,y-36,84,5); g.fillStyle='#f5c400'; g.font='800 22px Inter,Geist,Helvetica,Arial,sans-serif'; g.textAlign='center'; g.fillText('1',x,y-42); g.textAlign='left'; } });
+    // Flo: the white Mons half marathon shirt, cap backwards, glasses
+    runner(730,rY,{shirt:'#f6f6f8',shorts:'#22262e',sole:'#3a3a3a',wave:-.18,watch:true,
+      deco:(x,y)=>{ g.save(); g.beginPath(); g.roundRect(x-62,y,124,155,26); g.clip();
+        for(let i=0;i<60;i++){ const px=x-62+(i*37)%124, py=y+((i*53)%150); g.fillStyle=px<x?'rgba(120,180,230,.85)':'rgba(240,160,200,.75)'; g.beginPath(); g.arc(px,py,3.2,0,7); g.fill(); }
+        g.fillStyle='#8fc6ee'; g.beginPath(); g.ellipse(x,y+2,26,10,0,0,Math.PI); g.fill();
+        g.fillStyle='rgba(70,70,80,.75)'; g.fillRect(x-54,y+70,108,30); g.fillStyle='#fff'; g.font='700 11px Inter,Geist,Helvetica,Arial,sans-serif'; g.textAlign='center'; g.fillText('SEMI MARATHON',x,y+83); g.fillText('DE MONS',x,y+96); g.textAlign='left';
+        g.fillStyle='#fff'; RR(x-30,y+112,60,34,4); g.fillStyle='#1d1d1f'; g.font='700 16px Inter,Geist,Helvetica,Arial,sans-serif'; g.textAlign='center'; g.fillText('12',x,y+136); g.textAlign='left'; g.restore(); },
+      face:(x,y)=>{ g.strokeStyle='#141414'; g.lineWidth=4; g.beginPath(); g.roundRect(x-30,y-14,24,18,5); g.roundRect(x+6,y-14,24,18,5); g.moveTo(x-6,y-6); g.lineTo(x+6,y-6); g.stroke();
+        g.fillStyle='#2b2018'; g.beginPath(); g.arc(x-18,y-5,3.5,0,7); g.arc(x+18,y-5,3.5,0,7); g.fill();
+        g.fillStyle='rgba(60,40,30,.75)'; g.beginPath(); g.ellipse(x,y+16,16,4,0,0,7); g.fill(); g.beginPath(); g.ellipse(x,y+36,22,9,0,0,Math.PI); g.fill();
+        g.strokeStyle='#8a4a3a'; g.lineWidth=3.5; g.beginPath(); g.arc(x,y+18,9,.25*Math.PI,.75*Math.PI); g.stroke(); },
+      cap:(x,y)=>{ g.fillStyle='#141414'; g.beginPath(); g.ellipse(x,y-30,43,30,0,Math.PI,0); g.fill(); g.fillRect(x-43,y-32,86,8); g.fillStyle='#2a2a2a'; g.fillRect(x-43,y-28,86,4); g.fillStyle='#141414'; RR(x-10,y-46,20,10,3); } });
+    bubble(470,rY-640,'Mathias! Coming for a run?',60);
+    bubble(840,rY-560,'Easy pace, promise.',-90); });
   outT.wrapS=outT.wrapT=THREE.ClampToEdgeWrapping; outT.repeat.set(.86,.86); outT.offset.set(.07,.07);
   const view=new THREE.Mesh(new THREE.PlaneGeometry(wW,wH),std({map:outT,emissive:0xffffff,emissiveMap:outT,emissiveIntensity:.5,roughness:1,fog:false})); view.position.set(wX,wY,BZ+.006); WIN.add(view);
   const glass=new THREE.Mesh(new THREE.PlaneGeometry(wW,wH),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.05,depthWrite:false})); glass.position.set(wX,wY,BZ+.02); WIN.add(glass);
