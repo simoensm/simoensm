@@ -174,18 +174,6 @@ body.dark .burger{color:#eef1f6}
 .hero h1 .fx-data{display:inline-block;text-align:left}
 .hero h1 .fx-data i{font-style:normal;transition:color .3s}
 .hero h1 .fx-data i.on{color:#6f95ff}
-/* code: typed in, with a caret */
-.hero h1 .fx-code b{font-weight:inherit;opacity:0}
-.hero h1 .fx-code b.on{opacity:1}
-.hero h1 .caret{display:inline-block;width:.07em;height:.82em;margin-left:.04em;background:#6f95ff;vertical-align:-.04em;border-radius:2px;animation:blink .9s steps(1) infinite}
-.hero h1 .caret.out{opacity:0;transition:opacity .4s;animation:none}
-@keyframes blink{50%{opacity:0}}
-/* light: letters flicker on like a lamp warming up, then glow once */
-.hero h1 .fx-light b{font-weight:inherit;display:inline-block}
-.hero h1 .fx-light b.f{animation:flick .9s steps(1) both}
-@keyframes flick{0%{opacity:.15}10%{opacity:1}14%{opacity:.2}22%{opacity:.9}26%{opacity:.3}40%{opacity:1}100%{opacity:1}}
-.hero h1 .fx-light.glow{animation:lglow 1.8s var(--ease)}
-@keyframes lglow{30%{color:#fff;text-shadow:0 0 .18em rgba(255,214,140,.95),0 0 .55em rgba(255,180,90,.6),0 0 1.1em rgba(255,170,80,.35)}100%{text-shadow:0 0 0 rgba(255,190,100,0)}}
 .hero h1.nojs{opacity:0;animation:up 1.1s var(--spring) .25s forwards}
 .hero h1 em{font-style:normal;color:var(--ink3)}
 .hero .sub{font-size:clamp(17px,1.5vw,20px);line-height:1.5;color:var(--ink2);max-width:560px;margin-top:22px;opacity:0;animation:up 1s var(--spring) .45s forwards}
@@ -906,7 +894,6 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
   </div>
   <div class="legend dglass"><span><i class="lv"></i>Explored</span><span><i class="ll"></i>Not yet</span></div>
   <div class="caption dglass" id="cap"><div class="swap"><div class="meta"><span id="cIdx">01 / 06</span><span id="cKind">Education</span></div><div class="chead"><span class="clogo"><img id="cL" alt=""></span><div><div class="yr" id="cYr"></div><div class="dur" id="cD"></div></div></div><h3 id="cT"></h3><div class="org" id="cO"></div><p id="cP"></p><ul class="cb" id="cB"></ul><div class="ctags" id="cG"></div><div class="addr" id="cA"></div><span class="tapmore">TAP FOR DETAILS</span></div></div>
-  <i class="gsh" id="msh"></i><i class="glit" id="mlit"></i>
   <div class="msun" id="msun" aria-hidden="true"><svg><ellipse id="morb"/></svg><button class="sun" id="msunb" aria-label="M"><i class="halo"></i><svg class="rays" viewBox="-1 -1 2 2"></svg><svg class="rays b" viewBox="-1 -1 2 2"></svg><i class="core"></i><span class="nm">Sun &middot; M</span></button></div>
   <div class="jlist dglass" id="jlist"></div>
   <div class="player dglass" id="player">
@@ -979,15 +966,10 @@ setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700)
   const D=find('data'), Cc=find('code'), L=find('light'); const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const settle=()=>h.classList.add('done');
   if(RM||!D||!Cc||!L){ setTimeout(settle,2200); return; }
-  // set the words up before they rise: Data as digits, code as a lone caret, light dimmed
-  const dt=D.textContent; D.classList.add('fx-data'); D.innerHTML=[...dt].map(c=>`<i data-c="${c}">${/[a-z]/i.test(c)?'0123456789'[Math.random()*10|0]:c}</i>`).join('');
-  const ct=Cc.textContent; Cc.classList.add('fx-code'); Cc.innerHTML='<span class="caret"></span>'+[...ct].map(c=>`<b>${c}</b>`).join('');
-  const lt=L.textContent; L.classList.add('fx-light'); L.innerHTML=[...lt].map(c=>`<b style="opacity:.15">${c}</b>`).join('');
+  // all three words rise in as digits and decode into their letters, one word after the other
   const at=x=>(450+(+x.style.getPropertyValue('--i'))*75+650);
-  setTimeout(()=>{ [...D.children].forEach((el,k)=>{ const real=el.dataset.c; if(!/[a-z]/i.test(real)) return; el.classList.add('on'); let n=0; const iv=setInterval(()=>{ el.textContent='0123456789'[Math.random()*10|0]; if(++n>6+k*4){ clearInterval(iv); el.textContent=real; el.classList.remove('on'); } },50); }); },at(D));
-  setTimeout(()=>{ const bs=[...Cc.querySelectorAll('b')], car=Cc.querySelector('.caret'); let k=0;
-    (function ty(){ if(k<bs.length){ bs[k].classList.add('on'); Cc.insertBefore(car,bs[k].nextSibling); k++; setTimeout(ty,80+Math.random()*90); } else setTimeout(()=>{ car.classList.add('out'); setTimeout(()=>car.remove(),500); },1500); })(); },at(Cc)+250);
-  setTimeout(()=>{ [...L.children].forEach((b,j)=>{ b.style.animationDelay=(j*90+Math.random()*120|0)+'ms'; b.style.opacity=''; b.classList.add('f'); }); setTimeout(()=>L.classList.add('glow'),900+L.children.length*90); },at(L)+300);
+  [D,Cc,L].forEach((W,wi)=>{ const tx=W.textContent; W.classList.add('fx-data'); W.innerHTML=[...tx].map(c=>`<i data-c="${c}">${/[a-z]/i.test(c)?'0123456789'[Math.random()*10|0]:c}</i>`).join('');
+    setTimeout(()=>{ [...W.children].forEach((el,k)=>{ const real=el.dataset.c; if(!/[a-z]/i.test(real)) return; el.classList.add('on'); let n=0; const iv=setInterval(()=>{ el.textContent='0123456789'[Math.random()*10|0]; if(++n>6+k*4){ clearInterval(iv); el.textContent=real; el.classList.remove('on'); } },50); }); },at(W)+wi*120); });
   setTimeout(settle,at(L)+400); })();
 
 /* ============================ DISCOVERY GAME ============================ */
@@ -1446,9 +1428,17 @@ async function initGlobe(){
     // sun rays, drawn once as SVG lines that fade outwards
     $$('#msunb .rays').forEach((sv,n)=>{ let h=`<defs><radialGradient id="rg${n}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"><stop offset=".3" stop-color="#ffd59a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient></defs>`;
       const N=n?28:40; for(let i=0;i<N;i++){ const a=(i+(n?.5:0))/N*Math.PI*2, r2=.62+((i*37)%11)/11*.36; h+=`<line x1="${(Math.cos(a)*.3).toFixed(3)}" y1="${(Math.sin(a)*.3).toFixed(3)}" x2="${(Math.cos(a)*r2).toFixed(3)}" y2="${(Math.sin(a)*r2).toFixed(3)}" stroke="url(#rg${n})" stroke-width="${n?.018:.011}" stroke-linecap="round"/>`; } sv.innerHTML=h; });
+    // keep the scene's default lights, and bend them towards the sun as it comes into view
+    const LT=(g.lights?.()||[]), AMB=LT.find(l=>l.isAmbientLight), DIR=LT.find(l=>l.isDirectionalLight);
+    const L0=DIR?{i:DIR.intensity,c:DIR.color.clone(),p:DIR.position.clone()}:null, A0=AMB?{i:AMB.intensity}:null;
+    const sunLight=(k,dx,dy)=>{ if(!DIR||!AMB) return; const cam=g.camera(); cam.updateMatrixWorld(); const e=cam.matrixWorld.elements, L=Math.hypot(dx,dy)||1, ux=dx/L, uy=-dy/L;
+      const vx=e[0]*ux+e[4]*uy+e[8]*.18, vy=e[1]*ux+e[5]*uy+e[9]*.18, vz=e[2]*ux+e[6]*uy+e[10]*.18, n=Math.hypot(vx,vy,vz)||1, R=L0.p.length()||1;
+      DIR.position.set(L0.p.x+(vx/n*R-L0.p.x)*k, L0.p.y+(vy/n*R-L0.p.y)*k, L0.p.z+(vz/n*R-L0.p.z)*k);
+      DIR.intensity=L0.i*(1+1.4*k); DIR.color.copy(L0.c).lerp({r:1,g:.8,b:.55,isColor:true},k*.85); AMB.intensity=A0.i*(1-.94*k);
+      const gm=g.globeMaterial?.(); if(gm&&gm.specular){ if(!gm.userData.s0) gm.userData.s0={s:gm.specular.clone(),h:gm.shininess}; gm.specular.copy(gm.userData.s0.s).lerp({r:.55,g:.42,b:.28,isColor:true},k); gm.shininess=gm.userData.s0.h+(28-gm.userData.s0.h)*k; } };
     { const box=$('#msun'), sb=$('#msunb'), orb=$('#morb'), cam=g.camera(); cam.far=1e6; cam.updateProjectionMatrix(); let shown=false;
       sb.onclick=()=>{ toast('M. Every journey needs a sun to orbit.'); found('sun'); };
-      const hide=()=>{ if(shown){ box.style.opacity=0; $('#mlit').style.opacity=$('#msh').style.opacity=0; box.classList.remove('on'); shown=false; } };
+      const hide=()=>{ if(shown){ box.style.opacity=0; sunLight(0,1,0); box.classList.remove('on'); shown=false; } };
       const tickSun=()=>{ requestAnimationFrame(tickSun); if(route!=='journey'||playing) return hide();
         const pv=g.pointOfView(), k=Math.min(1,Math.max(0,(pv.altitude-14)/9)); if(k<=0) return hide();
         const c=g.getScreenCoords(pv.lat,pv.lng,-1); if(!c) return;
@@ -1456,14 +1446,9 @@ async function initGlobe(){
         const rx=rp*15, ry=rx*.3, th=.62, sx=c.x+rx*Math.cos(th), sy=c.y-ry*Math.sin(th);
         orb.setAttribute('cx',sx); orb.setAttribute('cy',sy); orb.setAttribute('rx',rx); orb.setAttribute('ry',ry);
         sb.style.transform=`translate(${sx}px,${sy}px)`; sb.style.setProperty('--r',(rp*3.2).toFixed(1)+'px');
-        // sunlight on the globe: a warm highlight on the side facing M, a soft night side opposite
-        { const lt=$('#mlit'), dx=sx-c.x, dy=sy-c.y, L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L, R=rp*1.02;
-          lt.style.width=lt.style.height=(R*2)+'px'; lt.style.transform=`translate(${c.x-R}px,${c.y-R}px)`;
-          const hx=50+ux*30, hy=50+uy*30, ang=Math.atan2(uy,ux)*180/Math.PI+90;
-          lt.style.background=`radial-gradient(circle at ${hx}% ${hy}%,rgba(255,226,180,.34) 0,rgba(255,190,120,.16) 24%,rgba(255,160,80,.04) 46%,transparent 60%)`;
-          const sh=$('#msh'); sh.style.width=sh.style.height=(R*2)+'px'; sh.style.transform=lt.style.transform; sh.style.background=`linear-gradient(${ang+180}deg,#fff 0,#fff 45%,#7a8296 62%,#2a2f3c 100%)`;
-          lt.style.boxShadow=`inset ${(-ux*R*.12).toFixed(1)}px ${(-uy*R*.12).toFixed(1)}px ${(R*.25).toFixed(1)}px -${(R*.08).toFixed(1)}px rgba(255,190,120,.45)`; }
-        box.style.opacity=k; $('#mlit').style.opacity=k; $('#msh').style.opacity=k*.85; if(!shown){ box.classList.add('on'); shown=true; } if(k>.85) found('sun'); };
+        // sunlight: the globe's own light turns towards M and warms up, the ambient light drops, so the far side falls into night
+        sunLight(k,sx-c.x,sy-c.y);
+        box.style.opacity=k; if(!shown){ box.classList.add('on'); shown=true; } if(k>.85) found('sun'); };
       requestAnimationFrame(tickSun); } ctr.dampingFactor=.08;
     let hoverT=null;
     el.addEventListener('pointerenter',()=>{ if(document.body.classList.contains('playing')) return; clearTimeout(hoverT); hoverT=setTimeout(()=>{ if(document.body.classList.contains('playing')) return; ctr.autoRotate=false; $('#jhint').textContent='Click Belgium to walk through my journey.'; },350); });
@@ -2240,6 +2225,22 @@ function initRoom(){
     HG.position.set(ex-.18,.77,ez-.06); HG.rotation.z=.55; HG.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); EL.add(HG);
     add(EL,new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(ex-.36,.81,ez+.04),new THREE.Vector3(ex-.34,.768,ez+.12),new THREE.Vector3(ex-.27,.766,ez+.15),new THREE.Vector3(ex-.2,.79,ez+.06),new THREE.Vector3(ex-.287,.965,ez-.06)]),40,.0032,6),mat.black));
     const reel=C(EL,.028,.028,.026,std({color:0xc9cbcf,metalness:.7,roughness:.35}),ex-.06,.79,ez-.16,24); reel.rotation.x=Math.PI/2; const rf=C(EL,.034,.034,.004,std({color:0xd23a2f,roughness:.5}),ex-.06,.79,ez-.146,24); rf.rotation.x=Math.PI/2; const rb=rf.clone(); rb.position.z=ez-.174; EL.add(rb); }
+  // a blue silicone soldering mat under the soldering corner: grid, rulers, parts wells and component outlines
+  { const mt=T(1024,660,(g,w,h)=>{ g.fillStyle='#2b5ea8'; g.fillRect(0,0,w,h); for(let i=0;i<4000;i++){ g.fillStyle=`rgba(255,255,255,${Math.random()*.03})`; g.fillRect(Math.random()*w,Math.random()*h,2,2); }
+      g.strokeStyle='rgba(255,255,255,.18)'; g.lineWidth=1; for(let x=40;x<w-200;x+=20){ g.beginPath(); g.moveTo(x,40); g.lineTo(x,h-40); g.stroke(); } for(let y=40;y<h-40;y+=20){ g.beginPath(); g.moveTo(40,y); g.lineTo(w-220,y); g.stroke(); }
+      g.strokeStyle='rgba(255,255,255,.55)'; g.lineWidth=2; g.strokeRect(40,40,w-260,h-80);
+      g.fillStyle='rgba(255,255,255,.8)'; g.font='14px ui-monospace,Menlo,monospace'; for(let x=40,i=0;x<w-220;x+=20,i++){ g.fillRect(x,24,1.5,i%5?7:14); if(i%5===0) g.fillText(String(i),x+3,20); } for(let y=40,i=0;y<h-40;y+=20,i++) g.fillRect(24,y,i%5?7:14,1.5);
+      // wells for screws on the right
+      for(let r=0;r<4;r++) for(let c=0;c<2;c++){ const x=w-195+c*90, y=48+r*142; g.fillStyle='#234f8f'; g.beginPath(); g.roundRect(x,y,78,128,18); g.fill(); g.strokeStyle='rgba(0,0,0,.25)'; g.lineWidth=3; g.stroke();
+        g.fillStyle='rgba(205,210,215,.9)'; for(let k=0;k<2+((r+c)%3);k++){ g.beginPath(); g.arc(x+18+((k*29)%50),y+24+k*30,4,0,7); g.fill(); } }
+      // component outlines in white
+      g.strokeStyle='rgba(255,255,255,.7)'; g.lineWidth=2.5; g.strokeRect(120,420,90,60); for(let k=0;k<6;k++){ g.beginPath(); g.moveTo(130+k*14,420); g.lineTo(130+k*14,408); g.moveTo(130+k*14,480); g.lineTo(130+k*14,492); g.stroke(); }
+      g.beginPath(); g.arc(300,450,26,0,7); g.stroke(); g.beginPath(); g.moveTo(274,450); g.lineTo(254,450); g.moveTo(326,450); g.lineTo(346,450); g.stroke();
+      g.strokeRect(400,435,70,30); g.beginPath(); g.moveTo(380,450); g.lineTo(400,450); g.moveTo(470,450); g.lineTo(490,450); g.stroke();
+      g.fillStyle='rgba(255,255,255,.75)'; g.font='600 22px ui-monospace,Menlo,monospace'; g.fillText('SILICONE SOLDERING MAT',120,560); g.font='15px ui-monospace,Menlo,monospace'; g.fillText('HEAT RESISTANT 500 °C',120,588); });
+    const mat0=new THREE.Mesh(new RoundedBoxGeometry(.62,.005,.4,2,.002),std({map:mt,roughness:.85}));
+    mat0.geometry.attributes.uv && mat0.geometry.attributes.uv.array; mat0.position.set(ex-.15,.765,ez+.08); mat0.receiveShadow=true; EL.add(mat0);
+    const top=new THREE.Mesh(new THREE.PlaneGeometry(.618,.398),std({map:mt,roughness:.85})); top.rotation.x=-Math.PI/2; top.position.set(ex-.15,.7678,ez+.08); top.receiveShadow=true; EL.add(top); }
   // wire spools on the pegboard
   [0xd93636,0x2b2b2e,0xf2c230].forEach((c,i)=>{ const sp=C(EL,.032,.032,.05,std({color:c,roughness:.55}),ex-.52+i*.1,1.2,BZ+.05,24); sp.rotation.z=Math.PI/2; [-.027,.027].forEach(o=>{ const fl=C(EL,.038,.038,.004,std({color:0x1d1d1f,roughness:.5}),ex-.52+i*.1+o,1.2,BZ+.05,24); fl.rotation.z=Math.PI/2; }); C(EL,.004,.004,.06,mat.chrome,ex-.52+i*.1,1.2,BZ+.04,8).rotation.x=Math.PI/2; });
   C(EL,.05,.05,.015,mat.black,ex+.05,.77,ez+.12); C(EL,.006,.006,.18,mat.chrome,ex+.05,.86,ez+.12,8);
