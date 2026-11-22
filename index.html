@@ -2442,19 +2442,21 @@ function initRoom(){
   hs('outside',WIN,[wX,wY+wH/2+.07,BZ+.05],{side:'atelier',label:'Outside',nomark:true,view:{pos:[wX,wY-.02,BZ+1.45],look:[wX,wY-.02,BZ]}});
 
   /* a candle on the shelf above the window: hovering lights it, hovering again blows it out */
-  const CND=(()=>{ const G=new THREE.Group(); A.add(G); const cx=ax-.08, cy=2.375, cz=BZ+.2;
+  const CND=(()=>{ const G=new THREE.Group(); A.add(G); const GLS=new THREE.Scene(); // the glow lives in its own scene, drawn after the AO pass
+    const cx=ax-.08, cy=2.375, cz=BZ+.2;
     const wax=std({color:0xf1e9d8,roughness:.75}), wm=C(G,.036,.038,.1,wax,cx,cy+.05,cz,28); C(G,.03,.03,.004,std({color:0xe9dcc4,roughness:.6}),cx,cy+.1,cz,24);
     const plate=C(G,.055,.05,.008,std({color:0x8c7a5c,roughness:.35,metalness:.6}),cx,cy+.004,cz,28);
     C(G,.0016,.0016,.018,std({color:0x1d1a16}),cx,cy+.109,cz,6);
     const fm=new THREE.MeshBasicMaterial({color:0xffc26b,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending});
-    const fl=new THREE.Mesh(new THREE.SphereGeometry(.009,14,10),fm); fl.scale.set(1,2.4,1); fl.position.set(cx,cy+.13,cz); G.add(fl);
-    const core=new THREE.Mesh(new THREE.SphereGeometry(.0045,10,8),new THREE.MeshBasicMaterial({color:0xfff6dd,transparent:true,opacity:0,depthWrite:false})); core.scale.set(1,2,1); core.position.set(cx,cy+.124,cz); G.add(core);
+    const fl=new THREE.Mesh(new THREE.SphereGeometry(.009,14,10),fm); fl.scale.set(1,2.4,1); fl.position.set(cx,cy+.13,cz); GLS.add(fl);
+    const core=new THREE.Mesh(new THREE.SphereGeometry(.0045,10,8),new THREE.MeshBasicMaterial({color:0xfff6dd,transparent:true,opacity:0,depthWrite:false})); core.scale.set(1,2,1); core.position.set(cx,cy+.124,cz); GLS.add(core);
     const gl=T(128,128,(g,w,h)=>{ const r=g.createRadialGradient(64,64,0,64,64,64); r.addColorStop(0,'rgba(255,200,120,.9)'); r.addColorStop(.25,'rgba(255,170,80,.35)'); r.addColorStop(1,'rgba(255,150,60,0)'); g.fillStyle=r; g.fillRect(0,0,w,h); });
-    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:gl,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending})); halo.scale.set(.75,.75,1); halo.position.set(cx,cy+.13,cz+.01); G.add(halo);
-    const wall=new THREE.Mesh(new THREE.PlaneGeometry(.9,.6),new THREE.MeshBasicMaterial({map:gl,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending})); wall.position.set(cx,cy+.16,BZ+.004); G.add(wall);
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:gl,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending})); halo.scale.set(.75,.75,1); halo.position.set(cx,cy+.13,cz+.01); GLS.add(halo);
+    const wall=new THREE.Mesh(new THREE.PlaneGeometry(.9,.6),new THREE.MeshBasicMaterial({map:gl,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending})); wall.position.set(cx,cy+.16,BZ+.004); GLS.add(wall);
+    [fm,core.material,halo.material,wall.material].forEach(m=>{ m.depthTest=false; m.toneMapped=false; });
     G.traverse(o=>{ if(o.isMesh){ o.userData.candle=1; if(o.material===wax||o===plate) o.castShadow=true; } });
     let on=false, k=0, last=0;
-    return { toggle(){ on=!on; }, update(t){ const want=on?1:0, dt=Math.min(.05,t-last); last=t; const was=k; k+=(want-k)*Math.min(1,dt*6); if(Math.abs(want-k)<.002) k=want;
+    return { scene:GLS, toggle(){ on=!on; }, update(t){ const want=on?1:0, dt=Math.min(.05,t-last); last=t; const was=k; k+=(want-k)*Math.min(1,dt*6); if(Math.abs(want-k)<.002) k=want;
       if(k<=0&&was<=0) return false; const f=1+Math.sin(t*23)*.05+Math.sin(t*37)*.04;
       fm.opacity=.9*k; core.material.opacity=k; fl.scale.set(1,2.4*f,1); halo.material.opacity=.95*k*f; wall.material.opacity=.6*k*f;
       return Math.floor(t*14)!==Math.floor((t-dt)*14)||was!==k; } }; })();
@@ -2528,6 +2530,7 @@ function initRoom(){
   let gtao=null; try{ gtao=new GTAOPass(scene,camera,innerWidth,innerHeight); gtao.blendIntensity=.9; gtao.updateGtaoMaterial?.({radius:.35,distanceExponent:1.5,thickness:1,scale:1.2,samples:12}); composer.addPass(gtao); }catch(e){ console.warn('GTAO off',e); }
   // a soft outline shows which zone the mouse is on
   const outline=new OutlinePass(new THREE.Vector2(innerWidth,innerHeight),scene,camera); outline.edgeStrength=0; outline.edgeGlow=.6; outline.edgeThickness=1.6; outline.pulsePeriod=0; outline.visibleEdgeColor.set('#6f95ff'); outline.hiddenEdgeColor.set('#22305a'); composer.addPass(outline);
+  { const gp=new RenderPass(CND.scene,camera); gp.clear=false; composer.addPass(gp); }
   composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.25,.6,.92)); composer.addPass(new OutputPass());
 
   /* camera */
