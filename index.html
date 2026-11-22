@@ -2459,23 +2459,6 @@ function initRoom(){
       fm.opacity=.9*k; core.material.opacity=k; fl.scale.set(1,2.4*f,1); halo.material.opacity=.95*k*f; wall.material.opacity=.6*k*f;
       return Math.floor(t*14)!==Math.floor((t-dt)*14)||was!==k; } }; })();
 
-  /* an original vinyl-style figure on the workbench: a little robot mechanic, out of its box and next to it */
-  { const F=new THREE.Group(); A.add(F); const fx=ex+.16, fz=ez-.08, fy=.7625;
-    const body=std({color:0xe8ecef,roughness:.45}), acc=std({color:0xff7a2f,roughness:.5}), dark=std({color:0x22262c,roughness:.4}), vis=std({color:0x0d1b2a,roughness:.15,emissive:0x1e5cff,emissiveIntensity:.25});
-    C(F,.045,.05,.012,dark,fx,fy+.006,fz,24);
-    B(F,.05,.06,.04,body,fx,fy+.05,fz,.012); B(F,.052,.012,.042,acc,fx,fy+.03,fz,.004);
-    [-1,1].forEach(sd=>{ C(F,.009,.009,.03,body,fx+sd*.014,fy+.02,fz,10); const arm=C(F,.008,.008,.04,body,fx+sd*.034,fy+.055,fz,10); arm.rotation.z=sd*.35; });
-    const wr=B(F,.008,.045,.008,mat.chrome,fx+.045,fy+.075,fz+.01,.002); wr.rotation.z=-.5; B(F,.02,.012,.008,mat.chrome,fx+.056,fy+.096,fz+.01,.002).rotation.z=-.5;
-    B(F,.085,.075,.07,body,fx,fy+.12,fz,.024); B(F,.064,.036,.004,vis,fx,fy+.122,fz+.036,.012);
-    [-1,1].forEach(sd=>{ const e=new THREE.Mesh(new THREE.SphereGeometry(.007,12,8),std({color:0x8fd3ff,emissive:0x8fd3ff,emissiveIntensity:.8})); e.position.set(fx+sd*.015,fy+.124,fz+.039); F.add(e); C(F,.012,.012,.012,acc,fx+sd*.047,fy+.12,fz,14).rotation.z=Math.PI/2; });
-    C(F,.003,.003,.03,dark,fx+.02,fy+.172,fz,6); const tip=new THREE.Mesh(new THREE.SphereGeometry(.007,10,8),acc); tip.position.set(fx+.02,fy+.19,fz); F.add(tip);
-    // the window box it came in, standing behind
-    const bx=T(256,320,(g,w,h)=>{ g.fillStyle='#ff7a2f'; g.fillRect(0,0,w,h); g.fillStyle='#22262c'; g.fillRect(0,0,w,46); g.fillStyle='#fff'; g.font='800 26px Inter,Helvetica,Arial,sans-serif'; g.fillText('BOLT',16,32); g.font='600 14px ui-monospace,Menlo,monospace'; g.fillText('No. 07',w-74,30);
-      g.fillStyle='rgba(255,255,255,.85)'; g.beginPath(); g.roundRect(26,64,w-52,196,20); g.fill(); g.fillStyle='#22262c'; g.font='600 15px ui-monospace,Menlo,monospace'; g.fillText('WORKSHOP SERIES',16,h-22); });
-    const box=new THREE.Mesh(new RoundedBoxGeometry(.1,.125,.07,2,.004),[std({color:0xe56a24,roughness:.6}),std({color:0xe56a24,roughness:.6}),std({color:0x22262c,roughness:.6}),std({color:0xe56a24,roughness:.6}),std({map:bx,roughness:.6}),std({color:0xe56a24,roughness:.6})]);
-    box.position.set(fx+.11,fy+.0625,fz-.07); box.rotation.y=-.45; box.castShadow=true; F.add(box);
-    F.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); }
-
   /* the cat: a brown tabby who wanders between the studio and the atelier, as he always did */
   const CAT=(()=>{ const tabby=(rings)=>T(512,256,(g,w,h)=>{ g.fillStyle='#6f5c46'; g.fillRect(0,0,w,h);
       for(let i=0;i<9000;i++){ const r=Math.random(); g.fillStyle=r<.5?`rgba(30,24,18,${Math.random()*.35})`:`rgba(196,170,130,${Math.random()*.3})`; g.fillRect(Math.random()*w,Math.random()*h,1,2+Math.random()*3); }
