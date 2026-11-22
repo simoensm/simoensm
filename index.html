@@ -999,7 +999,7 @@ setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700)
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
 window.found=(...a)=>found(...a);
 const DISC=[['overview','The overview'],['badge','My badge'],['journey','The journey'],['play','The journey played'],['studio','Above Belgium studio'],['gear','A piece of gear'],['atelier','The atelier'],['project','A project up close'],['contact','The contact page'],['ai','How I use AI'],
-  ['song','The song on the desk',1],['duck','The rubber duck',1],['plane','A paper plane',1],['sun','The sun called M',1],['cat','The cat',1],['medal','The golden medal',1],['outside','The view outside',1],['egg','The /egg command',1]];
+  ['song','The song on the desk',1],['duck','The white pony',1],['plane','A paper plane',1],['sun','The sun called M',1],['cat','The cat',1],['medal','The golden medal',1],['outside','The view outside',1],['egg','The /egg command',1]];
 let discGot=new Set(); try{ discGot=new Set(JSON.parse(localStorage.getItem('ms-disc')||'[]')); }catch(e){}
 function discDraw(){ const n=DISC.filter(d=>discGot.has(d[0])).length, pc=Math.round(n/DISC.length*100);
   const r=document.getElementById('discr'); if(!r) return; r.style.strokeDashoffset=69.1*(1-n/DISC.length);
@@ -2192,10 +2192,17 @@ function initRoom(){
     const knob=new THREE.Mesh(new THREE.SphereGeometry(.014,16,10),std({color:0xb48a5a,roughness:.75})); knob.position.y=jh+.028; knob.scale.y=.7; J.add(knob);
     const lt=T(512,128,(g,w,h)=>{ g.fillStyle='#f6efe0'; g.fillRect(0,0,w,h); g.strokeStyle='rgba(150,110,70,.5)'; g.lineWidth=3; g.strokeRect(8,8,w-16,h-16); g.fillStyle='#4a2c1a'; g.font=`64px ${'"Marker Felt","Segoe Print","Bradley Hand","Comic Sans MS",cursive'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText('cookie-woman',w/2,h/2+4); });
     const lab=new THREE.Mesh(new THREE.CylinderGeometry(jr+.0015,jr+.0015,.042,36,1,true,-1.15,2.3),std({map:lt,roughness:.8})); lab.position.y=jh*.52; J.add(lab);
-    J.position.set(ax-.72,.7625,az-.1); J.rotation.y=.25; J.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); gl.castShadow=false; BE.add(J); }
-  const duck=new THREE.Group(); const yel=std({color:0xf6c90e,roughness:.4});
+    J.position.set(ax-.72,.7625,az-.1); J.rotation.y=.25; J.userData.keep=1; J.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.userData.jar=1; } }); gl.castShadow=false; BE.add(J); }
+  // a small white toy pony on the desk (the group keeps its old name so the little prance still works)
+  const duck=new THREE.Group(); const wht=std({color:0xf4f2ee,roughness:.55}), grey=std({color:0xc9c6c0,roughness:.6}), hoof=std({color:0x6b6560,roughness:.5});
   const dp=(geo,m,x,y,z)=>{ const o=new THREE.Mesh(geo,m); o.position.set(x,y,z); o.castShadow=true; o.userData.egg=1; duck.add(o); return o; };
-  dp(new THREE.SphereGeometry(.03,20,16),yel,0,.026,0).scale.set(1.25,.85,1); dp(new THREE.SphereGeometry(.019,20,16),yel,.022,.06,0); dp(new THREE.ConeGeometry(.007,.018,12),std({color:0xe8731a}),.043,.058,0).rotation.z=-Math.PI/2;
+  dp(new THREE.SphereGeometry(.03,20,14),wht,0,.05,0).scale.set(1.5,.85,.8);
+  const nk=dp(new THREE.CylinderGeometry(.011,.016,.042,14),wht,.034,.072,0); nk.rotation.z=-.55;
+  const hd=dp(new THREE.SphereGeometry(.015,16,12),wht,.05,.093,0); hd.scale.set(1.5,.9,.85); hd.rotation.z=-.5;
+  [-1,1].forEach(sd=>{ dp(new THREE.ConeGeometry(.004,.011,8),wht,.043,.108,sd*.006).rotation.z=-.2; dp(new THREE.SphereGeometry(.0025,8,6),std({color:0x1d1d1f,roughness:.2}),.058,.098,sd*.011); });
+  [[.026,1],[.026,-1],[-.026,1],[-.026,-1]].forEach(([x,sd])=>{ dp(new THREE.CylinderGeometry(.0055,.005,.04,10),wht,x,.022,sd*.011); dp(new THREE.CylinderGeometry(.006,.006,.006,10),hoof,x,.003,sd*.011); });
+  for(let k=0;k<5;k++){ const m=dp(new THREE.SphereGeometry(.007,10,8),grey,.026+k*.007,.078+k*.006,0); m.scale.set(1,1.4,.7); }
+  const tl=dp(new THREE.CylinderGeometry(.004,.007,.04,10),grey,-.048,.042,0); tl.rotation.z=-.5;
   duck.position.set(ax+.62,.762,az+.25); duck.rotation.y=-2.4; A.add(duck);
   const ch2=ch.clone(true); ch2.position.set(ax+.05,0,az+.95); ch2.rotation.y=-.2; const CHAIR2={home:new THREE.Vector3(ax+.05,0,az+.95),away:new THREE.Vector3(ax-1.25,0,az+1.15),r0:-.2,r1:-1.2,k:0}; ch2.traverse(o=>{ if(o.isMesh) delete o.userData.hot; }); A.add(ch2);
   hs('software',BE,[ax,1.45,az-.2],{side:'atelier',label:'Software',view:{pos:[ax,1.5,az+2.75],look:[ax,1.08,az-.25]}});
@@ -2276,7 +2283,7 @@ function initRoom(){
   [0xd93636,0x2b2b2e,0xf2c230].forEach((c,i)=>{ const sp=C(EL,.032,.032,.05,std({color:c,roughness:.55}),ex-.52+i*.1,1.2,BZ+.05,24); sp.rotation.z=Math.PI/2; [-.027,.027].forEach(o=>{ const fl=C(EL,.038,.038,.004,std({color:0x1d1d1f,roughness:.5}),ex-.52+i*.1+o,1.2,BZ+.05,24); fl.rotation.z=Math.PI/2; }); C(EL,.004,.004,.06,mat.chrome,ex-.52+i*.1,1.2,BZ+.04,8).rotation.x=Math.PI/2; });
   C(EL,.05,.05,.015,mat.black,ex+.05,.77,ez+.12); C(EL,.006,.006,.18,mat.chrome,ex+.05,.86,ez+.12,8);
   const mag=new THREE.Mesh(new THREE.TorusGeometry(.04,.005,10,32),mat.black); mag.position.set(ex+.05,.96,ez+.14); mag.rotation.x=-.6; add(EL,mag);
-  B(EL,.085,.012,.056,std({color:0x1f7a3a,roughness:.55}),ex+.25,.77,ez+.2,.002); B(EL,.016,.012,.014,mat.chrome,ex+.28,.782,ez+.2); B(EL,.022,.014,.018,mat.chrome,ex+.22,.783,ez+.19); B(EL,.05,.004,.006,std({color:0x111111}),ex+.25,.779,ez+.176);
+  [B(EL,.085,.012,.056,std({color:0x1f7a3a,roughness:.55}),ex+.25,.77,ez+.2,.002),B(EL,.016,.012,.014,mat.chrome,ex+.28,.782,ez+.2),B(EL,.022,.014,.018,mat.chrome,ex+.22,.783,ez+.19),B(EL,.05,.004,.006,std({color:0x111111}),ex+.25,.779,ez+.176)].forEach(m=>{ m.userData.keep=1; m.userData.rpi=1; });
   B(EL,.16,.012,.055,mat.white,ex+.42,.77,ez+.2,.003);
   [0xd93636,0x2b7de9,0xf2c230,0x30d158].forEach((c,i)=>{ const cu=new THREE.CatmullRomCurve3([new THREE.Vector3(ex+.27,.78,ez+.18+i*.008),new THREE.Vector3(ex+.33,.83+i*.012,ez+.2),new THREE.Vector3(ex+.38+i*.02,.778,ez+.19)]); add(EL,new THREE.Mesh(new THREE.TubeGeometry(cu,16,.002,6),std({color:c,roughness:.5}))); });
   // the oscilloscope is broken: cracked glass, a dead trace, NO SIGNAL, and now and then a flicker
@@ -2627,7 +2634,7 @@ function initRoom(){
 
   const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(9,9), par=new THREE.Vector2(), tgt=new THREE.Vector2(); let hov=null;
   let moved=true, lastPick=0; canvas.addEventListener('pointermove',e=>{ mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1); moved=true; });
-  let onLamp=false; const pick=()=>{ if(mouse.x>5){ onLamp=false; return null; } ray.setFromCamera(mouse,camera); const h=ray.intersectObjects([S,A],true)[0]; onLamp=!!(h&&h.object.userData.lamp); return h?(h.object.userData.osc?'osc':h.object.userData.candle?'candle':h.object.userData.cat?'cat':h.object.userData.egg?'egg':(h.object.userData.hot||null)):null; };
+  let onLamp=false; const pick=()=>{ if(mouse.x>5){ onLamp=false; return null; } ray.setFromCamera(mouse,camera); const h=ray.intersectObjects([S,A],true)[0]; onLamp=!!(h&&h.object.userData.lamp); return h?(h.object.userData.jar?'jar':h.object.userData.rpi?'rpi':h.object.userData.osc?'osc':h.object.userData.candle?'candle':h.object.userData.cat?'cat':h.object.userData.egg?'egg':(h.object.userData.hot||null)):null; };
   const offP=new THREE.Vector3(), offL=new THREE.Vector3(), wantP=new THREE.Vector3(), wantL=new THREE.Vector3(); let outlined=null;
   let quacks=0;
   // things that open a website: the music screen (once you sit at the desk) and the client plaques
@@ -2635,9 +2642,12 @@ function initRoom(){
   let onLink=false; canvas.addEventListener('pointermove',()=>{ const l=!!linkAt(); if(l!==onLink){ onLink=l; } if(l) canvas.style.cursor='pointer'; else if(focused) canvas.style.cursor='default'; });
   canvas.addEventListener('click',()=>{ const ln=linkAt(); if(ln){ if(/spotify/.test(ln)) found('song'); window.open(ln,'_blank','noopener'); return; } const id=pick(); if(!id) return;
     if(id==='outside'&&!WIN.userData.sh.go){ WIN.userData.sh.go=true; WIN.userData.sh.t0=clock.getElapsedTime(); found('outside'); return; }
+    if(id==='candle'){ toast('Mom\'s candle always burns when I need it.'); return; }
+    if(id==='jar'){ toast('Carol\'s cookies always help me concentrate.'); return; }
+    if(id==='rpi'){ toast('Dirk might want it back (oops).'); return; }
     if(id==='osc'){ toast('Maybe we should ask Ronny for some help.'); return; }
     if(id==='cat'){ found('cat'); CAT.pet(); toast('He still wanders between the two rooms, just like he always did.'); return; }
-    if(id==='egg'){ found('duck'); quacks++; duck.userData.spin=1; toast(quacks<3?'Quack. Every good debugger needs a rubber duck.':'You found the debugging duck. There are more secrets around.'); return; } focusF(id); });
+    if(id==='egg'){ found('duck'); quacks++; duck.userData.spin=1; toast(quacks<3?'A little white pony keeps an eye on the code.':'The pony approves. There are more secrets around.'); return; } focusF(id); });
 
   const tmp=new THREE.Vector3(), clock=new THREE.Clock();
   function loop(now){ requestAnimationFrame(loop);
@@ -2686,7 +2696,7 @@ function initRoom(){
 
 
 console.log('%cHi, curious one.','font:600 15px Geist,system-ui;color:#3f6bff');
-console.log('There is a rubber duck somewhere in the atelier.');
+console.log('There is a white pony somewhere in the atelier.');
 show(location.hash.slice(1)||'overview');
 </script>
 </body>
