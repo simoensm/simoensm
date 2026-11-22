@@ -2432,6 +2432,41 @@ function initRoom(){
   WIN.userData.sh={k:0,go:false,set:shSet};
   hs('outside',WIN,[wX,wY+wH/2+.07,BZ+.05],{side:'atelier',label:'Outside',nomark:true,view:{pos:[wX,wY-.02,BZ+1.45],look:[wX,wY-.02,BZ]}});
 
+  /* a candle on the shelf above the window: hovering lights it, hovering again blows it out */
+  const CND=(()=>{ const G=new THREE.Group(); A.add(G); const cx=ax-.08, cy=2.375, cz=BZ+.2;
+    const wax=std({color:0xf1e9d8,roughness:.75}), wm=C(G,.036,.038,.1,wax,cx,cy+.05,cz,28); C(G,.03,.03,.004,std({color:0xe9dcc4,roughness:.6}),cx,cy+.1,cz,24);
+    const plate=C(G,.055,.05,.008,std({color:0x8c7a5c,roughness:.35,metalness:.6}),cx,cy+.004,cz,28);
+    C(G,.0016,.0016,.018,std({color:0x1d1a16}),cx,cy+.109,cz,6);
+    const fm=new THREE.MeshBasicMaterial({color:0xffc26b,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending});
+    const fl=new THREE.Mesh(new THREE.SphereGeometry(.009,14,10),fm); fl.scale.set(1,2.4,1); fl.position.set(cx,cy+.13,cz); G.add(fl);
+    const core=new THREE.Mesh(new THREE.SphereGeometry(.0045,10,8),new THREE.MeshBasicMaterial({color:0xfff6dd,transparent:true,opacity:0,depthWrite:false})); core.scale.set(1,2,1); core.position.set(cx,cy+.124,cz); G.add(core);
+    const gl=T(128,128,(g,w,h)=>{ const r=g.createRadialGradient(64,64,0,64,64,64); r.addColorStop(0,'rgba(255,200,120,.9)'); r.addColorStop(.25,'rgba(255,170,80,.35)'); r.addColorStop(1,'rgba(255,150,60,0)'); g.fillStyle=r; g.fillRect(0,0,w,h); });
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:gl,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending})); halo.scale.set(.75,.75,1); halo.position.set(cx,cy+.13,cz+.01); G.add(halo);
+    const wall=new THREE.Mesh(new THREE.PlaneGeometry(.9,.6),new THREE.MeshBasicMaterial({map:gl,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending})); wall.position.set(cx,cy+.16,BZ+.004); G.add(wall);
+    G.traverse(o=>{ if(o.isMesh){ o.userData.candle=1; if(o.material===wax||o===plate) o.castShadow=true; } });
+    let on=false, k=0, last=0;
+    return { toggle(){ on=!on; }, update(t){ const want=on?1:0, dt=Math.min(.05,t-last); last=t; const was=k; k+=(want-k)*Math.min(1,dt*6); if(Math.abs(want-k)<.002) k=want;
+      if(k<=0&&was<=0) return false; const f=1+Math.sin(t*23)*.05+Math.sin(t*37)*.04;
+      fm.opacity=.9*k; core.material.opacity=k; fl.scale.set(1,2.4*f,1); halo.material.opacity=.95*k*f; wall.material.opacity=.6*k*f;
+      return Math.floor(t*14)!==Math.floor((t-dt)*14)||was!==k; } }; })();
+
+  /* an original vinyl-style figure on the workbench: a little robot mechanic, out of its box and next to it */
+  { const F=new THREE.Group(); A.add(F); const fx=ex+.16, fz=ez-.08, fy=.7625;
+    const body=std({color:0xe8ecef,roughness:.45}), acc=std({color:0xff7a2f,roughness:.5}), dark=std({color:0x22262c,roughness:.4}), vis=std({color:0x0d1b2a,roughness:.15,emissive:0x1e5cff,emissiveIntensity:.25});
+    C(F,.045,.05,.012,dark,fx,fy+.006,fz,24);
+    B(F,.05,.06,.04,body,fx,fy+.05,fz,.012); B(F,.052,.012,.042,acc,fx,fy+.03,fz,.004);
+    [-1,1].forEach(sd=>{ C(F,.009,.009,.03,body,fx+sd*.014,fy+.02,fz,10); const arm=C(F,.008,.008,.04,body,fx+sd*.034,fy+.055,fz,10); arm.rotation.z=sd*.35; });
+    const wr=B(F,.008,.045,.008,mat.chrome,fx+.045,fy+.075,fz+.01,.002); wr.rotation.z=-.5; B(F,.02,.012,.008,mat.chrome,fx+.056,fy+.096,fz+.01,.002).rotation.z=-.5;
+    B(F,.085,.075,.07,body,fx,fy+.12,fz,.024); B(F,.064,.036,.004,vis,fx,fy+.122,fz+.036,.012);
+    [-1,1].forEach(sd=>{ const e=new THREE.Mesh(new THREE.SphereGeometry(.007,12,8),std({color:0x8fd3ff,emissive:0x8fd3ff,emissiveIntensity:.8})); e.position.set(fx+sd*.015,fy+.124,fz+.039); F.add(e); C(F,.012,.012,.012,acc,fx+sd*.047,fy+.12,fz,14).rotation.z=Math.PI/2; });
+    C(F,.003,.003,.03,dark,fx+.02,fy+.172,fz,6); const tip=new THREE.Mesh(new THREE.SphereGeometry(.007,10,8),acc); tip.position.set(fx+.02,fy+.19,fz); F.add(tip);
+    // the window box it came in, standing behind
+    const bx=T(256,320,(g,w,h)=>{ g.fillStyle='#ff7a2f'; g.fillRect(0,0,w,h); g.fillStyle='#22262c'; g.fillRect(0,0,w,46); g.fillStyle='#fff'; g.font='800 26px Inter,Helvetica,Arial,sans-serif'; g.fillText('BOLT',16,32); g.font='600 14px ui-monospace,Menlo,monospace'; g.fillText('No. 07',w-74,30);
+      g.fillStyle='rgba(255,255,255,.85)'; g.beginPath(); g.roundRect(26,64,w-52,196,20); g.fill(); g.fillStyle='#22262c'; g.font='600 15px ui-monospace,Menlo,monospace'; g.fillText('WORKSHOP SERIES',16,h-22); });
+    const box=new THREE.Mesh(new RoundedBoxGeometry(.1,.125,.07,2,.004),[std({color:0xe56a24,roughness:.6}),std({color:0xe56a24,roughness:.6}),std({color:0x22262c,roughness:.6}),std({color:0xe56a24,roughness:.6}),std({map:bx,roughness:.6}),std({color:0xe56a24,roughness:.6})]);
+    box.position.set(fx+.11,fy+.0625,fz-.07); box.rotation.y=-.45; box.castShadow=true; F.add(box);
+    F.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); }
+
   /* the cat: a brown tabby who wanders between the studio and the atelier, as he always did */
   const CAT=(()=>{ const tabby=(rings)=>T(512,256,(g,w,h)=>{ g.fillStyle='#6f5c46'; g.fillRect(0,0,w,h);
       for(let i=0;i<9000;i++){ const r=Math.random(); g.fillStyle=r<.5?`rgba(30,24,18,${Math.random()*.35})`:`rgba(196,170,130,${Math.random()*.3})`; g.fillRect(Math.random()*w,Math.random()*h,1,2+Math.random()*3); }
@@ -2597,7 +2632,7 @@ function initRoom(){
 
   const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(9,9), par=new THREE.Vector2(), tgt=new THREE.Vector2(); let hov=null;
   let moved=true, lastPick=0; canvas.addEventListener('pointermove',e=>{ mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1); moved=true; });
-  let onLamp=false; const pick=()=>{ if(mouse.x>5){ onLamp=false; return null; } ray.setFromCamera(mouse,camera); const h=ray.intersectObjects([S,A],true)[0]; onLamp=!!(h&&h.object.userData.lamp); return h?(h.object.userData.cat?'cat':h.object.userData.egg?'egg':(h.object.userData.hot||null)):null; };
+  let onLamp=false; const pick=()=>{ if(mouse.x>5){ onLamp=false; return null; } ray.setFromCamera(mouse,camera); const h=ray.intersectObjects([S,A],true)[0]; onLamp=!!(h&&h.object.userData.lamp); return h?(h.object.userData.candle?'candle':h.object.userData.cat?'cat':h.object.userData.egg?'egg':(h.object.userData.hot||null)):null; };
   const offP=new THREE.Vector3(), offL=new THREE.Vector3(), wantP=new THREE.Vector3(), wantL=new THREE.Vector3(); let outlined=null;
   let quacks=0;
   // things that open a website: the music screen (once you sit at the desk) and the client plaques
@@ -2625,7 +2660,7 @@ function initRoom(){
     outline.edgeStrength+=((hg?3.2:0)-outline.edgeStrength)*.12; outline.enabled=outline.edgeStrength>.02;
     // desk lamp: on while hovered, or while the desk is open
     LAMP.want= (onLamp&&!focused) || focused==='macbook' ? 1 : 0; if(Math.abs(LAMP.want-LAMP.on)>.002){ LAMP.set(LAMP.on+(LAMP.want-LAMP.on)*.08); dirty=2; shadowFrames=Math.max(shadowFrames,1); }
-    if(!focused&&moved&&now-lastPick>50){ moved=false; lastPick=now; const id=pick(); if(id!==hov){ hov=id; canvas.style.cursor=(id||onLink)?'pointer':'default'; hot.forEach(h=>h.el&&h.el.classList.toggle('hot',h.id===id||(h.id==='gear'&&/^g-/.test(id||''))||(h.id==='portfolio'&&/^pf-/.test(id||'')))); } }
+    if(!focused&&moved&&now-lastPick>50){ moved=false; lastPick=now; const id=pick(); if(id!==hov){ if(id==='candle') CND.toggle(); hov=id; canvas.style.cursor=(id||onLink)?'pointer':'default'; hot.forEach(h=>h.el&&h.el.classList.toggle('hot',h.id===id||(h.id==='gear'&&/^g-/.test(id||''))||(h.id==='portfolio'&&/^pf-/.test(id||'')))); } }
     hot.forEach(h=>{ if(!h.el) return; tmp.copy(h.anchor).project(camera); const vis=tmp.z<1&&Math.abs(tmp.x)<.95&&Math.abs(tmp.y)<.95&&h.side===side&&!tw; h.el.classList.toggle('vis',vis); h.el.style.left=((tmp.x+1)/2*innerWidth)+'px'; h.el.style.top=((1-tmp.y)/2*innerHeight)+'px'; });
     const ledOn=(t%1.6)<.8; if(led.userData.on!==ledOn){ led.userData.on=ledOn; led.material.emissiveIntensity=ledOn?3:.6; dirty=Math.max(dirty,1); }
     if(duck.userData.spin){ duck.userData.spin+=.08; duck.rotation.y=-2.4+Math.sin(duck.userData.spin*2)*.6; duck.position.y=.762+Math.abs(Math.sin(duck.userData.spin*3))*.03; if(duck.userData.spin>4){ duck.userData.spin=0; duck.rotation.y=-2.4; duck.position.y=.762; } }
@@ -2635,6 +2670,7 @@ function initRoom(){
     const PH=window.__PH; if(PH&&(hov==='hardware'||focused==='hardware')){ PH.position.x=PH.userData.x+Math.sin(t*2.6)*.07; PH.position.z=PH.userData.z+Math.cos(t*1.7)*.025; dirty=Math.max(dirty,1); }
     { const o=WIN.userData.outT; o.offset.x=.07+Math.max(-.07,Math.min(.07,(camera.position.x-ax)*.02)); o.offset.y=.07+Math.max(-.07,Math.min(.07,(camera.position.y-1.88)*-.03)); }
     { const S=WIN.userData.sh; if(S.go&&S.k<1){ S.k=Math.min(1,(t-S.t0)/.9); const e=1-Math.pow(1-S.k,3); S.set(e); dirty=Math.max(dirty,1); } }
+    if(CND.update(t)) dirty=Math.max(dirty,1);
     if(CAT.update(t,camera)) dirty=Math.max(dirty,1);
     if(duck.userData.spin) dirty=2;
     camera.updateMatrixWorld(); { const A=camera.matrixWorld.elements, L=lastCam.elements; let d=0; for(let i=0;i<16;i++) d=Math.max(d,Math.abs(A[i]-L[i])); if(d>2e-5){ lastCam.copy(camera.matrixWorld); dirty=Math.max(dirty,1); } }
