@@ -975,8 +975,8 @@ setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700)
 /* ============================ DISCOVERY GAME ============================ */
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
 window.found=(...a)=>found(...a);
-const DISC=[['overview','The overview'],['badge','My badge'],['journey','The journey'],['play','The journey played'],['studio','Above Belgium studio'],['gear','A piece of gear'],['atelier','The atelier'],['project','A project up close'],['contact','The contact page'],['ai','How I use AI'],['outside','The view outside'],
-  ['song','The song on the desk',1],['duck','The rubber duck',1],['plane','A paper plane',1],['sun','The sun called M',1],['cat','The cat',1],['egg','The /egg command',1]];
+const DISC=[['overview','The overview'],['badge','My badge'],['journey','The journey'],['play','The journey played'],['studio','Above Belgium studio'],['gear','A piece of gear'],['atelier','The atelier'],['project','A project up close'],['contact','The contact page'],['ai','How I use AI'],
+  ['song','The song on the desk',1],['duck','The rubber duck',1],['plane','A paper plane',1],['sun','The sun called M',1],['cat','The cat',1],['outside','The view outside',1],['egg','The /egg command',1]];
 let discGot=new Set(); try{ discGot=new Set(JSON.parse(localStorage.getItem('ms-disc')||'[]')); }catch(e){}
 function discDraw(){ const n=DISC.filter(d=>discGot.has(d[0])).length, pc=Math.round(n/DISC.length*100);
   const r=document.getElementById('discr'); if(!r) return; r.style.strokeDashoffset=69.1*(1-n/DISC.length);
@@ -2336,7 +2336,17 @@ function initRoom(){
   B(WIN,wW+.2,.03,.14,mat.birch,wX,wY-wH/2-ft-.015,BZ+.07,.006);
   const cact=C(WIN,.03,.026,.05,std({color:0xc86b45,roughness:.8}),wX+.42,wY-wH/2-ft+.027,BZ+.08,16); C(WIN,.016,.018,.09,std({color:0x4f7d4a,roughness:.7}),wX+.42,wY-wH/2-ft+.095,BZ+.08,12);
   WIN.userData.outT=outT;
-  hs('outside',WIN,[wX,wY+wH/2+.07,BZ+.05],{side:'atelier',label:'Outside',view:{pos:[wX,wY-.02,BZ+1.45],look:[wX,wY-.02,BZ]}});
+  // two louvred shutters, half closed; a click swings them open and only then does the view become a place to go
+  const shM=std({color:0x7d9a86,roughness:.6}), shW=wW/2+ft, shH=wH+ft*2, SH=[];
+  [-1,1].forEach(sd=>{ const pv=new THREE.Group(); pv.position.set(wX+sd*(wW/2+ft),wY,BZ+.075); WIN.add(pv); const cx=-sd*shW/2;
+    B(pv,.035,shH,.024,shM,cx-(-sd)*(shW/2-.0175),0,0,.004); B(pv,.035,shH,.024,shM,cx+(-sd)*(shW/2-.0175),0,0,.004);
+    B(pv,shW,.05,.024,shM,cx,shH/2-.025,0,.004); B(pv,shW,.05,.024,shM,cx,-shH/2+.025,0,.004); B(pv,shW,.04,.022,shM,cx,0,0,.004);
+    for(let k=0;k<14;k++){ const y=-shH/2+.07+k*((shH-.14)/13); if(Math.abs(y)<.03) continue; const sl=B(pv,shW-.06,.05,.006,shM,cx,y,0,.002); sl.rotation.x=-.75; }
+    const kn=C(pv,.008,.008,.02,mat.alu,cx+(-sd)*(shW/2-.06),0,.02,10); kn.rotation.x=Math.PI/2;
+    SH.push({pv,sd}); });
+  const shSet=k=>SH.forEach(({pv,sd})=>{ const a=.5+(Math.PI-.62)*k; pv.rotation.y=sd<0?-a:a; }); shSet(0);
+  WIN.userData.sh={k:0,go:false,set:shSet};
+  hs('outside',WIN,[wX,wY+wH/2+.07,BZ+.05],{side:'atelier',label:'Outside',nomark:true,view:{pos:[wX,wY-.02,BZ+1.45],look:[wX,wY-.02,BZ]}});
 
   /* the cat: a brown tabby who wanders between the studio and the atelier, as he always did */
   const CAT=(()=>{ const tabby=(rings)=>T(512,256,(g,w,h)=>{ g.fillStyle='#6f5c46'; g.fillRect(0,0,w,h);
@@ -2366,21 +2376,36 @@ function initRoom(){
     root.position.set(-.5,0,-1.8); A.add(root); window.__CATR=root;
     // wandering: pick a spot on the open floor in either room, walk there, then sit, lie down or groom for a while
     const st={mode:'sit',until:3,tx:0,tz:0,yaw:0,pose:{sit:1,lie:0},gait:0,look:0};
-    const pickSpot=()=>{ st.tx=-7+Math.random()*14; st.tz=Math.random()<.2?-2.5+Math.random()*.2:-1.95+Math.random()*.4; };
-    const rest=()=>{ const r=Math.random(); st.mode=r<.45?'sit':r<.8?'lie':'groom'; st.until=st.t+4+Math.random()*(st.mode==='lie'?14:7); };
+    // places he likes to jump onto; chairs are followed live, since they roll away when a desk is focused
+    const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+    const PERCH=[{at:()=>V3(dx-.6,.7575,dz+.24),face:-Math.PI/2},{at:()=>V3(ch.position.x,.52,ch.position.z),face:-Math.PI/2-.3},
+      {at:()=>V3(ax+.62,.7625,az+.33),face:0},{at:()=>V3(ch2.position.x,.52,ch2.position.z),face:-Math.PI/2+.2},{at:()=>V3(ex-.12,.768,ez+.3),face:Math.PI}];
+    const pickSpot=()=>{ st.goal=null; if(Math.random()<.45){ st.goal=PERCH[Math.random()*PERCH.length|0]; const p=st.goal.at(); st.tx=p.x; st.tz=p.z+.48; return; }
+      st.tx=-7+Math.random()*14; st.tz=Math.random()<.2?-2.5+Math.random()*.2:-1.95+Math.random()*.4; };
+    const jump=(to,up)=>{ st.jump={a:root.position.clone(),b:to.clone(),t0:st.t,dur:up?.6:.5,up}; st.mode='jump'; };
+    const rest=()=>{ const r=Math.random(); st.mode=r<.45?'sit':r<.8?'lie':'groom'; st.until=st.t+(st.on?8:4)+Math.random()*(st.mode==='lie'?16:8); };
     let last=0; st.t=0;
     return { root, meshes:()=>{ const a=[]; root.traverse(o=>o.userData.cat&&a.push(o)); return a; },
       pet(){ st.mode='sit'; st.until=st.t+6; st.purr=st.t+2.2; },
       update(t,cam){ const dt=Math.min(.05,t-last); last=t; st.t=t; let moving=false;
-        if(st.mode==='walk'){ const dx=st.tx-root.position.x, dz=st.tz-root.position.z, d=Math.hypot(dx,dz);
-          if(d<.05) rest(); else { const want=Math.atan2(-dz,dx); let dy=want-st.yaw; dy=Math.atan2(Math.sin(dy),Math.cos(dy)); st.yaw+=dy*Math.min(1,dt*3); const sp=.32*Math.max(0,Math.cos(dy)*.8+.2);
+        if(st.mode==='jump'){ const J=st.jump, u=Math.min(1,(t-J.t0)/J.dur), e=u*u*(3-2*u);
+          if(J.up&&st.goal) J.b.copy(st.goal.at());
+          root.position.lerpVectors(J.a,J.b,e); root.position.y=J.a.y+(J.b.y-J.a.y)*e+Math.sin(Math.PI*u)*(J.up?.28:.12);
+          const want=Math.atan2(-(J.b.z-J.a.z),J.b.x-J.a.x); let dy=want-st.yaw; dy=Math.atan2(Math.sin(dy),Math.cos(dy)); if(Math.hypot(J.b.x-J.a.x,J.b.z-J.a.z)>.05) st.yaw+=dy*Math.min(1,dt*8);
+          moving=true; if(u>=1){ if(J.up){ st.on=st.goal; st.goal=null; rest(); } else { st.on=null; st.mode='walk'; pickSpot(); } } }
+        else if(st.mode==='walk'){ const dx=st.tx-root.position.x, dz=st.tz-root.position.z, d=Math.hypot(dx,dz);
+          if(d<.05){ if(st.goal) jump(st.goal.at(),true); else rest(); } else { const want=Math.atan2(-dz,dx); let dy=want-st.yaw; dy=Math.atan2(Math.sin(dy),Math.cos(dy)); st.yaw+=dy*Math.min(1,dt*3); const sp=.32*Math.max(0,Math.cos(dy)*.8+.2);
             root.position.x+=Math.cos(st.yaw)*sp*dt; root.position.z-=Math.sin(st.yaw)*sp*dt; st.gait+=sp*dt*15; moving=true; } }
-        else if(t>st.until){ st.mode='walk'; pickSpot(); }
-        const ws=st.mode==='walk'?1:0, sit=st.mode==='sit'||st.mode==='groom'?1:0, lie=st.mode==='lie'?1:0;
+        else if(t>st.until){ if(st.on){ const p=st.on.at(); jump(V3(p.x,0,p.z+.48),false); } else { st.mode='walk'; pickSpot(); } }
+        // up on a perch he stays with it (the chair may roll), turning to his favourite side
+        if(st.on&&st.mode!=='jump'){ const p=st.on.at(); if(root.position.distanceToSquared(p)>1e-6){ root.position.copy(p); moving=true; }
+          let dy=st.on.face+(st.mode==='lie'?.0:0)-st.yaw; dy=Math.atan2(Math.sin(dy),Math.cos(dy)); if(Math.abs(dy)>.01){ st.yaw+=dy*Math.min(1,dt*2.5); moving=true; } }
+        const ws=st.mode==='walk'?1:0, sit=st.mode==='sit'||st.mode==='groom'?1:0, lie=st.mode==='lie'?1:0, air=st.mode==='jump'?Math.sin(Math.PI*Math.min(1,(t-st.jump.t0)/st.jump.dur)):0;
         st.pose.sit+=(sit-st.pose.sit)*Math.min(1,dt*3); st.pose.lie+=(lie-st.pose.lie)*Math.min(1,dt*2.5); const P=st.pose; if(Math.abs(sit-P.sit)>.01||Math.abs(lie-P.lie)>.01) moving=true;
         root.rotation.y=st.yaw;
         body.rotation.z=P.sit*.55; body.position.y=-P.sit*.05-P.lie*.105+ws*Math.abs(Math.sin(st.gait))*.006; body.position.x=-P.sit*.06;
-        legs.forEach(L=>{ const sw=ws*Math.sin(st.gait+L.ph)*.45; L.pv.rotation.z= sw + (L.front? -P.sit*.55 + P.lie*1.25 : P.sit*.9 + P.lie*-1.2); });
+        legs.forEach(L=>{ const sw=ws*Math.sin(st.gait+L.ph)*.45; L.pv.rotation.z= sw + (L.front? -P.sit*.55 + P.lie*1.25 + air*.9 : P.sit*.9 + P.lie*-1.2 - air*.9); });
+        body.rotation.z+=st.mode==='jump'?(st.jump.up?.35:-.3)*air:0;
         const purr=st.purr&&t<st.purr; head.rotation.z=-P.sit*.55+P.lie*.1+(st.mode==='groom'?Math.sin(t*6)*.15-.35:0)+(purr?Math.sin(t*40)*.01:0);
         head.rotation.y=(sit?Math.sin(t*.4)*.5:0)+(purr?.6:0);
         tail.forEach((sg,i)=>{ sg.rotation.z=(i?(.12+P.sit*.18+P.lie*.05):(.5-P.sit*1.6-P.lie*.5))+Math.sin(t*(ws?3:1.2)-i*.6)*(ws?.08:.05); sg.rotation.y=Math.sin(t*.9-i*.5)*(ws?.15:.22); });
@@ -2494,7 +2519,9 @@ function initRoom(){
   // things that open a website: the music screen (once you sit at the desk) and the client plaques
   const linkAt=()=>{ if(mouse.x>5) return null; const L=LINKS.filter(o=>!o.userData.when||focused===o.userData.when); if(!L.length) return null; ray.setFromCamera(mouse,camera); const all=ray.intersectObjects([S,A],true)[0]; return all&&all.object.userData.link&&L.includes(all.object) ? all.object.userData.link : null; };
   let onLink=false; canvas.addEventListener('pointermove',()=>{ const l=!!linkAt(); if(l!==onLink){ onLink=l; } if(l) canvas.style.cursor='pointer'; else if(focused) canvas.style.cursor='default'; });
-  canvas.addEventListener('click',()=>{ const ln=linkAt(); if(ln){ if(/spotify/.test(ln)) found('song'); window.open(ln,'_blank','noopener'); return; } const id=pick(); if(!id) return; if(id==='cat'){ found('cat'); CAT.pet(); toast('He still wanders between the two rooms, just like he always did.'); return; }
+  canvas.addEventListener('click',()=>{ const ln=linkAt(); if(ln){ if(/spotify/.test(ln)) found('song'); window.open(ln,'_blank','noopener'); return; } const id=pick(); if(!id) return;
+    if(id==='outside'&&!WIN.userData.sh.go){ WIN.userData.sh.go=true; WIN.userData.sh.t0=clock.getElapsedTime(); found('outside'); return; }
+    if(id==='cat'){ found('cat'); CAT.pet(); toast('He still wanders between the two rooms, just like he always did.'); return; }
     if(id==='egg'){ found('duck'); quacks++; duck.userData.spin=1; toast(quacks<3?'Quack. Every good debugger needs a rubber duck.':'You found the debugging duck. There are more secrets around.'); return; } focusF(id); });
 
   const tmp=new THREE.Vector3(), clock=new THREE.Clock();
@@ -2523,6 +2550,7 @@ function initRoom(){
     // the printer head moves while the bench is looked at
     const PH=window.__PH; if(PH&&(hov==='hardware'||focused==='hardware')){ PH.position.x=PH.userData.x+Math.sin(t*2.6)*.07; PH.position.z=PH.userData.z+Math.cos(t*1.7)*.025; dirty=Math.max(dirty,1); }
     { const o=WIN.userData.outT; o.offset.x=.07+Math.max(-.07,Math.min(.07,(camera.position.x-ax)*.02)); o.offset.y=.07+Math.max(-.07,Math.min(.07,(camera.position.y-1.88)*-.03)); }
+    { const S=WIN.userData.sh; if(S.go&&S.k<1){ S.k=Math.min(1,(t-S.t0)/.9); const e=1-Math.pow(1-S.k,3); S.set(e); dirty=Math.max(dirty,1); } }
     if(CAT.update(t,camera)) dirty=Math.max(dirty,1);
     if(duck.userData.spin) dirty=2;
     camera.updateMatrixWorld(); { const A=camera.matrixWorld.elements, L=lastCam.elements; let d=0; for(let i=0;i<16;i++) d=Math.max(d,Math.abs(A[i]-L[i])); if(d>2e-5){ lastCam.copy(camera.matrixWorld); dirty=Math.max(dirty,1); } }
