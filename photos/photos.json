@@ -6,12 +6,61 @@
    "w": 2200,
    "h": 1467,
    "alt": "Sports"
+  },
+  {
+   "src": "photos/sports/24h-emile-063.jpg",
+   "thumb": "photos/sports/24h-emile-063-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Sports"
   }
  ],
  "motorsports": [
   {
+   "src": "photos/motorsports/apex-mettet-019.jpg",
+   "thumb": "photos/motorsports/apex-mettet-019-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Motorsports"
+  },
+  {
+   "src": "photos/motorsports/apex-mettet-050.jpg",
+   "thumb": "photos/motorsports/apex-mettet-050-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Motorsports"
+  },
+  {
+   "src": "photos/motorsports/apex-mettet-2026-2.jpg",
+   "thumb": "photos/motorsports/apex-mettet-2026-2-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Motorsports"
+  },
+  {
    "src": "photos/motorsports/apex-mettet-2026-5.jpg",
    "thumb": "photos/motorsports/apex-mettet-2026-5-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Motorsports"
+  },
+  {
+   "src": "photos/motorsports/apex-mettet-2026.jpg",
+   "thumb": "photos/motorsports/apex-mettet-2026-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Motorsports"
+  },
+  {
+   "src": "photos/motorsports/ferrari-tributo-2025-087.jpg",
+   "thumb": "photos/motorsports/ferrari-tributo-2025-087-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Motorsports"
+  },
+  {
+   "src": "photos/motorsports/ferrari-tributo-2025-220.jpg",
+   "thumb": "photos/motorsports/ferrari-tributo-2025-220-t.jpg",
    "w": 2200,
    "h": 1467,
    "alt": "Motorsports"
@@ -24,20 +73,192 @@
    "w": 2200,
    "h": 1467,
    "alt": "Events"
+  },
+  {
+   "src": "photos/events/lecon-inaugurale-022.jpg",
+   "thumb": "photos/events/lecon-inaugurale-022-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Events"
+  },
+  {
+   "src": "photos/events/lecon-inaugurale-056.jpg",
+   "thumb": "photos/events/lecon-inaugurale-056-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Events"
+  },
+  {
+   "src": "photos/events/vincent-blondel-34.jpg",
+   "thumb": "photos/events/vincent-blondel-34-t.jpg",
+   "w": 2200,
+   "h": 1458,
+   "alt": "Events"
   }
  ],
  "portraits": [
+  {
+   "src": "photos/portraits/ucd26-131.jpg",
+   "thumb": "photos/portraits/ucd26-131-t.jpg",
+   "w": 1466,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-140.jpg",
+   "thumb": "photos/portraits/ucd26-140-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-144.jpg",
+   "thumb": "photos/portraits/ucd26-144-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-193.jpg",
+   "thumb": "photos/portraits/ucd26-193-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-203.jpg",
+   "thumb": "photos/portraits/ucd26-203-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-242.jpg",
+   "thumb": "photos/portraits/ucd26-242-t.jpg",
+   "w": 1466,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-263.jpg",
+   "thumb": "photos/portraits/ucd26-263-t.jpg",
+   "w": 1466,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-294.jpg",
+   "thumb": "photos/portraits/ucd26-294-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-341.jpg",
+   "thumb": "photos/portraits/ucd26-341-t.jpg",
+   "w": 1466,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-357.jpg",
+   "thumb": "photos/portraits/ucd26-357-t.jpg",
+   "w": 1466,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-361.jpg",
+   "thumb": "photos/portraits/ucd26-361-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-364.jpg",
+   "thumb": "photos/portraits/ucd26-364-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/ucd26-369.jpg",
+   "thumb": "photos/portraits/ucd26-369-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
+  },
   {
    "src": "photos/portraits/chrisvers-141.jpg",
    "thumb": "photos/portraits/chrisvers-141-t.jpg",
    "w": 2200,
    "h": 1467,
    "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/mjcg-117.jpg",
+   "thumb": "photos/portraits/mjcg-117-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Portraits"
+  },
+  {
+   "src": "photos/portraits/mjcg-187.jpg",
+   "thumb": "photos/portraits/mjcg-187-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Portraits"
   }
  ],
- "drone": [],
- "realestate": [],
- "macro": [],
- "products": [],
+ "drone": [
+  {
+   "src": "photos/drone/karting-benz-parade-automne-2025-93.jpg",
+   "thumb": "photos/drone/karting-benz-parade-automne-2025-93-t.jpg",
+   "w": 1237,
+   "h": 2200,
+   "alt": "Drone"
+  }
+ ],
+ "realestate": [
+  {
+   "src": "photos/realestate/arthur-carlier-podologue-002.jpg",
+   "thumb": "photos/realestate/arthur-carlier-podologue-002-t.jpg",
+   "w": 1467,
+   "h": 2200,
+   "alt": "Realestate"
+  },
+  {
+   "src": "photos/realestate/lecon-inaugurale-002.jpg",
+   "thumb": "photos/realestate/lecon-inaugurale-002-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Realestate"
+  }
+ ],
+ "macro": [
+  {
+   "src": "photos/macro/abovebelgium-2.jpg",
+   "thumb": "photos/macro/abovebelgium-2-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Macro"
+  }
+ ],
+ "products": [
+  {
+   "src": "photos/products/velom-030.jpg",
+   "thumb": "photos/products/velom-030-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Products"
+  },
+  {
+   "src": "photos/products/velom-037.jpg",
+   "thumb": "photos/products/velom-037-t.jpg",
+   "w": 2200,
+   "h": 1467,
+   "alt": "Products"
+  }
+ ],
  "videos": []
 }

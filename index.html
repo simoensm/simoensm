@@ -2279,8 +2279,17 @@ function initRoom(){
   B(EL,.085,.012,.056,std({color:0x1f7a3a,roughness:.55}),ex+.25,.77,ez+.2,.002); B(EL,.016,.012,.014,mat.chrome,ex+.28,.782,ez+.2); B(EL,.022,.014,.018,mat.chrome,ex+.22,.783,ez+.19); B(EL,.05,.004,.006,std({color:0x111111}),ex+.25,.779,ez+.176);
   B(EL,.16,.012,.055,mat.white,ex+.42,.77,ez+.2,.003);
   [0xd93636,0x2b7de9,0xf2c230,0x30d158].forEach((c,i)=>{ const cu=new THREE.CatmullRomCurve3([new THREE.Vector3(ex+.27,.78,ez+.18+i*.008),new THREE.Vector3(ex+.33,.83+i*.012,ez+.2),new THREE.Vector3(ex+.38+i*.02,.778,ez+.19)]); add(EL,new THREE.Mesh(new THREE.TubeGeometry(cu,16,.002,6),std({color:c,roughness:.5}))); });
-  B(EL,.32,.17,.16,std({color:0x2b2c30,roughness:.5}),ex+.42,.85,ez-.14,.012);
-  const osc=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),screen(T(300,200,(g,w,h)=>{ g.fillStyle='#04110a'; g.fillRect(0,0,w,h); g.strokeStyle='rgba(51,255,153,.25)'; for(let x=0;x<w;x+=30){ g.beginPath(); g.moveTo(x,0); g.lineTo(x,h); g.stroke(); } g.strokeStyle='#33ff99'; g.lineWidth=3; g.beginPath(); for(let x=0;x<w;x+=3) g.lineTo(x,h/2+Math.sign(Math.sin(x/18))*40); g.stroke(); }),1.2)); osc.position.set(ex+.37,.86,ez-.059); EL.add(osc);
+  // the oscilloscope is broken: cracked glass, a dead trace, NO SIGNAL, and now and then a flicker
+  const oscB=B(EL,.32,.17,.16,std({color:0x2b2c30,roughness:.5}),ex+.42,.85,ez-.14,.012); oscB.userData.keep=1; oscB.userData.osc=1;
+  const oscMat=screen(T(300,200,(g,w,h)=>{ g.fillStyle='#030806'; g.fillRect(0,0,w,h); g.strokeStyle='rgba(51,255,153,.12)'; for(let x=0;x<w;x+=30){ g.beginPath(); g.moveTo(x,0); g.lineTo(x,h); g.stroke(); } for(let y=0;y<h;y+=25){ g.beginPath(); g.moveTo(0,y); g.lineTo(w,y); g.stroke(); }
+      g.strokeStyle='rgba(51,255,153,.7)'; g.lineWidth=2; g.beginPath(); for(let x=0;x<w;x+=2){ const y=h*.62+(Math.random()-.5)*(x>120&&x<150?60:6); x?g.lineTo(x,y):g.moveTo(x,y); } g.stroke();
+      g.fillStyle='#ff4d4d'; g.font='700 22px ui-monospace,Menlo,monospace'; g.fillText('NO SIGNAL',16,34); g.fillStyle='rgba(255,77,77,.7)'; g.font='14px ui-monospace,Menlo,monospace'; g.fillText('CH1 ERR  CH2 --',16,56);
+      g.strokeStyle='rgba(235,245,240,.75)'; g.lineWidth=1.4; const cx=205, cy=118; for(let k=0;k<9;k++){ let x=cx, y=cy, a=k/9*6.28+Math.random()*.4; g.beginPath(); g.moveTo(x,y); for(let j=0;j<5;j++){ x+=Math.cos(a)*(14+Math.random()*16); y+=Math.sin(a)*(14+Math.random()*16); a+=(Math.random()-.5)*.7; g.lineTo(x,y); } g.stroke(); }
+      g.beginPath(); g.arc(cx,cy,7,0,7); g.stroke(); g.beginPath(); g.arc(cx,cy,15,.4,2.1); g.stroke(); }),.75);
+  const osc=new THREE.Mesh(new THREE.PlaneGeometry(.15,.1),oscMat); osc.position.set(ex+.37,.86,ez-.059); osc.userData.keep=1; osc.userData.osc=1; EL.add(osc);
+  // a probe hanging loose off the front
+  add(EL,new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(ex+.5,.82,ez-.058),new THREE.Vector3(ex+.53,.78,ez-.02),new THREE.Vector3(ex+.56,.77,ez+.06),new THREE.Vector3(ex+.6,.768,ez+.1)]),24,.0025,6),std({color:0x2b7de9,roughness:.5})));
+  window.__OSC=oscMat;
   B(EL,.18,.1,.16,std({color:0xdfdfe1,roughness:.5}),ex+.52,.995,ez-.14,.01);
   B(EL,.08,.15,.03,std({color:0xe5b625,roughness:.6}),ex-.62,.82,ez+.15,.01).rotation.x=-.3;
   for(let r=0;r<3;r++) for(let c=0;c<4;c++) B(EL,.06,.035,.12,std({color:0xdad7cf,roughness:.5}),ex-.62+c*.065,.79+r*.038,ez-.22,.004);
@@ -2408,8 +2417,8 @@ function initRoom(){
         g.fillStyle='rgba(60,40,30,.75)'; g.beginPath(); g.ellipse(x,y+16,16,4,0,0,7); g.fill(); g.beginPath(); g.ellipse(x,y+36,22,9,0,0,Math.PI); g.fill();
         g.strokeStyle='#8a4a3a'; g.lineWidth=3.5; g.beginPath(); g.arc(x,y+18,9,.25*Math.PI,.75*Math.PI); g.stroke(); },
       cap:(x,y)=>{ g.fillStyle='#141414'; g.beginPath(); g.ellipse(x,y-30,43,30,0,Math.PI,0); g.fill(); g.fillRect(x-43,y-32,86,8); g.fillStyle='#2a2a2a'; g.fillRect(x-43,y-28,86,4); g.fillStyle='#141414'; RR(x-10,y-46,20,10,3); } });
-    bubble(500,rY-640,'Trek mijn pin Matteke !',50);
-    bubble(840,rY-560,'Easy pace, promise.',-90); });
+    bubble(500,rY-640,'Trek mijn pin control',50);
+    bubble(840,rY-560,'Easy pace Matteke',-90); });
   outT.wrapS=outT.wrapT=THREE.ClampToEdgeWrapping; outT.repeat.set(.86,.86); outT.offset.set(.07,.07);
   const view=new THREE.Mesh(new THREE.PlaneGeometry(wW,wH),std({map:outT,emissive:0xffffff,emissiveMap:outT,emissiveIntensity:.5,roughness:1,fog:false})); view.position.set(wX,wY,BZ+.006); WIN.add(view);
   const glass=new THREE.Mesh(new THREE.PlaneGeometry(wW,wH),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.05,depthWrite:false})); glass.position.set(wX,wY,BZ+.02); WIN.add(glass);
@@ -2632,7 +2641,7 @@ function initRoom(){
 
   const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(9,9), par=new THREE.Vector2(), tgt=new THREE.Vector2(); let hov=null;
   let moved=true, lastPick=0; canvas.addEventListener('pointermove',e=>{ mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1); moved=true; });
-  let onLamp=false; const pick=()=>{ if(mouse.x>5){ onLamp=false; return null; } ray.setFromCamera(mouse,camera); const h=ray.intersectObjects([S,A],true)[0]; onLamp=!!(h&&h.object.userData.lamp); return h?(h.object.userData.candle?'candle':h.object.userData.cat?'cat':h.object.userData.egg?'egg':(h.object.userData.hot||null)):null; };
+  let onLamp=false; const pick=()=>{ if(mouse.x>5){ onLamp=false; return null; } ray.setFromCamera(mouse,camera); const h=ray.intersectObjects([S,A],true)[0]; onLamp=!!(h&&h.object.userData.lamp); return h?(h.object.userData.osc?'osc':h.object.userData.candle?'candle':h.object.userData.cat?'cat':h.object.userData.egg?'egg':(h.object.userData.hot||null)):null; };
   const offP=new THREE.Vector3(), offL=new THREE.Vector3(), wantP=new THREE.Vector3(), wantL=new THREE.Vector3(); let outlined=null;
   let quacks=0;
   // things that open a website: the music screen (once you sit at the desk) and the client plaques
@@ -2640,6 +2649,7 @@ function initRoom(){
   let onLink=false; canvas.addEventListener('pointermove',()=>{ const l=!!linkAt(); if(l!==onLink){ onLink=l; } if(l) canvas.style.cursor='pointer'; else if(focused) canvas.style.cursor='default'; });
   canvas.addEventListener('click',()=>{ const ln=linkAt(); if(ln){ if(/spotify/.test(ln)) found('song'); window.open(ln,'_blank','noopener'); return; } const id=pick(); if(!id) return;
     if(id==='outside'&&!WIN.userData.sh.go){ WIN.userData.sh.go=true; WIN.userData.sh.t0=clock.getElapsedTime(); found('outside'); return; }
+    if(id==='osc'){ toast('Maybe we should ask Ronny for some help.'); return; }
     if(id==='cat'){ found('cat'); CAT.pet(); toast('He still wanders between the two rooms, just like he always did.'); return; }
     if(id==='egg'){ found('duck'); quacks++; duck.userData.spin=1; toast(quacks<3?'Quack. Every good debugger needs a rubber duck.':'You found the debugging duck. There are more secrets around.'); return; } focusF(id); });
 
@@ -2670,6 +2680,7 @@ function initRoom(){
     const PH=window.__PH; if(PH&&(hov==='hardware'||focused==='hardware')){ PH.position.x=PH.userData.x+Math.sin(t*2.6)*.07; PH.position.z=PH.userData.z+Math.cos(t*1.7)*.025; dirty=Math.max(dirty,1); }
     { const o=WIN.userData.outT; o.offset.x=.07+Math.max(-.07,Math.min(.07,(camera.position.x-ax)*.02)); o.offset.y=.07+Math.max(-.07,Math.min(.07,(camera.position.y-1.88)*-.03)); }
     { const S=WIN.userData.sh; if(S.go&&S.k<1){ S.k=Math.min(1,(t-S.t0)/.9); const e=1-Math.pow(1-S.k,3); S.set(e); dirty=Math.max(dirty,1); } }
+    { const om=window.__OSC, ph=t%4.7; if(om){ const f=ph<.32?(Math.random()<.5?.08:1.1):(ph<.36?.75:null); if(f!==null){ om.emissiveIntensity=f; om.opacity=1; dirty=Math.max(dirty,1); } } }
     if(CND.update(t)) dirty=Math.max(dirty,1);
     if(CAT.update(t,camera)) dirty=Math.max(dirty,1);
     if(duck.userData.spin) dirty=2;
