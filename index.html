@@ -72,6 +72,11 @@ html.night .ctf input:focus,html.night .ctf textarea:focus{background:rgba(255,2
 html.night .ctpills button{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:var(--ink2)}
 html.night .ctpills button.on{background:#eef1f6;color:#14161a;border-color:#eef1f6}
 html.night .idhint{color:#14161a;background:#eef1f6}
+html.night .idcard{transition:background-color .5s}
+html.night .idcard.hov,html.night .idcard.open,html.night .idcard:focus-within{background:rgba(17,20,27,.96);border-color:rgba(255,255,255,.1);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 30px 80px -24px rgba(0,0,0,.85)}
+html.night .idfacts li span{color:var(--ink2)}
+.idcard.hov,.idcard.open,.idcard:focus-within{background:#f8f9fa}
+html.night .idcard.hov,html.night .idcard.open,html.night .idcard:focus-within{background:#11141b}
 /* night: every surface that had a light background of its own gets a dark one */
 html.night .tags span,html.night .tags button,html.night .skp button,html.night .idlinks a,html.night .ctc .cp,html.night .ctalt a,html.night .ctalt button,
 html.night .gearnav button,html.night .chipsrow button,html.night .more-rv,html.night .svcgrid span,html.night .pj,html.night .pjfacts div,html.night .fmts div,
@@ -2073,6 +2078,11 @@ function initRoom(){
   shelfYs.forEach(y=>{ B(gear,1.22,.012,.26,steel,sx,y+.0115,BZ+.152,.003); B(gear,1.22,.04,.008,steel,sx,y-.003,BZ+.282,.002);
     [-.46,.46].forEach(o=>{ const b=new THREE.Mesh(gusG,steelL); b.position.set(sx+o-.004,y+.005,BZ+.022); add(gear,b); C(gear,.006,.006,.012,steelL,sx+o,y-.03,BZ+.025,12).rotation.x=Math.PI/2; });
     const st=new THREE.Mesh(new THREE.BoxGeometry(1.12,.006,.01),std({color:0x000000,emissive:0xfff0dc,emissiveIntensity:2.4})); st.position.set(sx,y-.006,BZ+.26); gear.add(st); });
+  // shelf lighting: each LED strip really lights the shelf below it, and a soft wash fills the rack
+  const GEARL=[]; [...shelfYs,2.24].forEach((y,k)=>{ if(k===0) return; const l=new THREE.SpotLight(0xfff0dc,0,.9,1.25,1,1.2); l.position.set(sx,y-.02,BZ+.24); l.target.position.set(sx,y-.45,BZ+.12); scene.add(l,l.target); GEARL.push(l); });
+  { const l=new THREE.SpotLight(0xfff0dc,0,.9,1.25,1,1.2); l.position.set(sx,shelfYs[0]-.02,BZ+.24); l.target.position.set(sx,.9,BZ+.12); scene.add(l,l.target); GEARL.push(l); }
+  const gWash=new THREE.PointLight(0xeef2ff,0,2.2,1.6); gWash.position.set(sx,1.6,BZ+.9); scene.add(gWash);
+  window.__GEAR={set(e){ GEARL.forEach(l=>l.intensity=1.6+1.6*e); gWash.intensity=.9+.6*e; }}; window.__GEAR.set(0);
   const gLight=new THREE.SpotLight(0xfff2e0,7,3.5,.7,.8,1.6); gLight.position.set(sx,2.9,BZ+1.4); gLight.target.position.set(sx,1.45,BZ+.1); gLight.castShadow=true; gLight.shadow.mapSize.set(1024,1024); gLight.shadow.bias=-.0004; scene.add(gLight,gLight.target);
   const card=(txt,x,y)=>{ const c=new THREE.Mesh(new THREE.PlaneGeometry(.16,.032),std({map:labelTex([[txt,58,600,95]],512,102,'#f3f1ec','#1d1d1f'),roughness:.8})); c.position.set(x,y-.004,BZ+.2868); gear.add(c); };
   hs('gear',gear,[sx,2.28,BZ+.12],{side:'studio',label:'Gear',view:{pos:[sx,1.55,BZ+2.15],look:[sx,1.52,BZ]}});
@@ -2659,7 +2669,7 @@ function initRoom(){
     const sm=x=>x*x*(3-2*x);
     const apply=()=>{ const e=sm(k), w=sm(kw);
       hemi.intensity=H0*(1-.95*e); sun.intensity=S0*(1-e); scene.environmentIntensity=E0*(1-.9*e); renderer.toneMappingExposure=X0*(1-.12*e);
-      CEIL.forEach(l=>l.intensity=l.userData.i0*(1-e)); keyL.intensity=K0*.9*e; gLight.intensity=G0*.8*e; pLight.intensity=P0*e; strip.material.emissiveIntensity=ST0*e; FIX.set(e);
+      CEIL.forEach(l=>l.intensity=l.userData.i0*(1-e)); keyL.intensity=K0*.9*e; gLight.intensity=G0*(.45+.75*e); window.__GEAR&&window.__GEAR.set(e); pLight.intensity=P0*e; strip.material.emissiveIntensity=ST0*e; FIX.set(e);
       if(window.__ALB){ window.__ALB.emissiveIntensity=3.5*e; window.__ALD.emissiveIntensity=1.6*e; }
       dl.intensity=6*e; bl.intensity=6*e; wl.intensity=4.5*e; fill.intensity=F0*.6*e; barL.emissiveIntensity=3*e; pbL.emissiveIntensity=3*e;
       o1.material.opacity=Math.sin(Math.PI*Math.min(1,w*1.15))*.75; o2.material.opacity=Math.max(0,(w-.35)/.65)*.92; if(view) view.material.emissiveIntensity=.5*(1-.8*w); };
