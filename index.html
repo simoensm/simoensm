@@ -1091,7 +1091,7 @@ afterIntro(()=>setTimeout(()=>document.getElementById('idcard')?.classList.remov
   b.addEventListener('click',()=>{ const n=!H.classList.contains('night'); H.classList.toggle('night',n); try{ localStorage.setItem('ms-theme',n?'night':'day'); }catch(e){} document.body.classList.toggle('dark',n||!['overview','contact'].includes(route)); });
   if(H.classList.contains('night')) document.body.classList.add('dark'); })();
 /* the CV opens in a viewer here; on phones it opens the PDF itself */
-(()=>{ const a=document.getElementById('cvbtn'), M=document.getElementById('cvm'), F=document.getElementById('cvf'); if(!a||!M) return;
+(()=>{ const a=document.getElementById('cvbtn'), M=document.getElementById('cvm'), F=document.getElementById('cvf'); if(!a||!M) return; const links=[a,...document.querySelectorAll('.cvlink')];
   const close=()=>{ M.classList.remove('vis'); setTimeout(()=>M.classList.remove('on'),350); };
   links.forEach(l=>l.addEventListener('click',e=>{ if(innerWidth<760) return; e.preventDefault(); if(!F.src) F.src='cv.pdf#view=FitH'; M.classList.add('on'); requestAnimationFrame(()=>M.classList.add('vis')); }));
   document.getElementById('cvx').onclick=close; M.addEventListener('click',e=>{ if(e.target===M) close(); }); addEventListener('keydown',e=>{ if(e.key==='Escape'&&M.classList.contains('on')) close(); }); })();
