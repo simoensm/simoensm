@@ -166,6 +166,26 @@ body.dark .burger{color:#eef1f6}
 .hero h1{font-size:clamp(44px,6.6vw,92px);line-height:1;font-weight:600;letter-spacing:-.045em;margin-top:34px;max-width:980px}
 /* opening: the same soft rise as the cards, line by line */
 .hero{position:relative}
+/* loading intro: the two rings draw themselves, the name rises, a counter runs, then the curtain lifts */
+#intro{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:var(--bg);clip-path:inset(0 0 0 0);transition:clip-path 1s cubic-bezier(.76,0,.24,1)}
+html:not(.pre) #intro{display:none}
+#intro.out{clip-path:inset(0 0 100% 0)}
+#intro .in-c{display:grid;justify-items:center;gap:22px;transition:transform 1s cubic-bezier(.76,0,.24,1),opacity .6s}
+#intro.out .in-c{transform:translateY(-60px);opacity:0}
+#intro .in-r{width:84px;height:84px;transform:rotate(-90deg)}
+#intro .in-r circle{fill:none;stroke:#8a8f98;stroke-width:2.9;stroke-linecap:round}
+#intro .in-r .a{stroke-dasharray:141.4;stroke-dashoffset:141.4;animation:indraw 1.1s cubic-bezier(.65,0,.35,1) .1s forwards}
+#intro .in-r .b{stroke-dasharray:94.3;stroke-dashoffset:-94.3;animation:indraw 1.1s cubic-bezier(.65,0,.35,1) .3s forwards}
+@keyframes indraw{to{stroke-dashoffset:0}}
+#intro .in-n{overflow:hidden;font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+#intro .in-n span{display:inline-block;transform:translateY(110%);animation:inname .9s cubic-bezier(.16,1,.3,1) .45s forwards}
+@keyframes inname{to{transform:none}}
+#intro .in-p{display:flex;align-items:center;gap:12px;font:500 11px/1 var(--mono);letter-spacing:.14em;color:var(--ink3);opacity:0;animation:up .6s var(--ease) .55s forwards;transform:none}
+#intro .in-p i{display:block;width:120px;height:2px;border-radius:2px;background:rgba(20,22,26,.08);overflow:hidden}
+#intro .in-p u{display:block;height:100%;width:0;background:linear-gradient(90deg,#6f95ff,#b49cff);border-radius:2px}
+/* everything on the home page waits for the intro */
+html.pre .hero,html.pre .hero *,html.pre .hero::before{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){#intro{display:none}}
 .hero::before{content:"";position:absolute;left:-10%;top:8%;width:70%;height:70%;pointer-events:none;z-index:-1;background:radial-gradient(closest-side,rgba(111,149,255,.14),rgba(180,156,255,.06) 55%,transparent 75%);filter:blur(10px);opacity:0;animation:hglow 2.6s cubic-bezier(.16,1,.3,1) .1s forwards}
 @keyframes hglow{to{opacity:1}}
 .hero .eyb{margin-top:34px;font:500 11.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);opacity:0;transform:translateY(14px);animation:lrise 1s cubic-bezier(.16,1,.3,1) .2s forwards}
@@ -764,6 +784,11 @@ html,body{overflow-x:clip}
 </style>
 </head>
 <body>
+<div id="intro" aria-hidden="true"><div class="in-c">
+  <svg class="in-r" viewBox="0 0 64 64"><circle class="a" cx="32" cy="32" r="22.5"/><circle class="b" cx="32" cy="32" r="15"/></svg>
+  <div class="in-n"><span>Mathias Simoens</span></div>
+  <div class="in-p"><span id="inpc">00</span><i><u id="inbar"></u></i></div></div></div>
+<script>document.documentElement.classList.add('pre');</script>
 <div class="aura"><i></i><i></i><i></i></div>
 
 <nav class="nav glass">
@@ -990,7 +1015,18 @@ function Adaptive(apply,{max=1.25,min=.7,heavy=null}={}){ let pr=Math.min(device
       else if(ema<14.5){ if(pr<Math.min(devicePixelRatio,max)){ pr=Math.min(Math.min(devicePixelRatio,max),pr+.08); apply(pr); } } },
     idle(){ last=0; } }; }
 
-setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700);
+/* loading intro driver: counts while the page loads (at least ~1.3s, at most ~2s), then lifts away */
+const afterIntro=(()=>{ const q=[]; let done=!document.documentElement.classList.contains('pre'); const run=()=>{ done=true; q.splice(0).forEach(f=>f()); }; window.__introDone=run; return f=>done?f():q.push(f); })();
+afterIntro(()=>setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700));
+(()=>{ const H=document.documentElement, I=document.getElementById('intro'); if(!I||!H.classList.contains('pre')) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ H.classList.remove('pre'); window.__introDone(); return; }
+  const pc=document.getElementById('inpc'), bar=document.getElementById('inbar'), t0=performance.now(); let loaded=false, shown=0;
+  Promise.all([document.fonts?document.fonts.ready:0,new Promise(r=>document.readyState==='loading'?addEventListener('DOMContentLoaded',r,{once:true}):r())]).then(()=>loaded=true);
+  const tick=now=>{ const el=now-t0, cap=loaded?100:Math.min(92,el/30); shown+=(Math.min(cap,el<1300?el/13:100)-shown)*.12; if(el>2000) shown=100;
+    const v=Math.round(shown); pc.textContent=String(Math.min(v,100)).padStart(2,'0'); bar.style.width=Math.min(v,100)+'%';
+    if(v>=99&&el>1300){ pc.textContent='100'; bar.style.width='100%'; setTimeout(()=>{ I.classList.add('out'); setTimeout(()=>{ H.classList.remove('pre'); window.__introDone(); },450); },180); return; }
+    requestAnimationFrame(tick); };
+  requestAnimationFrame(tick); })();
 /* hero opening: the title becomes two lines that rise in one after the other; line two then decodes from digits */
 (()=>{ const h=document.getElementById('htitle'); if(!h) return; const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   // the label shows when the site was last updated
@@ -1003,8 +1039,8 @@ setTimeout(()=>document.getElementById('idcard')?.classList.remove('grow'),1700)
   const settle=()=>{ h.classList.add('done'); sub&&sub.classList.add('done'); chips&&chips.classList.add('done'); };
   if(RM||!em){ settle(); return; }
   const ws=[]; [...em.childNodes].forEach(x=>{ if(x.nodeType!==3) return; const f=document.createDocumentFragment(); x.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)){ f.appendChild(document.createTextNode(' ')); return; } const sp=document.createElement('span'); sp.className='fx-data'; sp.innerHTML=[...t].map(c=>`<i data-c="${c}">${/[a-z]/i.test(c)?'0123456789'[Math.random()*10|0]:c}</i>`).join(''); ws.push(sp); f.appendChild(sp); }); x.replaceWith(f); });
-  ws.forEach((W,wi)=>setTimeout(()=>{ [...W.children].forEach((el,k)=>{ const real=el.dataset.c; if(!/[a-z]/i.test(real)) return; el.classList.add('on'); let n=0; const iv=setInterval(()=>{ el.textContent='0123456789'[Math.random()*10|0]; if(++n>5+k*3){ clearInterval(iv); el.textContent=real; el.classList.remove('on'); } },45); }); },850+wi*170));
-  setTimeout(settle,2600); })();
+  afterIntro(()=>ws.forEach((W,wi)=>setTimeout(()=>{ [...W.children].forEach((el,k)=>{ const real=el.dataset.c; if(!/[a-z]/i.test(real)) return; el.classList.add('on'); let n=0; const iv=setInterval(()=>{ el.textContent='0123456789'[Math.random()*10|0]; if(++n>5+k*3){ clearInterval(iv); el.textContent=real; el.classList.remove('on'); } },45); }); },850+wi*170)));
+  afterIntro(()=>setTimeout(settle,2600)); })();
 
 /* ============================ DISCOVERY GAME ============================ */
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
