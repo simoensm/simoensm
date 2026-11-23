@@ -51,14 +51,15 @@ body.dark .nav .links a{color:#a7aebb}
 body.dark .nav .links a:hover{color:#fff;background:rgba(255,255,255,.08)}
 body.dark .nav .links a.on{color:#14161a;background:#eef1f6}
 body.dark .nav .cv{background:#eef1f6;color:#14161a}
-/* light and dark switch */
-.nav .thm{width:34px;height:34px;border:0;border-radius:50%;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--ink2);transition:background .3s,color .3s}
-.nav .thm:hover{background:rgba(127,127,127,.12)}
-body.dark .nav .thm{color:#c9d0dc}
-.nav .thm svg{grid-area:1/1;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;transition:transform .6s var(--spring),opacity .4s}
-.nav .thm .moon{fill:currentColor;stroke:none;opacity:0;transform:rotate(-60deg) scale(.6)}
-html.night .nav .thm .sun{opacity:0;transform:rotate(90deg) scale(.6)}
-html.night .nav .thm .moon{opacity:1;transform:none}
+/* light and dark switch: a pill with a clear sun and moon */
+.nav .thm{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.55);display:grid;place-items:center;cursor:pointer;color:#e2a42b;transition:background .3s,border-color .3s,transform .4s var(--spring)}
+.nav .thm:hover{transform:rotate(-12deg)}
+body.dark .nav .thm{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.nav .thm svg{grid-area:1/1;width:20px;height:20px;transition:transform .6s var(--spring),opacity .35s}
+.nav .thm .tsun circle{fill:currentColor}.nav .thm .tsun path{stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.nav .thm .tmoon{color:#c9d6ff;opacity:0;transform:rotate(-70deg) scale(.5)}.nav .thm .tmoon path{fill:currentColor}
+html.night .nav .thm .tsun{opacity:0;transform:rotate(90deg) scale(.5)}
+html.night .nav .thm .tmoon{opacity:1;transform:none}
 /* night theme for the pages */
 html.night{--ink:#eef1f6;--ink2:#a9b0bc;--ink3:#7a828f;--bg:#0b0d11;--line:rgba(255,255,255,.08);--glass:rgba(24,28,37,.58);--glass-b:rgba(255,255,255,.08)}
 html.night .glass{box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 16px 50px -18px rgba(0,0,0,.7)}
@@ -71,6 +72,27 @@ html.night .ctf input:focus,html.night .ctf textarea:focus{background:rgba(255,2
 html.night .ctpills button{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:var(--ink2)}
 html.night .ctpills button.on{background:#eef1f6;color:#14161a;border-color:#eef1f6}
 html.night .idhint{color:#14161a;background:#eef1f6}
+/* night: every surface that had a light background of its own gets a dark one */
+html.night .tags span,html.night .tags button,html.night .skp button,html.night .idlinks a,html.night .ctc .cp,html.night .ctalt a,html.night .ctalt button,
+html.night .gearnav button,html.night .chipsrow button,html.night .more-rv,html.night .svcgrid span,html.night .pj,html.night .pjfacts div,html.night .fmts div,
+html.night .score,html.night .spec,html.night .sheet .note,html.night .sheet .gal div,html.night .cta2 .btns,html.night .masonry .ph-empty{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:var(--ink)}
+html.night .tags span:hover,html.night .tags button:hover,html.night .skp button:hover,html.night .idlinks a:hover,html.night .ctc .cp:hover,html.night .ctalt a:hover,html.night .ctalt button:hover,
+html.night .gearnav button:hover,html.night .chipsrow button:hover,html.night .more-rv:hover,html.night .svcgrid span:hover,html.night .pj:hover,html.night .wbtn:hover{background:rgba(255,255,255,.12)}
+html.night .svcgrid span{color:var(--ink2)}
+html.night .nav .links a:hover{background:rgba(255,255,255,.08)}
+html.night .nav .links a.on{background:#eef1f6;color:#14161a}
+html.night .aibox{background:rgba(18,21,28,.9)}
+html.night .sheet{background:rgba(16,19,26,.82)}
+html.night .sheet .tabs button.on{background:#eef1f6;color:#14161a}
+html.night .tldots button i{background:#1a1e26;border-color:rgba(255,255,255,.18)}
+html.night .tldots button.on i{background:#eef1f6;border-color:#6f95ff}
+html.night .gearnav button,html.night .chipsrow button{color:var(--ink)}
+html.night .more p,html.night .rv p,html.night .sheet p,html.night .sheet li,html.night .pjo,html.night .sheet .tabs button,html.night .pjback{color:var(--ink2)!important}
+html.night .pjback{background:rgba(255,255,255,.08)}
+html.night .pjstack span{background:rgba(255,255,255,.07);color:var(--ink2)}
+html.night .btn.solid,html.night .btn.solid *{color:#14161a}
+html.night .btn.solid:hover{background:#fff}
+html.night .cta2 .btnp{background:#eef1f6;color:#14161a}html.night .cta2 .btnp:hover{background:#fff}html.night .cta2 .btns{color:var(--ink)}
 html.night .idhint::after{background:#eef1f6}
 /* CV viewer */
 #cvm{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:24px;background:rgba(8,10,14,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .35s}
@@ -335,7 +357,7 @@ h2.big{font-size:clamp(34px,4.4vw,58px);font-weight:600;letter-spacing:-.04em;li
 .aibtn{position:fixed;right:22px;bottom:22px;z-index:40;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13.5px;font-weight:500;color:var(--ink);padding:11px 18px;border-radius:999px;cursor:pointer;transition:opacity .5s var(--ease),transform .7s var(--spring),box-shadow .4s}
 .aibtn svg{width:15px;height:15px;color:#3f6bff}
 .aibtn:hover{transform:translateY(-2px);box-shadow:0 18px 40px -18px rgba(20,30,60,.45)}
-body.dark .aibtn,body.ai-open .aibtn{opacity:0;pointer-events:none;transform:translateY(14px)}
+body.away .aibtn,body.ai-open .aibtn{opacity:0;pointer-events:none;transform:translateY(14px)}
 .aimodal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;background:rgba(240,242,246,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
 body.ai-open .aimodal{opacity:1;pointer-events:auto}
 .aibox{position:relative;width:min(1040px,100%);max-height:calc(100vh - 40px);overflow:auto;border-radius:30px;padding:40px 40px 34px;background:rgba(255,255,255,.82);transform:translateY(18px) scale(.98);transition:transform .8s var(--spring)}
@@ -844,7 +866,7 @@ html,body{overflow-x:clip}
     <a data-go="atelier">Projects</a>
     <a data-go="contact">Contact</a>
   </div>
-  <button class="thm" id="thm" aria-label="Switch between light and dark"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><g><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg><svg class="moon" viewBox="0 0 24 24"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6z"/></svg></button>
+  <button class="thm" id="thm" aria-label="Switch between light and dark" title="Light or dark"><svg class="tsun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><g><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg><svg class="tmoon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7z"/><path d="M17 3.2l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6z" opacity=".85"/></svg></button>
   <a class="cv" href="cv.pdf" id="cvbtn">CV</a>
   <button class="burger" id="burger" aria-label="Menu"><i></i><i></i></button>
 </nav>
@@ -1120,6 +1142,7 @@ function show(r){
   const prev=route; route=r; document.body.classList.remove('menu-open'); setTimeout(()=>found(r),900);
   $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===r));
   document.body.classList.toggle('dark', document.documentElement.classList.contains('night') || (r!=='overview'&&r!=='contact'));
+  document.body.classList.toggle('away', r!=='overview'&&r!=='contact');
   $('#v-contact').classList.toggle('on',r==='contact');
   $('#v-overview').classList.toggle('on',r==='overview');
   $('#v-journey').classList.toggle('on',r==='journey');
@@ -2280,7 +2303,8 @@ function initRoom(){
     rod(sh,el,.008); rod([.01,.045,.012],[-.05,.37,.012],.004); rod(el,hp,.007);
     [sh,el,hp].forEach(q=>{ const j=new THREE.Mesh(new THREE.SphereGeometry(.013,12,10),lm); j.position.set(...q); LP.add(j); });
     const hdL=new THREE.Mesh(new THREE.CylinderGeometry(.022,.06,.1,28,1,true),std({color:0x1d1d1f,roughness:.4,metalness:.3,side:THREE.DoubleSide})); hdL.position.set(.24,.39,0); hdL.rotation.z=.65; LP.add(hdL);
-    const bl=new THREE.Mesh(new THREE.CircleGeometry(.05,24),std({color:0x000000,emissive:0xfff1d6,emissiveIntensity:2.2})); bl.position.set(.268,.352,0); bl.rotation.set(Math.PI/2,0,-.65); bl.rotation.order='ZXY'; LP.add(bl);
+    const blM=std({color:0xf4efe6,emissive:0xffe2b0,emissiveIntensity:0,roughness:.3}); window.__ALB=blM; const bulb=new THREE.Mesh(new THREE.SphereGeometry(.024,18,14),blM); bulb.position.set(.243,.372,0); LP.add(bulb);
+    const bl=new THREE.Mesh(new THREE.CircleGeometry(.05,24),std({color:0x1a1a1a,emissive:0xfff1d6,emissiveIntensity:0})); bl.position.set(.268,.352,0); bl.rotation.set(Math.PI/2,0,-.65); bl.rotation.order='ZXY'; LP.add(bl); window.__ALD=bl.material;
     LP.position.set(ax-1.2,.763,az-.28); LP.rotation.y=-.35; LP.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); BE.add(LP); }
   // a glass cookie jar, labelled by hand
   { const J=new THREE.Group(), jr=.058, jh=.13;
@@ -2590,6 +2614,22 @@ function initRoom(){
       fm.opacity=.9*k; core.material.opacity=k; fl.scale.set(1,2.4*f,1); halo.material.opacity=.95*k*f; wall.material.opacity=.6*k*f;
       return Math.floor(t*14)!==Math.floor((t-dt)*14)||was!==k; } }; })();
 
+  /* studio light sources made visible: track spots on the ceiling aimed at the gear rack, a picture light over the gallery */
+  const FIX=(()=>{ const blk=std({color:0x18191c,roughness:.45,metalness:.5}), lens=[];
+    const head=(p,t)=>{ const P=new THREE.Vector3(...p), Tt=new THREE.Vector3(...t), G=new THREE.Group(); G.position.copy(P); scene.add(G);
+      C(G,.006,.006,3.12-P.y,blk,0,(3.12-P.y)/2,0,8);
+      const can=new THREE.Group(); G.add(can); const body=C(can,.045,.04,.15,blk,0,0,0,24); const ring=C(can,.047,.047,.012,std({color:0x2a2b2f,roughness:.3,metalness:.7}),0,-.075,0,24);
+      const lm=new THREE.MeshBasicMaterial({color:0x2a2622}); const ls=new THREE.Mesh(new THREE.CircleGeometry(.034,24),lm); ls.rotation.x=Math.PI/2; ls.position.y=-.082; can.add(ls); lens.push(lm);
+      can.quaternion.setFromUnitVectors(new THREE.Vector3(0,-1,0),Tt.clone().sub(P).normalize()); return G; };
+    B(scene,3.4,.025,.035,blk,-3.3,3.12,BZ+1.4,.004);
+    head([sx,2.9,BZ+1.4],[sx,1.45,BZ+.1]); head([sx-1.3,2.9,BZ+1.4],[-4.6,1.9,BZ]);
+    // picture light: a slim brass bar above the frames
+    const brass=std({color:0xb08a4a,roughness:.35,metalness:.8}); C(scene,.014,.014,1.6,brass,gx,2.5,BZ+.16,16).rotation.z=Math.PI/2;
+    [-.6,.6].forEach(o=>{ const a=C(scene,.006,.006,.16,brass,gx+o,2.52,BZ+.08,10); a.rotation.x=Math.PI/2; });
+    const pm=new THREE.MeshBasicMaterial({color:0x2a2622}); const pb=new THREE.Mesh(new THREE.BoxGeometry(1.56,.006,.02),pm); pb.position.set(gx,2.486,BZ+.165); scene.add(pb); lens.push(pm);
+    return { set(e){ const c=new THREE.Color(0x2a2622).lerp(new THREE.Color(0xfff0d8),e); lens.forEach(m=>m.color.copy(c)); } }; })();
+  pLight.position.set(gx,2.48,BZ+.2); pLight.target.position.set(gx,1.6,BZ); pLight.angle=1.05; pLight.penumbra=1;
+
   /* night: ceiling lights and daylight go out, the real lamps come on, and the view outside turns from sunset to night */
   const NIGHT=(()=>{ const warm=0xffd6a8;
     const mk=(c,p,t,a,pen=.75)=>{ const l=new THREE.SpotLight(c,0,4.5,a,pen,1.4); l.position.set(...p); l.target.position.set(...t); scene.add(l,l.target); return l; };
@@ -2613,13 +2653,15 @@ function initRoom(){
     const o1=new THREE.Mesh(new THREE.PlaneGeometry(1.22,.7),new THREE.MeshBasicMaterial({map:sky1,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false})); o1.position.set(ax,1.88,BZ+.008); A.add(o1);
     const o2=new THREE.Mesh(new THREE.PlaneGeometry(1.22,.7),new THREE.MeshBasicMaterial({map:sky2,transparent:true,opacity:0,depthWrite:false,fog:false})); o2.position.set(ax,1.88,BZ+.009); A.add(o2);
     const view=WIN.children.find(o=>o.material&&o.material.emissiveMap===WIN.userData.outT);
-    const H0=hemi.intensity, S0=sun.intensity, F0=fill.intensity, E0=scene.environmentIntensity, K0=keyL.intensity, X0=renderer.toneMappingExposure;
+    const H0=hemi.intensity, S0=sun.intensity, F0=fill.intensity, E0=scene.environmentIntensity, K0=keyL.intensity, X0=renderer.toneMappingExposure, G0=gLight.intensity, P0=pLight.intensity, ST0=strip.material.emissiveIntensity;
+    gLight.color.set(0xffe4c4); gLight.penumbra=1;
     let k=document.documentElement.classList.contains('night')?1:0, kw=k, last=0;
     const sm=x=>x*x*(3-2*x);
     const apply=()=>{ const e=sm(k), w=sm(kw);
-      hemi.intensity=H0*(1-.94*e); sun.intensity=S0*(1-e); fill.intensity=F0*(1-.85*e); scene.environmentIntensity=E0*(1-.9*e); renderer.toneMappingExposure=X0*(1-.12*e);
-      CEIL.forEach(l=>l.intensity=l.userData.i0*(1-e)); keyL.intensity=K0*(1+.3*e);
-      dl.intensity=5*e; bl.intensity=7*e; wl.intensity=5*e; barL.emissiveIntensity=3*e; pbL.emissiveIntensity=3*e;
+      hemi.intensity=H0*(1-.95*e); sun.intensity=S0*(1-e); scene.environmentIntensity=E0*(1-.9*e); renderer.toneMappingExposure=X0*(1-.12*e);
+      CEIL.forEach(l=>l.intensity=l.userData.i0*(1-e)); keyL.intensity=K0*.9*e; gLight.intensity=G0*.8*e; pLight.intensity=P0*e; strip.material.emissiveIntensity=ST0*e; FIX.set(e);
+      if(window.__ALB){ window.__ALB.emissiveIntensity=3.5*e; window.__ALD.emissiveIntensity=1.6*e; }
+      dl.intensity=6*e; bl.intensity=6*e; wl.intensity=4.5*e; fill.intensity=F0*.6*e; barL.emissiveIntensity=3*e; pbL.emissiveIntensity=3*e;
       o1.material.opacity=Math.sin(Math.PI*Math.min(1,w*1.15))*.75; o2.material.opacity=Math.max(0,(w-.35)/.65)*.92; if(view) view.material.emissiveIntensity=.5*(1-.8*w); };
     apply();
     return { get on(){ return k>.5; }, update(t){ const dt=Math.min(.05,t-last); last=t; const want=document.documentElement.classList.contains('night')?1:0;
