@@ -51,6 +51,37 @@ body.dark .nav .links a{color:#a7aebb}
 body.dark .nav .links a:hover{color:#fff;background:rgba(255,255,255,.08)}
 body.dark .nav .links a.on{color:#14161a;background:#eef1f6}
 body.dark .nav .cv{background:#eef1f6;color:#14161a}
+/* light and dark switch */
+.nav .thm{width:34px;height:34px;border:0;border-radius:50%;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--ink2);transition:background .3s,color .3s}
+.nav .thm:hover{background:rgba(127,127,127,.12)}
+body.dark .nav .thm{color:#c9d0dc}
+.nav .thm svg{grid-area:1/1;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;transition:transform .6s var(--spring),opacity .4s}
+.nav .thm .moon{fill:currentColor;stroke:none;opacity:0;transform:rotate(-60deg) scale(.6)}
+html.night .nav .thm .sun{opacity:0;transform:rotate(90deg) scale(.6)}
+html.night .nav .thm .moon{opacity:1;transform:none}
+/* night theme for the pages */
+html.night{--ink:#eef1f6;--ink2:#a9b0bc;--ink3:#7a828f;--bg:#0b0d11;--line:rgba(255,255,255,.08);--glass:rgba(24,28,37,.58);--glass-b:rgba(255,255,255,.08)}
+html.night .glass{box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 16px 50px -18px rgba(0,0,0,.7)}
+html.night .aura{opacity:.32}
+html.night body,html.night .glass,html.night .chip{transition:background-color .6s,color .6s,border-color .6s}
+html.night .btn.solid{background:#eef1f6;color:#14161a}
+html.night .nav .cv{background:#eef1f6;color:#14161a}
+html.night .ctf input,html.night .ctf textarea{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}
+html.night .ctf input:focus,html.night .ctf textarea:focus{background:rgba(255,255,255,.08)}
+html.night .ctpills button{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:var(--ink2)}
+html.night .ctpills button.on{background:#eef1f6;color:#14161a;border-color:#eef1f6}
+html.night .idhint{color:#14161a;background:#eef1f6}
+html.night .idhint::after{background:#eef1f6}
+/* CV viewer */
+#cvm{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:24px;background:rgba(8,10,14,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .35s}
+#cvm.on{display:grid}#cvm.vis{opacity:1}
+#cvm .cvp{width:min(900px,100%);height:min(92vh,1200px);border-radius:24px;padding:12px;display:flex;flex-direction:column;gap:10px;transform:translateY(14px) scale(.98);transition:transform .5s var(--spring)}
+#cvm.vis .cvp{transform:none}
+#cvm .cvh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 6px 0 10px}
+#cvm .cvh b{font-weight:600;font-size:15px}
+#cvm .cvh span{display:flex;gap:8px}
+#cvm .cvh .btn{padding:8px 14px;font-size:13px}
+#cvm iframe{flex:1;width:100%;border:0;border-radius:14px;background:#fff}
 .burger{display:none;width:36px;height:36px;border:0;background:none;cursor:pointer;position:relative}
 .burger i{position:absolute;left:10px;right:10px;height:1.5px;background:currentColor;transition:transform .3s}
 .burger i:first-child{top:14px}.burger i:last-child{top:21px}
@@ -796,7 +827,7 @@ html,body{overflow-x:clip}
 </head>
 <body>
 <div id="intro" aria-hidden="true"><i class="iris"></i><div class="in-rw"><i class="in-gl"></i><i class="rg o"></i><i class="rg i"></i><i class="ar o"></i><i class="ar i"></i></div></div>
-<script>(function(){ var H=document.documentElement; H.classList.add('pre');
+<script>(function(){ var H=document.documentElement; H.classList.add('pre'); try{ var t=localStorage.getItem('ms-theme'); if(t==='night'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)) H.classList.add('night'); }catch(e){}
   var done=function(){ H.classList.remove('pre'); window.__introDone&&window.__introDone(); };
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){ done(); return; }
   // fixed, short timing that does not wait for the rest of the site: rings in, then the iris opens from their centre
@@ -813,7 +844,8 @@ html,body{overflow-x:clip}
     <a data-go="atelier">Projects</a>
     <a data-go="contact">Contact</a>
   </div>
-  <a class="cv" href="https://github.com/simoensm/simoensm/blob/main/cv.pdf" target="_blank" rel="noopener">CV</a>
+  <button class="thm" id="thm" aria-label="Switch between light and dark"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><g><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg><svg class="moon" viewBox="0 0 24 24"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6z"/></svg></button>
+  <a class="cv" href="cv.pdf" id="cvbtn">CV</a>
   <button class="burger" id="burger" aria-label="Menu"><i></i><i></i></button>
 </nav>
 
@@ -831,7 +863,7 @@ html,body{overflow-x:clip}
           <li><span>Running</span><b>Above Belgium, self-employed student entrepreneur</b></li>
           <li><span>Speaks</span><b>French · Dutch · English</b></li>
         </ul>
-        <div class="idlinks"><a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a><a href="mailto:mathias.simoens@student.uclouvain.be">Email</a><a href="https://github.com/simoensm/simoensm/blob/main/cv.pdf" target="_blank" rel="noopener">CV</a></div>
+        <div class="idlinks"><a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a><a href="mailto:mathias.simoens@student.uclouvain.be">Email</a><a href="cv.pdf" class="cvlink">CV</a></div>
       </div></div>
     </div></div>
     <div class="eyb" id="eyb">Portfolio</div>
@@ -995,6 +1027,7 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
 <path d="M0,-30 L5,-12 L6,2 L40,18 L40,25 L6,16 L5,34 L15,42 L15,47 L0,43 L-15,47 L-15,42 L-5,34 L-6,16 L-40,25 L-40,18 L-6,2 L-5,-12 Z" fill="#7a4e0c" opacity=".9" transform="translate(0,6) scale(1.05)"/>
 <path d="M0,-30 L5,-12 L6,2 L40,18 L40,25 L6,16 L5,34 L15,42 L15,47 L0,43 L-15,47 L-15,42 L-5,34 L-6,16 L-40,25 L-40,18 L-6,2 L-5,-12 Z" fill="#ffe7a0" opacity=".35" transform="translate(-1.2,4.6) scale(1.05)"/>
 <text y="70" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9.5" letter-spacing="2.4" fill="#6b4208">BELGIAN AIR COMPONENT</text></svg><i class="shine"></i></div></div><div class="mcap">A golden medal for persistence.</div></div>
+<div id="cvm" aria-hidden="true"><div class="cvp glass"><div class="cvh"><b>Curriculum vitae</b><span><a class="btn" href="cv.pdf" download>Download</a><a class="btn" href="cv.pdf" target="_blank" rel="noopener">Open</a><button class="btn solid" id="cvx">Close</button></span></div><iframe id="cvf" title="CV of Mathias Simoens"></iframe></div></div>
 <div id="glitch" aria-hidden="true"><div class="bars"></div><div class="sl"></div><div class="sl"></div><div class="sl"></div><div class="err" id="gerr"><div class="eh"><i></i>FATAL</div><div class="eb"><b>ERROR</b><p id="gmsg">simoensm.github.io has stopped responding.<br>Unexpected token in /egg. The website will close now.</p><div class="eq"><u></u></div></div></div></div>
 <div class="toast dglass" id="toast"></div>
 
@@ -1053,6 +1086,16 @@ afterIntro(()=>setTimeout(()=>document.getElementById('idcard')?.classList.remov
     setTimeout(()=>{ ws.forEach(w=>w.classList.add('sharp')); goto(ws,'lock'); },T); setTimeout(()=>afb.classList.add('gone'),T+320); setTimeout(()=>{ afb.remove(); h.classList.remove('af'); },T+800); });
   afterIntro(()=>setTimeout(settle,3400)); })();
 
+/* light and dark: remembered in this browser, follows the system the first time */
+(()=>{ const H=document.documentElement, b=document.getElementById('thm'); if(!b) return;
+  b.addEventListener('click',()=>{ const n=!H.classList.contains('night'); H.classList.toggle('night',n); try{ localStorage.setItem('ms-theme',n?'night':'day'); }catch(e){} document.body.classList.toggle('dark',n||!['overview','contact'].includes(route)); });
+  if(H.classList.contains('night')) document.body.classList.add('dark'); })();
+/* the CV opens in a viewer here; on phones it opens the PDF itself */
+(()=>{ const a=document.getElementById('cvbtn'), M=document.getElementById('cvm'), F=document.getElementById('cvf'); if(!a||!M) return;
+  const close=()=>{ M.classList.remove('vis'); setTimeout(()=>M.classList.remove('on'),350); };
+  links.forEach(l=>l.addEventListener('click',e=>{ if(innerWidth<760) return; e.preventDefault(); if(!F.src) F.src='cv.pdf#view=FitH'; M.classList.add('on'); requestAnimationFrame(()=>M.classList.add('vis')); }));
+  document.getElementById('cvx').onclick=close; M.addEventListener('click',e=>{ if(e.target===M) close(); }); addEventListener('keydown',e=>{ if(e.key==='Escape'&&M.classList.contains('on')) close(); }); })();
+
 /* ============================ DISCOVERY GAME ============================ */
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
 window.found=(...a)=>found(...a);
@@ -1076,7 +1119,7 @@ function show(r){
   if(!ROUTES.includes(r)) r='overview';
   const prev=route; route=r; document.body.classList.remove('menu-open'); setTimeout(()=>found(r),900);
   $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===r));
-  document.body.classList.toggle('dark', r!=='overview'&&r!=='contact');
+  document.body.classList.toggle('dark', document.documentElement.classList.contains('night') || (r!=='overview'&&r!=='contact'));
   $('#v-contact').classList.toggle('on',r==='contact');
   $('#v-overview').classList.toggle('on',r==='overview');
   $('#v-journey').classList.toggle('on',r==='journey');
@@ -1848,12 +1891,12 @@ function initRoom(){
   const rug=new THREE.Mesh(new THREE.PlaneGeometry(3.2,2.0),mat.rug); rug.rotation.x=-Math.PI/2; rug.position.set(-4.3,.006,-1.7); rug.receiveShadow=true; shell.add(rug);
 
   /* lights */
-  scene.add(new THREE.HemisphereLight(0xf2efe9,0x3a3029,.55));
+  const hemi=new THREE.HemisphereLight(0xf2efe9,0x3a3029,.55); scene.add(hemi);
   const sun=new THREE.DirectionalLight(0xfff1dc,1.6); sun.position.set(-12,4.5,-.4); sun.target.position.set(-4,0,-1.5);
   sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-6,right:6,top:4,bottom:-3,near:1,far:20}); sun.shadow.bias=-.0003; sun.shadow.radius=6; scene.add(sun,sun.target);
   const spot=(c,i,p,t,a=.6,sh=true)=>{ const s=new THREE.SpotLight(c,i,14,a,.85,1.5); s.position.set(...p); s.target.position.set(...t); s.castShadow=sh; s.shadow.mapSize.set(1024,1024); s.shadow.bias=-.0004; s.shadow.radius=5; scene.add(s,s.target); return s; };
-  spot(0xffe2bf,14,[-4.3,3.1,.4],[-4.3,0,-2.2],.7); spot(0xfff0dc,9,[-2.0,3.1,.2],[-1.9,1.2,-3.1],.45,false);
-  spot(0xe9efff,16,[3.6,3.1,.4],[3.6,0,-2.3],.7); spot(0xffd6a0,10,[6.6,2.6,-1.3],[6.7,.8,-2.8],.55);
+  const CEIL=[]; CEIL.push(spot(0xffe2bf,14,[-4.3,3.1,.4],[-4.3,0,-2.2],.7)); CEIL.push(spot(0xfff0dc,9,[-2.0,3.1,.2],[-1.9,1.2,-3.1],.45,false));
+  CEIL.push(spot(0xe9efff,16,[3.6,3.1,.4],[3.6,0,-2.3],.7)); CEIL.push(spot(0xffd6a0,10,[6.6,2.6,-1.3],[6.7,.8,-2.8],.55)); CEIL.forEach(l=>l.userData.i0=l.intensity);
 
   /* -------- STUDIO -------- */
   const S=new THREE.Group(); scene.add(S);
@@ -2547,6 +2590,41 @@ function initRoom(){
       fm.opacity=.9*k; core.material.opacity=k; fl.scale.set(1,2.4*f,1); halo.material.opacity=.95*k*f; wall.material.opacity=.6*k*f;
       return Math.floor(t*14)!==Math.floor((t-dt)*14)||was!==k; } }; })();
 
+  /* night: ceiling lights and daylight go out, the real lamps come on, and the view outside turns from sunset to night */
+  const NIGHT=(()=>{ const warm=0xffd6a8;
+    const mk=(c,p,t,a,pen=.75)=>{ const l=new THREE.SpotLight(c,0,4.5,a,pen,1.4); l.position.set(...p); l.target.position.set(...t); scene.add(l,l.target); return l; };
+    // atelier desk lamp
+    const dl=mk(warm,[ax-.95,1.12,az-.28],[ax-.65,.76,az-.05],.75,.8);
+    // workbench: a slim LED bar on top of the pegboard
+    const barM=std({color:0x1d1d1f,roughness:.4,metalness:.5}), barL=std({color:0x000000,emissive:0xfff3e2,emissiveIntensity:0});
+    B(A,.9,.03,.06,barM,ex,2.0,BZ+.07,.006); const ledB=new THREE.Mesh(new THREE.BoxGeometry(.86,.006,.04),barL); ledB.position.set(ex,1.983,BZ+.07); A.add(ledB);
+    [-.38,.38].forEach(o=>B(A,.02,.02,.1,barM,ex+o,2.0,BZ+.03,.004));
+    const bl=mk(0xfff1de,[ex,1.98,BZ+.25],[ex,.76,ez+.1],.95,.6);
+    // whiteboard: a brass picture light on an arm
+    const brass=std({color:0xb08a4a,roughness:.35,metalness:.8}), pbL=std({color:0x000000,emissive:0xffe9c8,emissiveIntensity:0});
+    C(A,.012,.012,.6,brass,1.0,2.29,BZ+.13,16).rotation.z=Math.PI/2; const pb=new THREE.Mesh(new THREE.BoxGeometry(.56,.006,.016),pbL); pb.position.set(1.0,2.276,BZ+.14); A.add(pb);
+    const arm=C(A,.006,.006,.14,brass,1.0,2.29,BZ+.07,10); arm.rotation.x=Math.PI/2;
+    const wl=mk(0xffecd0,[1.0,2.3,BZ+.32],[1.0,1.7,BZ],.95,.55);
+    // the outside view: a sunset glow, then the night sky
+    const sky1=T(512,300,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'rgba(80,60,140,.35)'); gr.addColorStop(.35,'rgba(255,120,80,.55)'); gr.addColorStop(.55,'rgba(255,170,90,.6)'); gr.addColorStop(1,'rgba(120,60,40,.35)'); g.fillStyle=gr; g.fillRect(0,0,w,h); });
+    const sky2=T(512,300,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'rgba(6,10,28,.96)'); gr.addColorStop(.45,'rgba(14,22,50,.9)'); gr.addColorStop(1,'rgba(6,9,20,.92)'); g.fillStyle=gr; g.fillRect(0,0,w,h);
+      for(let i=0;i<120;i++){ g.fillStyle=`rgba(255,255,255,${.3+Math.random()*.6})`; g.beginPath(); g.arc(Math.random()*w,Math.random()*h*.45,Math.random()*1.1+.3,0,7); g.fill(); }
+      g.fillStyle='rgba(240,236,220,.95)'; g.beginPath(); g.arc(w*.78,h*.16,9,0,7); g.fill(); g.fillStyle='rgba(255,214,140,.9)'; [[w*.62,h*.6],[w*.66,h*.61],[w*.7,h*.6]].forEach(([x,y])=>g.fillRect(x,y,3,3)); });
+    const o1=new THREE.Mesh(new THREE.PlaneGeometry(1.22,.7),new THREE.MeshBasicMaterial({map:sky1,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false})); o1.position.set(ax,1.88,BZ+.008); A.add(o1);
+    const o2=new THREE.Mesh(new THREE.PlaneGeometry(1.22,.7),new THREE.MeshBasicMaterial({map:sky2,transparent:true,opacity:0,depthWrite:false,fog:false})); o2.position.set(ax,1.88,BZ+.009); A.add(o2);
+    const view=WIN.children.find(o=>o.material&&o.material.emissiveMap===WIN.userData.outT);
+    const H0=hemi.intensity, S0=sun.intensity, F0=fill.intensity, E0=scene.environmentIntensity, K0=keyL.intensity, X0=renderer.toneMappingExposure;
+    let k=document.documentElement.classList.contains('night')?1:0, kw=k, last=0;
+    const sm=x=>x*x*(3-2*x);
+    const apply=()=>{ const e=sm(k), w=sm(kw);
+      hemi.intensity=H0*(1-.94*e); sun.intensity=S0*(1-e); fill.intensity=F0*(1-.85*e); scene.environmentIntensity=E0*(1-.9*e); renderer.toneMappingExposure=X0*(1-.12*e);
+      CEIL.forEach(l=>l.intensity=l.userData.i0*(1-e)); keyL.intensity=K0*(1+.3*e);
+      dl.intensity=5*e; bl.intensity=7*e; wl.intensity=5*e; barL.emissiveIntensity=3*e; pbL.emissiveIntensity=3*e;
+      o1.material.opacity=Math.sin(Math.PI*Math.min(1,w*1.15))*.75; o2.material.opacity=Math.max(0,(w-.35)/.65)*.92; if(view) view.material.emissiveIntensity=.5*(1-.8*w); };
+    apply();
+    return { get on(){ return k>.5; }, update(t){ const dt=Math.min(.05,t-last); last=t; const want=document.documentElement.classList.contains('night')?1:0;
+      if(k===want&&kw===want) return false; k=want>k?Math.min(want,k+dt/1.3):Math.max(want,k-dt/1.3); kw=want>kw?Math.min(want,kw+dt/3.4):Math.max(want,kw-dt/1.6); apply(); shadowFrames=Math.max(shadowFrames,1); return true; } }; })();
+
   /* the cat: a brown tabby who wanders between the studio and the atelier, as he always did */
   const CAT=(()=>{ const tabby=(rings)=>T(512,256,(g,w,h)=>{ g.fillStyle='#6f5c46'; g.fillRect(0,0,w,h);
       for(let i=0;i<9000;i++){ const r=Math.random(); g.fillStyle=r<.5?`rgba(30,24,18,${Math.random()*.35})`:`rgba(196,170,130,${Math.random()*.3})`; g.fillRect(Math.random()*w,Math.random()*h,1,2+Math.random()*3); }
@@ -2744,7 +2822,7 @@ function initRoom(){
     const hg= hz ? hz : null; if(hg&&hg.group!==outlined){ outlined=hg.group; outline.selectedObjects=[outlined]; }
     outline.edgeStrength+=((hg?3.2:0)-outline.edgeStrength)*.12; outline.enabled=outline.edgeStrength>.02;
     // desk lamp: on while hovered, or while the desk is open
-    LAMP.want= (onLamp&&!focused) || focused==='macbook' ? 1 : 0; if(Math.abs(LAMP.want-LAMP.on)>.002){ LAMP.set(LAMP.on+(LAMP.want-LAMP.on)*.08); dirty=2; shadowFrames=Math.max(shadowFrames,1); }
+    LAMP.want= NIGHT.on || (onLamp&&!focused) || focused==='macbook' ? 1 : 0; if(Math.abs(LAMP.want-LAMP.on)>.002){ LAMP.set(LAMP.on+(LAMP.want-LAMP.on)*.08); dirty=2; shadowFrames=Math.max(shadowFrames,1); }
     if(!focused&&moved&&now-lastPick>50){ moved=false; lastPick=now; const id=pick(); if(id!==hov){ if(id==='candle') CND.toggle(); hov=id; canvas.style.cursor=(id||onLink)?'pointer':'default'; hot.forEach(h=>h.el&&h.el.classList.toggle('hot',h.id===id||(h.id==='gear'&&/^g-/.test(id||''))||(h.id==='portfolio'&&/^pf-/.test(id||'')))); } }
     hot.forEach(h=>{ if(!h.el) return; tmp.copy(h.anchor).project(camera); const vis=tmp.z<1&&Math.abs(tmp.x)<.95&&Math.abs(tmp.y)<.95&&h.side===side&&!tw; h.el.classList.toggle('vis',vis); h.el.style.left=((tmp.x+1)/2*innerWidth)+'px'; h.el.style.top=((1-tmp.y)/2*innerHeight)+'px'; });
     const ledOn=(t%1.6)<.8; if(led.userData.on!==ledOn){ led.userData.on=ledOn; led.material.emissiveIntensity=ledOn?3:.6; dirty=Math.max(dirty,1); }
@@ -2756,6 +2834,7 @@ function initRoom(){
     { const o=WIN.userData.outT; o.offset.x=.07+Math.max(-.07,Math.min(.07,(camera.position.x-ax)*.02)); o.offset.y=.07+Math.max(-.07,Math.min(.07,(camera.position.y-1.88)*-.03)); }
     { const S=WIN.userData.sh; if(S.go&&S.k<1){ S.k=Math.min(1,(t-S.t0)/.9); const e=1-Math.pow(1-S.k,3); S.set(e); dirty=Math.max(dirty,1); } }
     { const om=window.__OSC, ph=t%4.7; if(om){ const f=ph<.32?(Math.random()<.5?.08:1.1):(ph<.36?.75:null); if(f!==null){ om.emissiveIntensity=f; om.opacity=1; dirty=Math.max(dirty,1); } } }
+    if(NIGHT.update(t)) dirty=Math.max(dirty,1);
     if(CND.update(t)) dirty=Math.max(dirty,1);
     if(CAT.update(t,camera)) dirty=Math.max(dirty,1);
     if(duck.userData.spin) dirty=2;
