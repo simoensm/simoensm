@@ -166,33 +166,26 @@ body.dark .burger{color:#eef1f6}
 .hero h1{font-size:clamp(44px,6.6vw,92px);line-height:1;font-weight:600;letter-spacing:-.045em;margin-top:34px;max-width:980px}
 /* opening: the same soft rise as the cards, line by line */
 .hero{position:relative}
-/* loading intro: the outer ring is the progress, the inner one turns; at 100 the page opens through a circle from the rings */
-@property --hole{syntax:'<length>';inherits:false;initial-value:0px}
-#intro{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:var(--bg);--hx:50%;--hy:46%;-webkit-mask:radial-gradient(circle at var(--hx) var(--hy),transparent var(--hole),#000 calc(var(--hole) + 1px));mask:radial-gradient(circle at var(--hx) var(--hy),transparent var(--hole),#000 calc(var(--hole) + 1px))}
+/* loading intro: only transform and opacity move, so it stays fluid while the page starts up underneath */
+#intro{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:var(--bg);transition:opacity .9s cubic-bezier(.65,0,.35,1) .15s;will-change:opacity}
 html:not(.pre) #intro{display:none}
-#intro.out{animation:inhole 1.25s cubic-bezier(.65,0,.35,1) forwards}
-@keyframes inhole{to{--hole:150vmax}}
-/* one continuous timeline: both rings draw on a single ease, a soft light circles them, then the mark grows as the page opens through it */
-#intro .in-rw{position:relative;width:104px;height:104px;transition:transform 1.2s cubic-bezier(.65,0,.35,1),opacity .9s cubic-bezier(.65,0,.35,1) .15s;will-change:transform,opacity}
-#intro.out .in-rw{transform:scale(3.2);opacity:0}
-#intro .in-gl{position:absolute;inset:-70%;border-radius:50%;background:radial-gradient(closest-side,rgba(111,149,255,.2),rgba(111,149,255,0) 72%);opacity:0;animation:inglow 1.8s cubic-bezier(.45,0,.55,1) .1s forwards}
-@keyframes inglow{to{opacity:1}}
-#intro .in-r{position:relative;width:100%;height:100%;overflow:visible;animation:inbreath 3.2s cubic-bezier(.45,0,.55,1) infinite}
-@keyframes inbreath{50%{transform:scale(1.025)}}
-#intro .in-r circle{fill:none;stroke-width:2.9;stroke-linecap:round}
-#intro .in-r .t{stroke:rgba(20,22,26,.05)}
-#intro .in-r .a,#intro .in-r .b{stroke:#8a8f98;transform-origin:32px 32px}
-#intro .in-r .a{stroke-dasharray:141.4;stroke-dashoffset:141.4;transform:rotate(-90deg);animation:drawA 1.6s cubic-bezier(.65,0,.35,1) .15s forwards}
-#intro .in-r .b{stroke-dasharray:94.3;stroke-dashoffset:-94.3;transform:rotate(-90deg);animation:drawB 1.6s cubic-bezier(.65,0,.35,1) .3s forwards}
-@keyframes drawA{to{stroke-dashoffset:0}}
-@keyframes drawB{to{stroke-dashoffset:0}}
-#intro .in-r .cm,#intro .in-r .cm2{transform-origin:32px 32px;opacity:0;animation:cmin .5s ease .2s forwards,cmrot 1.6s linear infinite;transition:opacity .6s cubic-bezier(.65,0,.35,1)}
-#intro .in-r .cm2{animation:cmin .5s ease .35s forwards,cmrot 2.1s linear infinite reverse}
-#intro .in-r .cm circle{stroke:url(#incm);stroke-dasharray:24 118}
-#intro .in-r .cm2 circle{stroke:url(#incm);stroke-dasharray:15 80}
-@keyframes cmin{to{opacity:.9}}
-@keyframes cmrot{to{transform:rotate(360deg)}}
-#intro.full .in-r .cm,#intro.full .in-r .cm2{animation:cmrot 1.6s linear infinite;opacity:0}
+#intro.out{opacity:0;pointer-events:none}
+#intro .in-rw{position:relative;width:104px;height:104px;transition:transform 1.1s cubic-bezier(.65,0,.35,1),opacity .8s cubic-bezier(.65,0,.35,1);will-change:transform,opacity}
+#intro.out .in-rw{transform:scale(2.4);opacity:0}
+#intro .in-rw>i{position:absolute;left:50%;top:50%;border-radius:50%;will-change:transform,opacity}
+#intro .in-gl{width:260px;height:260px;margin:-130px 0 0 -130px;background:radial-gradient(closest-side,rgba(111,149,255,.2),rgba(111,149,255,0) 72%);opacity:0;animation:infade 1.6s cubic-bezier(.45,0,.55,1) .1s forwards,inbreath 3.2s cubic-bezier(.45,0,.55,1) 1.7s infinite}
+#intro .rg{border:4.6px solid #8a8f98;opacity:0;transform:scale(.6)}
+#intro .rg.o{width:73px;height:73px;margin:-36.5px 0 0 -36.5px;animation:ringin 1.2s cubic-bezier(.16,1,.3,1) .15s forwards}
+#intro .rg.i{width:49px;height:49px;margin:-24.5px 0 0 -24.5px;animation:ringin 1.2s cubic-bezier(.16,1,.3,1) .32s forwards}
+@keyframes ringin{to{opacity:1;transform:none}}
+/* a soft arc of light circling each ring */
+#intro .ar{border:4.6px solid transparent;opacity:0}
+#intro .ar.o{width:73px;height:73px;margin:-36.5px 0 0 -36.5px;border-top-color:rgba(157,182,255,.95);border-right-color:rgba(111,149,255,.25);animation:infade .6s ease .55s forwards,arspin 1.5s linear infinite}
+#intro .ar.i{width:49px;height:49px;margin:-24.5px 0 0 -24.5px;border-bottom-color:rgba(157,182,255,.85);border-left-color:rgba(111,149,255,.2);animation:infade .6s ease .7s forwards,arspin 2s linear infinite reverse}
+@keyframes arspin{to{transform:rotate(360deg)}}
+@keyframes infade{to{opacity:1}}
+@keyframes inbreath{50%{transform:scale(1.06)}}
+#intro.full .ar{opacity:0!important;transition:opacity .5s cubic-bezier(.65,0,.35,1);animation:arspin 1.5s linear infinite}
 /* everything on the home page waits for the intro */
 html.pre .hero,html.pre .hero *,html.pre .hero::before{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){#intro{display:none}}
@@ -803,11 +796,7 @@ html,body{overflow-x:clip}
 </style>
 </head>
 <body>
-<div id="intro" aria-hidden="true"><div class="in-rw"><i class="in-gl"></i><svg class="in-r" viewBox="0 0 64 64">
-  <defs><linearGradient id="incm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f95ff" stop-opacity="0"/><stop offset=".7" stop-color="#9db6ff"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs>
-  <circle class="t" cx="32" cy="32" r="22.5"/><circle class="t" cx="32" cy="32" r="15"/>
-  <circle class="a" id="inring" cx="32" cy="32" r="22.5"/><circle class="b" id="inring2" cx="32" cy="32" r="15"/>
-  <g class="cm"><circle cx="32" cy="32" r="22.5"/></g><g class="cm2"><circle cx="32" cy="32" r="15"/></g></svg></div></div>
+<div id="intro" aria-hidden="true"><div class="in-rw"><i class="in-gl"></i><i class="rg o"></i><i class="rg i"></i><i class="ar o"></i><i class="ar i"></i></div></div>
 <script>document.documentElement.classList.add('pre');</script>
 <div class="aura"><i></i><i></i><i></i></div>
 
@@ -1042,9 +1031,8 @@ afterIntro(()=>setTimeout(()=>document.getElementById('idcard')?.classList.remov
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){ H.classList.remove('pre'); window.__introDone(); return; }
   let loaded=false; const t0=performance.now();
   Promise.all([document.fonts?document.fonts.ready:0,new Promise(r=>document.readyState==='loading'?addEventListener('DOMContentLoaded',r,{once:true}):r())]).then(()=>loaded=true);
-  const finish=()=>{ I.classList.add('full'); const r=I.querySelector('.in-r').getBoundingClientRect(); I.style.setProperty('--hx',(r.left+r.width/2)+'px'); I.style.setProperty('--hy',(r.top+r.height/2)+'px');
-    setTimeout(()=>{ I.classList.add('out'); setTimeout(()=>{ H.classList.remove('pre'); window.__introDone(); },420); },260); };
-  const wait=()=>{ const el=performance.now()-t0; if((el>=1950&&loaded)||el>2800) finish(); else requestAnimationFrame(wait); }; requestAnimationFrame(wait); })();
+  const finish=()=>{ I.classList.add('full'); setTimeout(()=>{ I.classList.add('out'); setTimeout(()=>{ H.classList.remove('pre'); window.__introDone(); },520); setTimeout(()=>I.remove(),1300); },380); };
+  const wait=()=>{ const el=performance.now()-t0; if((el>=1700&&loaded)||el>2800) finish(); else requestAnimationFrame(wait); }; requestAnimationFrame(wait); })();
 /* hero opening: the title becomes two lines that rise in one after the other; line two then decodes from digits */
 (()=>{ const h=document.getElementById('htitle'); if(!h) return; const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   // the label shows when the site was last updated
@@ -1251,7 +1239,7 @@ const Journey={};
 let globeStarted=false;
 const loadScript=src=>new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
 /* the overview's journey panel shows the same globe: explored countries in colour, the rest locked */
-(async()=>{ const cv=$('#miniGlobe'); if(!cv) return; let world;
+afterIntro(()=>setTimeout(()=>(async()=>{ const cv=$('#miniGlobe'); if(!cv) return; let world;
   try{ world=(await geo('worldLow')).filter(f=>f.properties&&f.properties.id!=='AQ'); }catch(e){ return; }
   const D=Math.PI/180, shapes=world.map(f=>{ const g=f.geometry, L= g.type==='Polygon'?[g.coordinates]:g.type==='MultiPolygon'?g.coordinates:[]; return {id:f.properties.id, rings:L.map(p=>p[0]).filter(r=>r&&r.length>2)}; });
   const g=cv.getContext('2d'); let W=0,H=0,R=0,cx=0,cy=0,lon0=-10,run=false,last=0, s0=Math.sin(24*D), c0=Math.cos(24*D);
@@ -1276,7 +1264,7 @@ const loadScript=src=>new Promise((res,rej)=>{ const s=document.createElement('s
     if(!reduce&&!over) lon0-=dt*.006; spin+=(wSpin-spin)*Math.min(1,dt*.006); tilt+=(wTilt-tilt)*Math.min(1,dt*.006); s0=Math.sin(tilt*D); c0=Math.cos(tilt*D); draw(); };
   size(); draw(); new ResizeObserver(()=>{ size(); draw(); }).observe(cv); // stays round while the panel widens
   new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; if(on&&!run){ run=true; last=0; requestAnimationFrame(tick); } else if(!on) run=false; })).observe(cv);
-})();
+})(),300));
 async function geo(name){
   try{ const m=await import(`https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/${name}.js`); return m.default.features; }
   catch(e){ await loadScript(`https://cdn.jsdelivr.net/npm/@amcharts/amcharts4-geodata@4/dist/script/${name}.js`); return window['am4geodata_'+name].features; }
