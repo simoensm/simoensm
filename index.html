@@ -58,7 +58,13 @@ button{font-family:inherit;color:inherit}
 .nav .brand{display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
 .nav .brand img{width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:50% 20%;background:#fff}
 .nav .links{display:flex;gap:2px}
-.nav .links a{font-size:13.5px;padding:8px 14px;border-radius:999px;cursor:pointer;color:var(--ink2);transition:background .3s,color .3s}
+.nav .links a{display:inline-flex;align-items:center;height:34px;white-space:nowrap;line-height:1;font-size:13.5px;padding:0 14px;border-radius:999px;cursor:pointer;color:var(--ink2);transition:background .3s,color .3s}
+.nav .cv,.nav .brand,.nav .lng>button{white-space:nowrap}
+.nav>*{flex:none}
+/* keep every label on one line as the window narrows: tighter pills first, then the name next to the photo goes */
+@media (max-width:1240px){.nav .links a{padding:0 11px;font-size:13px}.nav{gap:4px}}
+.nav .ablg{display:block;width:54px;height:24px;background:currentColor;-webkit-mask:url(logos/above-belgium.svg) center/contain no-repeat;mask:url(logos/above-belgium.svg) center/contain no-repeat}
+@media (max-width:1100px){.nav .brand span,.nav .brand b{display:none}.nav .brand{padding:0 6px}.nav .links a{padding:0 9px}}
 .nav .links a:hover{color:var(--ink);background:rgba(255,255,255,.5)}
 .nav .links a.on{color:var(--ink);background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.08)}
 .nav .cv{font-size:13px;font-weight:500;background:var(--ink);color:#fff;padding:8px 16px;border-radius:999px;margin-left:4px}
@@ -882,11 +888,11 @@ html,body{overflow-x:clip}
 <div class="aura"><i></i><i></i><i></i></div>
 
 <nav class="nav glass">
-  <a class="brand" data-go="overview"><img src="portrait.jpg" alt="">Mathias Simoens</a>
+  <a class="brand" data-go="overview"><img src="portrait.jpg" alt="Mathias Simoens"><span>Mathias Simoens</span></a>
   <div class="links">
     <a data-go="overview">Overview</a>
     <a data-go="journey">Journey</a>
-    <a data-go="studio">Above Belgium</a>
+    <a data-go="studio" class="ablink" aria-label="Above Belgium" title="Above Belgium"><i class="ablg" aria-hidden="true"></i></a>
     <a data-go="atelier">Projects</a>
     <a data-go="contact">Contact</a>
   </div>
