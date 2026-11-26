@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://simoensm.github.io/simoensm/sitemap.xml
+Sitemap: https://mathias-simoens.abovebelgium.be/sitemap.xml
