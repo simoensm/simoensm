@@ -871,7 +871,9 @@ html,body{overflow-x:clip}
 </head>
 <body>
 <div id="intro" aria-hidden="true"><i class="iris"></i><div class="in-rw"><i class="in-gl"></i><i class="rg o"></i><i class="rg i"></i><i class="ar o"></i><i class="ar i"></i></div></div>
-<script>(function(){ var H=document.documentElement; H.classList.add('pre'); try{ var t=localStorage.getItem('ms-theme'); if(t==='night'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)) H.classList.add('night'); }catch(e){}
+<script>(function(){ var H=document.documentElement; try{ var lg=localStorage.getItem('ms-lang'); if(!lg){ var nv=(navigator.languages||[navigator.language||'en']).map(function(x){return String(x).slice(0,2).toLowerCase();}); lg=nv.find(function(x){return x==='fr'||x==='nl'||x==='en';})||'en'; } window.__LANG=['en','fr','nl'].indexOf(lg)>=0?lg:'en'; H.lang=window.__LANG; }catch(e){ window.__LANG='en'; }
+  try{ if(sessionStorage.getItem('ms-skipintro')){ sessionStorage.removeItem('ms-skipintro'); H.classList.add('nointro'); var I0=document.getElementById('intro'); I0&&I0.remove(); window.__introDone&&window.__introDone(); return; } }catch(e){}
+  H.classList.add('pre'); try{ var t=localStorage.getItem('ms-theme'); if(t==='night'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)) H.classList.add('night'); }catch(e){}
   var done=function(){ H.classList.remove('pre'); window.__introDone&&window.__introDone(); };
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){ done(); return; }
   // fixed, short timing that does not wait for the rest of the site: rings in, then the iris opens from their centre
@@ -1086,6 +1088,7 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
 </script>
+<script defer src="i18n.js"></script>
 <script type="module">
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -1129,7 +1132,7 @@ afterIntro(()=>setTimeout(()=>document.getElementById('idcard')?.classList.remov
   if(RM||!em){ settle(); return; }
   // line two: out of focus, then autofocus brackets hunt and lock onto each word, which snaps sharp
   const ws=[]; [...em.childNodes].forEach(x=>{ if(x.nodeType!==3) return; const f=document.createDocumentFragment(); x.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)){ f.appendChild(document.createTextNode(' ')); return; } const sp=document.createElement('span'); sp.className='fw'; sp.textContent=t; ws.push(sp); f.appendChild(sp); }); x.replaceWith(f); });
-  const fw=ws.filter(w=>/[a-z]{3,}/i.test(w.textContent)&&!/^and$/i.test(w.textContent)); h.classList.add('af');
+  const fw=ws.filter(w=>/[a-zà-ÿ]{3,}/i.test(w.textContent)&&!/^(and|et|en)$/i.test(w.textContent)); h.classList.add('af');
   const afb=document.createElement('span'); afb.className='afb'; afb.innerHTML='<i></i><i></i><i></i><i></i>'; h.appendChild(afb);
   const boxOf=els=>{ const H=h.getBoundingClientRect(); let l=1e9,t=1e9,r=-1e9,b=-1e9; els.forEach(e=>{ const q=e.getBoundingClientRect(); l=Math.min(l,q.left); t=Math.min(t,q.top); r=Math.max(r,q.right); b=Math.max(b,q.bottom); }); const px=Math.max(8,(b-t)*.12); return {l:l-H.left-px,t:t-H.top-px*.4,w:r-l+px*2,h:b-t+px*.8}; };
   const goto=(els,cls)=>{ const B=boxOf(els); Object.assign(afb.style,{left:B.l+'px',top:B.t+'px',width:B.w+'px',height:B.h+'px'}); afb.className='afb on '+(cls||''); };
@@ -1565,7 +1568,7 @@ async function initGlobe(){
   const el=$('#globe');
   try{
     await loadScript('https://cdn.jsdelivr.net/npm/globe.gl@2/dist/globe.gl.min.js');
-    const world=(await geo('worldLow')).filter(f=>f.properties&&f.properties.id!=='AQ'); world.forEach(f=>{ if(f.properties.id==='SJ') f.properties.name='Svalbard'; });
+    const world=(await geo('worldLow')).filter(f=>f.properties&&f.properties.id!=='AQ'); { const LG=window.__LANG||'en'; let dn=null; try{ dn=LG!=='en'?new Intl.DisplayNames([LG],{type:'region'}):null; }catch(e){} world.forEach(f=>{ if(f.properties.id==='SJ') f.properties.name='Svalbard'; else if(dn){ try{ const n=dn.of(f.properties.id); if(n&&n!==f.properties.id) f.properties.name=n; }catch(e){} } }); }
     el.innerHTML='';
     let g=new window.Globe(el,{animateIn:false}); if(!el.querySelector('canvas')&&typeof g==='function') g=g(el);
     try{ g.renderer().setPixelRatio(Math.min(devicePixelRatio,1.25)); }catch(e){}
@@ -1575,7 +1578,7 @@ async function initGlobe(){
     const colOf=f=> COL[f.properties.id]||'#60a5fa';
     const nV=Object.keys(VISITED).filter(k=>!TERR.has(k)).length; $('#nC').textContent=nV; $('#nP').textContent=Math.round(nV/195*100)+'%'; setTimeout(()=>$('#nBar').style.width=Math.max(4,nV/195*100)+'%',300);
     $('#conts').innerHTML=Object.keys(CONT_COL).map(c=>{ const n=Object.keys(VISITED).filter(k=>VISITED[k]===c&&!TERR.has(k)).length; return n?`<span data-ct="${c}"><i style="background:${CONT_COL[c][0]}"></i>${c}<em>${n}</em></span>`:''; }).join('');
-    { const names=new Intl.DisplayNames(['en'],{type:'region'}); const nm=c=>c==='TR'?'Türkiye':c==='CZ'?'Czechia':c==='SJ'?'Svalbard':names.of(c);
+    { const LG=window.__LANG||'en', names=new Intl.DisplayNames([LG],{type:'region'}); const nm=c=>c==='SJ'?'Svalbard':LG==='en'&&c==='TR'?'Türkiye':LG==='en'&&c==='CZ'?'Czechia':names.of(c);
       const all=Object.keys(VISITED).sort((a,b)=>Object.keys(CONT_COL).indexOf(VISITED[a])-Object.keys(CONT_COL).indexOf(VISITED[b])||nm(a).localeCompare(nm(b)));
       $('#clist>div').innerHTML=`<div class="cgrid">${all.map((k,i)=>`<button class="ctile" data-cc="${k}" data-ct="${VISITED[k]}" style="--i:${i};--c:${COL[k]||'#7aa2ff'}"><img src="https://flagcdn.com/w80/${k==='SJ'?'no':k.toLowerCase()}.png" alt="" loading="lazy"><b>${nm(k)}</b><small><i></i>${TERR.has(k)?'Territory':VISITED[k]}</small></button>`).join('')}</div>`;
       const J=$('.jstats'), setOpen=o=>{ J.classList.toggle('open',o); if(o&&innerWidth<900) $('#jlist').classList.remove('on'); $('#cmore').firstChild.textContent=o?'Hide the countries ':'See the countries '; if(!o) filt(null); };
