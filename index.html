@@ -105,10 +105,10 @@ html.night .idfacts li span{color:var(--ink2)}
 .idcard.hov,.idcard.open,.idcard:focus-within{background:#f8f9fa}
 html.night .idcard.hov,html.night .idcard.open,html.night .idcard:focus-within{background:#11141b}
 /* night: every surface that had a light background of its own gets a dark one */
-html.night .tags span,html.night .tags button,html.night .skp button,html.night .idlinks a,html.night .ctc .cp,html.night .ctalt a,html.night .ctalt button,
+html.night .tags span,html.night .tags button,html.night .skp button,html.night .idlinks a,html.night .idlinks .qv,html.night .ctc .cp,html.night .ctalt a,html.night .ctalt button,
 html.night .gearnav button,html.night .chipsrow button,html.night .more-rv,html.night .svcgrid span,html.night .pj,html.night .pjfacts div,html.night .fmts div,
 html.night .score,html.night .spec,html.night .sheet .note,html.night .sheet .gal div,html.night .cta2 .btns,html.night .masonry .ph-empty{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:var(--ink)}
-html.night .tags span:hover,html.night .tags button:hover,html.night .skp button:hover,html.night .idlinks a:hover,html.night .ctc .cp:hover,html.night .ctalt a:hover,html.night .ctalt button:hover,
+html.night .tags span:hover,html.night .tags button:hover,html.night .skp button:hover,html.night .idlinks a:hover,html.night .idlinks .qv:hover,html.night .ctc .cp:hover,html.night .ctalt a:hover,html.night .ctalt button:hover,
 html.night .gearnav button:hover,html.night .chipsrow button:hover,html.night .more-rv:hover,html.night .svcgrid span:hover,html.night .pj:hover,html.night .wbtn:hover{background:rgba(255,255,255,.12)}
 html.night .svcgrid span{color:var(--ink2)}
 html.night .nav .links a:hover{background:rgba(255,255,255,.08)}
@@ -189,7 +189,7 @@ html.night .rc-sheet{background:#12151c;border-color:rgba(255,255,255,.08);box-s
 #recap .rc-main>*,#recap .rc-id-card>*{opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease),transform .8s var(--spring)}
 #recap.vis .rc-main>*,#recap.vis .rc-id-card>*{opacity:1;transform:none}
 #recap.vis .rc-main>*:nth-child(2){transition-delay:.06s}#recap.vis .rc-main>*:nth-child(3){transition-delay:.12s}#recap.vis .rc-main>*:nth-child(4){transition-delay:.18s}#recap.vis .rc-main>*:nth-child(5){transition-delay:.24s}
-.idlinks .qv{font:inherit;cursor:pointer}
+.idlinks .qv{font-family:inherit;color:var(--ink);cursor:pointer}
 @media (max-width:900px){.rc-grid{grid-template-columns:1fr}.rc-id-card{border-right:0;border-bottom:1px dashed rgba(127,127,127,.3)}.rc-work{grid-template-columns:1fr}.rc-tl li{grid-template-columns:96px 10px 1fr}.rc-ab{grid-template-columns:1fr}.rc-logos{justify-content:flex-start}#recap{padding:76px 10px 10px}}
 @media print{body>*:not(#recap){display:none!important}#recap{position:static;display:block;opacity:1;background:none;padding:0}.rc-sheet{max-height:none;box-shadow:none;transform:none}.rc-x{display:none}}
 /* CV viewer */
@@ -297,8 +297,10 @@ body.dark .burger{color:#eef1f6}
 .idfacts li span{font-family:var(--mono);font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;padding-top:2px;white-space:nowrap}
 .idfacts li b{font-weight:500;text-align:right}
 .idlinks{display:flex;gap:8px;padding:14px 0 10px;flex-wrap:wrap}
-.idlinks a{font-size:13px;font-weight:500;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);transition:background .3s,transform .4s var(--spring)}
-.idlinks a:hover{background:#fff;transform:translateY(-2px)}
+.idlinks a,
+.idlinks .qv{font-size:13px;font-weight:500;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);transition:background .3s,transform .4s var(--spring)}
+.idlinks a:hover,
+.idlinks .qv:hover{background:#fff;transform:translateY(-2px)}
 .idlinks a:first-child{background:var(--ink);color:#fff;border-color:var(--ink)}
 .idwrap .idcard.hov,.idwrap .idcard:focus-within,.idwrap .idcard.open{width:min(480px,calc(100vw - 56px));border-radius:28px;padding:14px}
 .idcard.hov img,.idcard:focus-within img,.idcard.open img{width:104px;height:104px;border-radius:22px;box-shadow:0 14px 30px -12px rgba(20,30,60,.35)}
@@ -1209,8 +1211,7 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
         <button data-rc="optim"><b>ESG Web Mining</b><span>NLP and web mining · 3 brands compared</span></button>
         <button data-rc="software"><b>Sony Recognizer</b><span>Event photos delivered by face matching</span></button></div></section>
       <section class="rc-sec"><h4>Skills</h4><div class="rc-sk"><span>Python</span><span>pandas</span><span>scikit-learn</span><span>NLP</span><span>SQL</span><span>Statistical testing</span><span>Linear and integer programming</span><span>Power BI</span><span>Excel</span><span>Building with Claude</span><span>Odoo ERP</span><span>Adobe</span></div></section>
-      <section class="rc-sec rc-ab"><h4>Above Belgium</h4><div class="rc-stats"><div><b>10+</b><span>clients</span></div><div><b>4.98</b><span>on Google</span></div><div><b>2023</b><span>Self-employed</span></div></div>
-        <div class="rc-logos"><img src="logos/uclouvain.png" alt="UCLouvain"><img src="logos/apex.png" alt="APEX"></div></section>
+      <section class="rc-sec rc-ab"><h4>Above Belgium</h4><div class="rc-stats"><div><b>10+</b><span>clients</span></div><div><b>4.98</b><span>on Google</span></div><div><b>2023</b><span>Self-employed</span></div></div></section>
     </div>
   </div>
   <div class="rc-mrz" aria-hidden="true"><span>MS&lt;BEL&lt;SIMOENS&lt;&lt;MATHIAS&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><span>BUSINESS&lt;ANALYTICS&lt;&lt;DATA&lt;CODE&lt;LIGHT&lt;&lt;&lt;&lt;&lt;2027&lt;&lt;</span></div>
@@ -1308,7 +1309,7 @@ document.addEventListener('click',e=>{ if(!e.target.closest('#disc')) document.g
 const ROUTES=['overview','journey','studio','atelier','contact']; let route=null;
 function gcHit(path,title,n=0){ try{ const g=window.goatcounter; if(g&&g.count){ g.count({path,title}); return; } }catch(e){ return; } if(n<8) setTimeout(()=>gcHit(path,title,n+1),1000); }
 function go(r){ if(!ROUTES.includes(r)) r='overview'; if(location.hash!=='#'+r) location.hash=r; else show(r); }
-function show(r){
+function show(r){ if(r!=='studio') window.__SCRVID?.pause();
   if(!ROUTES.includes(r)) r='overview';
   const prev=route; route=r; document.body.classList.remove('menu-open'); gcHit(location.pathname.replace(/index\.html$/,'')+r,r); setTimeout(()=>found(r),900);
   $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===r));
@@ -2204,6 +2205,11 @@ function initRoom(){
   B(mon,.24,.008,.17,mat.alu,0,.004,0,.004); B(mon,.045,.3,.016,mat.alu,0,.16,-.045,.004);
   B(mon,.552,.322,.014,std({color:0x1b1c1e,roughness:.4,metalness:.6}),0,.38,-.03,.006);
   const mscr=new THREE.Mesh(new THREE.PlaneGeometry(.538,.302),screen(musicTex,.9)); mscr.position.set(0,.381,-.0225); mon.add(mscr); mscr.userData.link='https://open.spotify.com/search/Chan%20Chan%20Buena%20Vista%20Social%20Club'; mscr.userData.when='macbook'; LINKS.push(mscr);
+  /* the monitor plays a short muted loop of my own footage when videos/screen.mp4 is there; otherwise it keeps the music app */
+  const SV={v:document.createElement('video'),ready:false,t:-1}; window.__SCRVID=SV.v;
+  Object.assign(SV.v,{muted:true,loop:true,playsInline:true,preload:'auto'}); SV.v.setAttribute('muted',''); SV.v.setAttribute('playsinline','');
+  SV.v.addEventListener('loadeddata',()=>{ const vt=new THREE.VideoTexture(SV.v); vt.colorSpace=THREE.SRGBColorSpace; mscr.material=screen(vt,.95); mscr.userData.link='https://youtu.be/2xuQsZlt5ec'; SV.ready=true; },{once:true});
+  SV.v.src='videos/screen.mp4';
   mon.position.set(dx-.38,.7575,dz-.18); mon.rotation.y=.14;
   // desk mat, mouse, headphones, business cards, card reader
   B(desk,.86,.003,.4,mat.felt,dx-.06,.759,dz+.11,.01);
@@ -3063,6 +3069,7 @@ function initRoom(){
     LAMP.want= NIGHT.on || (onLamp&&!focused) || focused==='macbook' ? 1 : 0; if(Math.abs(LAMP.want-LAMP.on)>.002){ LAMP.set(LAMP.on+(LAMP.want-LAMP.on)*.08); dirty=2; shadowFrames=Math.max(shadowFrames,1); }
     if(!focused&&moved&&now-lastPick>50){ moved=false; lastPick=now; const id=pick(); if(id!==hov){ if(id==='candle') CND.toggle(); hov=id; canvas.style.cursor=(id||onLink)?'pointer':'default'; hot.forEach(h=>h.el&&h.el.classList.toggle('hot',h.id===id||(h.id==='gear'&&/^g-/.test(id||''))||(h.id==='portfolio'&&/^pf-/.test(id||'')))); } }
     hot.forEach(h=>{ if(!h.el) return; tmp.copy(h.anchor).project(camera); const vis=tmp.z<1&&Math.abs(tmp.x)<.95&&Math.abs(tmp.y)<.95&&h.side===side&&!tw; h.el.classList.toggle('vis',vis); h.el.style.left=((tmp.x+1)/2*innerWidth)+'px'; h.el.style.top=((1-tmp.y)/2*innerHeight)+'px'; });
+    if(SV.ready){ const want=route==='studio'&&side==='studio'&&!document.hidden; if(want&&SV.v.paused) SV.v.play().catch(()=>{}); else if(!want&&!SV.v.paused) SV.v.pause(); if(!SV.v.paused&&SV.v.currentTime!==SV.t){ SV.t=SV.v.currentTime; dirty=Math.max(dirty,1); } }
     const ledOn=(t%1.6)<.8; if(led.userData.on!==ledOn){ led.userData.on=ledOn; led.material.emissiveIntensity=ledOn?3:.6; dirty=Math.max(dirty,1); }
     if(duck.userData.spin){ duck.userData.spin+=.08; duck.rotation.y=-2.4+Math.sin(duck.userData.spin*2)*.6; duck.position.y=.762+Math.abs(Math.sin(duck.userData.spin*3))*.03; if(duck.userData.spin>4){ duck.userData.spin=0; duck.rotation.y=-2.4; duck.position.y=.762; } }
     { const want= focused==='macbook'?1:0; if(Math.abs(want-CHAIR.k)>.002){ CHAIR.k+=(want-CHAIR.k)*.09; const e=CHAIR.k*CHAIR.k*(3-2*CHAIR.k); ch.position.lerpVectors(CHAIR.home,CHAIR.away,e); ch.rotation.y=CHAIR.r0+(CHAIR.r1-CHAIR.r0)*e; dirty=Math.max(dirty,1); shadowFrames=Math.max(shadowFrames,1); } }
