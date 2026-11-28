@@ -143,13 +143,15 @@ html.night .idhint::after{background:#eef1f6}
 .cllogos img{max-height:30px;max-width:70%}
 html.night .cllogos a{background:rgba(255,255,255,.92)}
 /* quick view: a one-page summary laid out like an identity data page */
-#recap{position:fixed;inset:0;z-index:8500;display:none;place-items:center;padding:84px 20px 20px;background:rgba(236,239,244,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;transition:opacity .4s var(--ease)}
+#recap{position:fixed;inset:0;z-index:8500;display:none;place-items:center;padding:84px 20px 20px;background:rgba(236,239,244,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;transition:opacity .4s var(--ease)}
 html.night #recap{background:rgba(6,8,12,.6)}
-#recap.on{display:grid}#recap.vis{opacity:1}
+#recap.on{display:grid}
+/* nothing behind the quick view moves while it is open, so the blur is computed once instead of every frame */
+body.rcopen *,body.rcopen *::before,body.rcopen *::after{animation-play-state:paused!important}body.rcopen #recap *{animation-play-state:running!important}#recap.vis{opacity:1}
 .rc-sheet{position:relative;width:min(1080px,100%);max-height:calc(100vh - 104px);overflow:auto;border-radius:28px;background:#fbfbfa;border:1px solid rgba(20,22,26,.08);box-shadow:0 40px 100px -30px rgba(20,30,60,.45);transform:translateY(30px) scale(.98);opacity:.6;transition:transform .9s var(--spring),opacity .5s}
 html.night .rc-sheet{background:#12151c;border-color:rgba(255,255,255,.08);box-shadow:0 40px 100px -30px rgba(0,0,0,.8)}
 #recap.vis .rc-sheet{transform:none;opacity:1}
-.rc-sheet{background-image:repeating-linear-gradient(115deg,rgba(63,107,255,.025) 0 2px,transparent 2px 9px),radial-gradient(circle at 85% 0,rgba(111,149,255,.12),transparent 45%);background-attachment:local}
+.rc-sheet{background-image:radial-gradient(circle at 85% 0,rgba(111,149,255,.1),transparent 45%);background-repeat:no-repeat;contain:paint;will-change:transform}
 .rc-top{display:flex;align-items:center;gap:14px;padding:18px 24px;border-bottom:1px dashed rgba(127,127,127,.3);font:500 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
 .rc-top .rc-id{margin-left:auto}
 .rc-x{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:18px;line-height:1;color:var(--ink);cursor:pointer}
@@ -1348,8 +1350,8 @@ document.addEventListener('click',e=>{ const c=e.target.closest('#vchips [data-v
 /* the quick view opens when the badge is clicked (hover keeps working as before) */
 function openRecap(){ const R=$('#recap'); if(!R) return; const tl=$('#rctl');
   if(tl&&!tl.children.length) tl.innerHTML=[...TL].reverse().map(it=>`<li style="--c:${it.kind==='Education'?'#3f6bff':'#8b5cf6'}"><time>${it.when}</time><i></i><div><b>${it.t}</b><span>${it.o}</span></div></li>`).join('');
-  R.classList.add('on'); R.setAttribute('aria-hidden','false'); requestAnimationFrame(()=>requestAnimationFrame(()=>R.classList.add('vis'))); found('recap'); }
-function closeRecap(){ const R=$('#recap'); R.classList.remove('vis'); R.setAttribute('aria-hidden','true'); setTimeout(()=>R.classList.remove('on'),400); }
+  R.classList.add('on'); R.setAttribute('aria-hidden','false'); document.body.classList.add('rcopen'); requestAnimationFrame(()=>requestAnimationFrame(()=>R.classList.add('vis'))); found('recap'); }
+function closeRecap(){ const R=$('#recap'); R.classList.remove('vis'); R.setAttribute('aria-hidden','true'); document.body.classList.remove('rcopen'); setTimeout(()=>R.classList.remove('on'),400); }
 $('#rcx').onclick=closeRecap; $('#recap').addEventListener('click',e=>{ if(e.target.id==='recap') closeRecap(); const w=e.target.closest('[data-rc]'); if(w){ closeRecap(); pendingFocus=w.dataset.rc; go('atelier'); } });
 document.addEventListener('click',e=>{ if(e.target.closest('[data-qv]')){ e.preventDefault(); $('#idcard').classList.remove('open','hov'); openRecap(); } });
 addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#recap').classList.contains('on')) closeRecap(); });
@@ -1508,7 +1510,7 @@ afterIntro(()=>setTimeout(()=>(async()=>{ const cv=$('#miniGlobe'); if(!cv) retu
       if(!any) continue; g.fillStyle= v ? hexA(COL[sh.id]||'#7aa2ff',.95) : '#171c26'; g.fill(); g.lineWidth= v?1.1:.6; g.strokeStyle= v ? lighten(COL[sh.id]||'#7aa2ff',.45) : 'rgba(95,105,125,.5)'; g.stroke(); }
     const shade=g.createRadialGradient(cx-R*.45,cy-R*.5,R*.2,cx,cy,R*1.05); shade.addColorStop(0,'rgba(255,255,255,.08)'); shade.addColorStop(.6,'rgba(0,0,0,0)'); shade.addColorStop(1,'rgba(0,0,0,.45)'); g.fillStyle=shade; g.fillRect(cx-R,cy-R,2*R,2*R);
     g.restore(); g.strokeStyle='rgba(180,195,230,.28)'; g.lineWidth=1.2; g.beginPath(); g.arc(cx,cy,R,0,7); g.stroke(); };
-  const tick=now=>{ if(!run) return; requestAnimationFrame(tick); if(now-last<16) return; const dt=last?Math.min(100,now-last):0; last=now;
+  const tick=now=>{ if(!run) return; requestAnimationFrame(tick); if(now-last<16||document.body.classList.contains('rcopen')) return; const dt=last?Math.min(100,now-last):0; last=now;
     if(!reduce&&!over) lon0-=dt*.006; spin+=(wSpin-spin)*Math.min(1,dt*.006); tilt+=(wTilt-tilt)*Math.min(1,dt*.006); s0=Math.sin(tilt*D); c0=Math.cos(tilt*D); draw(); };
   size(); draw(); new ResizeObserver(()=>{ size(); draw(); }).observe(cv); // stays round while the panel widens
   new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; if(on&&!run){ run=true; last=0; requestAnimationFrame(tick); } else if(!on) run=false; })).observe(cv);
@@ -2208,7 +2210,7 @@ function initRoom(){
   /* the monitor plays a short muted loop of my own footage when videos/screen.mp4 is there; otherwise it keeps the music app */
   const SV={v:document.createElement('video'),ready:false,t:-1}; window.__SCRVID=SV.v;
   Object.assign(SV.v,{muted:true,loop:true,playsInline:true,preload:'auto'}); SV.v.setAttribute('muted',''); SV.v.setAttribute('playsinline','');
-  SV.v.addEventListener('loadeddata',()=>{ const vt=new THREE.VideoTexture(SV.v); vt.colorSpace=THREE.SRGBColorSpace; mscr.material=screen(vt,.95); mscr.userData.link='https://youtu.be/2xuQsZlt5ec'; SV.ready=true; },{once:true});
+  SV.v.addEventListener('loadeddata',()=>{ const vt=new THREE.VideoTexture(SV.v); vt.colorSpace=THREE.SRGBColorSpace; mscr.material=screen(vt,.95); mscr.userData.link='https://youtu.be/fNfyxJjofKg'; SV.ready=true; },{once:true});
   SV.v.src='videos/screen.mp4';
   mon.position.set(dx-.38,.7575,dz-.18); mon.rotation.y=.14;
   // desk mat, mouse, headphones, business cards, card reader
