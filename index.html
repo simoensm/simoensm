@@ -396,6 +396,17 @@ body.ai-open .aibox{transform:none}
 @media (max-width:900px){.aibox{padding:28px 20px 24px;border-radius:24px}.aibtn{bottom:14px;right:14px;padding:10px 14px;font-size:13px}}
 .ai{padding-top:20px;padding-bottom:90px}
 .aigrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+.aiuni{margin-top:14px;border-radius:26px;padding:26px 24px}
+.aiuni h3{font-size:22px;font-weight:600;letter-spacing:-.02em;margin:6px 0 8px}
+.aiuni>p{font-size:14.5px;line-height:1.6;color:var(--ink2);max-width:720px}
+.aiu3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.aiu3 div{padding:14px 16px;border-radius:16px;background:rgba(127,127,127,.07)}
+.aiu3 b,.aiul b{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.aiu3 span{font-size:13.5px;line-height:1.5;color:var(--ink2)}
+.aiul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.aiul li{font-size:13.5px;line-height:1.5;color:var(--ink2);padding-left:14px;border-left:2px solid rgba(63,107,255,.35)}
+.aiul li:last-child{border-left-color:rgba(255,90,100,.5)}
+@media (max-width:900px){.aiu3{grid-template-columns:1fr}}
 .aic{border-radius:26px;padding:26px 24px;transition:scale .9s var(--spring),box-shadow .7s var(--ease)}
 .aic:hover{scale:1.015;box-shadow:0 28px 60px -28px rgba(20,30,60,.35)}
 .aic .n{font-family:var(--mono);font-size:11px;color:#3f6bff;letter-spacing:.06em}
@@ -414,6 +425,14 @@ body.ai-open .aibox{transform:none}
 .skc h3{font-size:21px;font-weight:600;letter-spacing:-.02em;margin-top:18px}
 .skc p{font-size:14px;color:var(--ink2);margin-top:5px;line-height:1.5}
 .skp{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.pjai{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font:500 11.5px/1 var(--mono);letter-spacing:.02em;color:#c4623f;background:rgba(217,119,87,.1);border:1px solid rgba(217,119,87,.25);padding:5px 9px;border-radius:999px;width:max-content}
+.pjai img{width:12px;height:12px}
+.pjclaude{display:flex;gap:12px;align-items:flex-start;margin:16px 0 4px;padding:14px 16px;border-radius:16px;background:rgba(217,119,87,.08);border:1px solid rgba(217,119,87,.22)}
+.pjclaude img{width:22px;height:22px;flex:none;margin-top:2px}
+.pjclaude b{display:block;font-size:14px;font-weight:600;margin-bottom:3px}
+.pjclaude span{display:block;font-size:13.5px;line-height:1.5;color:var(--ink2)}
+.pjclaude .pjaib{margin-top:8px;padding:0;border:0;background:none;font:inherit;font-size:13px;font-weight:500;color:#c4623f;cursor:pointer}
+html.night .pjai,html.night .pjclaude .pjaib{color:#e8916f}
 .skp button{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.72);color:var(--ink);cursor:pointer;opacity:0;translate:0 8px;transition:background .35s var(--ease),color .35s var(--ease),border-color .35s,translate .7s var(--spring) calc(var(--d) + .25s + var(--i)*.04s),opacity .6s var(--ease) calc(var(--d) + .25s + var(--i)*.04s)}
 .skc.seen .skp button{opacity:1;translate:0 0}
 .skp button em{font-style:normal;font-family:var(--mono);font-size:10.5px;min-width:18px;height:18px;display:inline-grid;place-items:center;border-radius:999px;background:rgba(63,107,255,.1);color:#3f6bff;transition:background .35s,color .35s}
@@ -1022,6 +1041,10 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
       <div class="aic glass"><span class="n">02</span><h3>Ethical</h3><p>I'm open about it, like here. For coursework I follow each course's rules and say where AI helped. Nothing personal or confidential goes into a prompt, I check facts and sources instead of taking them on trust, and I only hand in work I can explain line by line.</p></div>
       <div class="aic glass"><span class="n">03</span><h3>A way to learn</h3><p>I ask why, not only what. When Claude writes something new to me, I have it explain the approach, then I change or rebuild it myself. It works like a patient tutor: languages and tools I didn't know became projects I can now build on my own.</p></div>
     </div>
+    <div class="aiuni glass"><div class="label">At university</div><h3>The UCLouvain rules, applied.</h3>
+      <p>For coursework I follow UCLouvain's guidelines on the responsible use of generative AI, and the rules of each course come first.</p>
+      <div class="aiu3"><div><b>Responsibility</b><span>I am fully responsible for what I hand in, and it comes from my own work.</span></div><div><b>Transparency</b><span>Where it is required, I say which AI tools I used, and I quote and reference anything taken word for word.</span></div><div><b>Authenticity</b><span>My work has to show what I have actually learned, in the result and in the method behind it.</span></div></div>
+      <ul class="aiul"><li><b>Without a mention</b>Spelling and grammar help on text I wrote myself, and exploring a topic to find leads, after which I read and check the sources myself.</li><li><b>With a mention</b>Any AI output quoted word for word, cited like a source, and machine translations I did not rework.</li><li><b>Never</b>Anything a course forbids, or anything that hides what I can really do.</li></ul></div>
     <p class="ainote">The clearest example is <a href="https://github.com/simoensm/research_vault" target="_blank" rel="noopener">Research Vault</a>: an AI research agent that answers only from my own notes, with citations, and never invents a source.</p>
   </section>
 </div></div>
@@ -1158,6 +1181,7 @@ afterIntro(()=>setTimeout(()=>document.getElementById('idcard')?.classList.remov
   links.forEach(l=>l.addEventListener('click',e=>{ if(innerWidth<760) return; e.preventDefault(); if(!F.src) F.src='cv.pdf#view=FitH'; M.classList.add('on'); requestAnimationFrame(()=>M.classList.add('vis')); }));
   document.getElementById('cvx').onclick=close; M.addEventListener('click',e=>{ if(e.target===M) close(); }); addEventListener('keydown',e=>{ if(e.key==='Escape'&&M.classList.contains('on')) close(); }); })();
 
+document.addEventListener('click',e=>{ if(e.target.closest('[data-ai]')){ e.preventDefault(); document.getElementById('aibtn')?.click(); } });
 /* ============================ DISCOVERY GAME ============================ */
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
 window.found=(...a)=>found(...a);
@@ -1772,13 +1796,13 @@ function fillMasonry(cat){ const mas=document.getElementById('mas'); if(!mas) re
 /* ============================ PROJECTS (from the GitHub READMEs) ============================ */
 const GH='https://github.com/simoensm/';
 const PROJECTS=[
-  {id:'pushit',st:'software',name:'PushIt',tag:'Android app',year:'2026',repo:'pushit',
+  {id:'pushit',claude:1,st:'software',name:'PushIt',tag:'Android app',year:'2026',repo:'pushit',
    one:'A push-up game where the front camera counts your reps live, with ranks, streaks and friend leaderboards.',
    about:'A native Android fitness game. You prop the phone against the wall, get into position, and on-device pose estimation counts every push-up in real time. No wearables, and no honour system.',
    how:['MediaPipe Pose Landmarker runs on every CameraX frame.','A state machine follows the elbow angle and the nose-to-floor distance: down below 80 degrees, counted on the way back up above 150, with a 300 ms debounce.','Auto-calibration on the first frame adapts to body size and camera distance.','A live skeleton overlay warns about sagging hips, and counting freezes if the phone moves.','Stars, 16 ranks, achievements and challenges, plus shared leaderboards.'],
    facts:[['6','push-up variants'],['16','ranks'],['v1.1.3','latest version']],
    stack:['Kotlin','Jetpack Compose','MediaPipe','CameraX','Firebase','Room']},
-  {id:'sidetab',st:'software',name:'SideTab',tag:'macOS app',year:'2026',repo:'sidetab',
+  {id:'sidetab',claude:1,st:'software',name:'SideTab',tag:'macOS app',year:'2026',repo:'sidetab',
    one:'Turns an Android tablet into a real extended display for a Mac, over one USB-C cable.',
    about:"Apple's Sidecar only works with iPads, and Samsung's Second Screen only with Windows. SideTab fills the gap: plug a Galaxy Tab into the Mac and it appears as a real monitor, with nothing to install on the tablet.",
    how:['macOS sees it as a real display, so it works with every app, Mission Control and the Displays settings.','Lives in the menu bar: plug in and the display appears, unplug and windows move back.','Retina rendering, encoded with the Mac\'s hardware H.264 encoder, at 60 fps or 30 to save power.','Switches the USB-C power direction so the tablet charges from the Mac, and shows its battery level.'],
@@ -1790,13 +1814,13 @@ const PROJECTS=[
    how:['Photos stream from the camera to object storage as they are taken.','A Python worker finds faces with InsightFace and stores embeddings in PostgreSQL with pgvector.','A selfie becomes a vector search over the whole event.','Queues in Redis and BullMQ keep uploads and matching flowing during a live event.'],
    facts:[['FTPS','straight from the camera'],['pgvector','face search'],['M0','current milestone']],
    stack:['Next.js 15','TypeScript','Tailwind','Python','InsightFace','ONNX','PostgreSQL','pgvector','Redis','Docker']},
-  {id:'privacy',st:'software',name:'Privacy Guard',tag:'Browser extension',year:'2026',repo:'privacy_guard_extension',
+  {id:'privacy',claude:1,st:'software',name:'Privacy Guard',tag:'Browser extension',year:'2026',repo:'privacy_guard_extension',
    one:'A browser extension that reads privacy policies for you and gives each site a transparency score.',
    about:'Privacy Guard spots privacy policies, terms of service and GDPR pages, analyses them and explains in seconds what you are agreeing to. Everything runs locally in the browser: no data leaves your machine.',
    how:['Summarises the key points in five to seven sentences.','Measures readability (Flesch) and pulls the main keywords with TF-IDF.','Detects ten kinds of sensitive clauses, such as data resale, mandatory arbitration, transfers outside the EU and targeted advertising.','Combines them into a 0 to 100 transparency score with a low, medium or high risk level.'],
    facts:[['10','clause types detected'],['0-100','transparency score'],['100%','local processing']],
    stack:['JavaScript','NLP','TF-IDF','Chrome','Firefox','Edge']},
-  {id:'command',st:'software',name:'Command Center',tag:'Web app',year:'2026',repo:'command_center',
+  {id:'command',claude:1,st:'software',name:'Command Center',tag:'Web app',year:'2026',repo:'command_center',
    one:'A personal dashboard that puts my Google Calendar and Gmail in one place, behind a Google sign-in.',
    about:'A Next.js app I built for my own day-to-day: sign in with Google once, then work from a single command center with a calendar view and the inbox side by side.',
    how:['Google sign-in through Auth.js, with the access token used to call Google APIs.','Dedicated calendar and Gmail sections, with server-side API routes.','Built with the Next.js App Router and Tailwind.'],
@@ -1808,7 +1832,7 @@ const PROJECTS=[
    how:['A ready-made vault with folders for papers, concepts, projects, courses and questions, and a home dashboard with the reading queue.','One command imports a paper with its metadata, abstract and all PDF highlights; the bibliography updates itself.','An AI research agent with eleven commands, such as summarize, link, ask, lit-review, find-papers and weekly-review.','The agent answers from your own notes, with citations, and never invents sources.'],
    facts:[['11','agent commands'],['2 min','from paper to note']],
    stack:['Python','Obsidian','Zotero','Claude Code','Git']},
-  {id:'planner',st:'software',name:'Project Planner',tag:'Web tool',year:'2026',repo:'project_planner_ba',
+  {id:'planner',claude:1,st:'software',name:'Project Planner',tag:'Web tool',year:'2026',repo:'project_planner_ba',
    one:'A one-page planner for the Business Analytics projects of the second quarter, with a shared timeline.',
    about:'Built with Matteo Galizia to keep track of every group project of the quarter: one timeline, all deadlines, and import and export so the plan can be shared.',
    how:['A timeline of every project and deliverable.','Import, export and reset, so the plan travels between us.','A single HTML file, no install.'],
@@ -1854,19 +1878,20 @@ const GHI='<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><p
   const ICON={ data:'<path d="M4 19V9M10 19V5M16 19v-7M22 19H2" />', code:'<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />', model:'<circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 8.5l2.6 7M16 8.5l-2.6 7M8.5 7h7"/>', biz:'<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>' };
   const G=[
     {k:'data',t:'Data and machine learning',d:'From scraping the data to testing whether a result is real.',room:'atelier',st:'optim',s:[['Python','Python'],['pandas','pandas'],['scikit-learn','scikit-learn'],['NLP','NLP'],['Web scraping','BeautifulSoup'],['SQL','PostgreSQL'],['Statistical testing','']]},
-    {k:'code',t:'Software',d:'Apps and tools that people actually use, on phone, Mac and web.',room:'atelier',st:'software',s:[['Kotlin','Kotlin'],['Swift','Swift'],['TypeScript','TypeScript'],['React','React'],['Flask','Flask'],['Firebase','Firebase'],['Git','Git']]},
+    {k:'code',t:'Building software with AI',d:'I design the product, write the specifications and test every version; Claude writes most of the code.',room:'atelier',st:'software',s:[['Building with Claude','#claude'],['Product design',''],['Specifications and testing',''],['Prompting',''],['Git and GitHub','Git']]},
     {k:'model',t:'Optimisation and analytics',d:'Models that turn a business question into a decision.',room:'atelier',st:'optim',s:[['Linear and integer programming',''],['FICO Xpress',''],['PuLP',''],['Excel',''],['Power BI','']]},
     {k:'biz',t:'Business and creative',d:'Running a company and an association, and the images that go with it.',room:'studio',st:'macbook',s:[['Odoo ERP',''],['Adobe','']]}];
-  const count=term=> term ? PROJECTS.filter(p=>p.stack.some(x=>x.toLowerCase()===term.toLowerCase())).length : 0;
+  const count=term=> term==='#claude' ? PROJECTS.filter(p=>p.claude).length : term ? PROJECTS.filter(p=>p.stack.some(x=>x.toLowerCase()===term.toLowerCase())).length : 0;
   host.innerHTML=G.map((g,gi)=>`<div class="skc glass reveal" style="--d:${gi*.08}s"><div class="skh"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[g.k]}</svg><span>${String(gi+1).padStart(2,'0')}</span></div><h3>${g.t}</h3><p>${g.d}</p>
     <div class="skp">${g.s.map(([n,term],i)=>{ const c=count(term); const room= n==='Odoo ERP' ? 'atelier' : g.room, st= n==='Odoo ERP' ? 'software' : g.st;
       return `<button data-skill="${st}" data-room="${room}" style="--i:${i}">${n}${c?`<em>${c}</em>`:''}</button>`; }).join('')}</div></div>`).join('');
   host.querySelectorAll('.skc').forEach(el=>{ io.observe(el); el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); }); });
 })();
 function stationHTML(st){ const [k,t,d]=STATIONS[st]; const list=PROJECTS.filter(p=>p.st===st);
-  return `<div class="k">Atelier · ${k}</div><h3>${t}</h3><p>${d}</p><div class="pjlist">${list.map(p=>`<button class="pj" data-proj="${p.id}"><span class="pjt"><b>${p.name}</b><em>${p.tag}</em></span><span class="pjo">${p.one}</span><span class="pjgo">Read more &rarr;</span></button>`).join('')}</div>`; }
+  return `<div class="k">Atelier · ${k}</div><h3>${t}</h3><p>${d}</p><div class="pjlist">${list.map(p=>`<button class="pj" data-proj="${p.id}"><span class="pjt"><b>${p.name}</b><em>${p.tag}</em></span>${p.claude?`<span class="pjai"><img src="logos/claude.svg" alt="">Built with Claude</span>`:''}<span class="pjo">${p.one}</span><span class="pjgo">Read more &rarr;</span></button>`).join('')}</div>`; }
 function projectHTML(id){ const p=PROJECTS.find(x=>x.id===id); const st=STATIONS[p.st][0];
   return `<button class="pjback" data-back="${p.st}">&larr; ${st}</button><div class="k">${p.tag} · ${p.year}</div><h3>${p.name}</h3><p class="pjlead">${p.one}</p>
+    ${p.claude?`<div class="pjclaude"><img src="logos/claude.svg" alt=""><div><b>Built with Claude</b><span>I designed it, wrote the specifications and tested every version; Claude wrote most of the code.</span><button class="pjaib" type="button" data-ai>How I use AI &rarr;</button></div></div>`:''}
     ${p.facts?`<div class="pjfacts">${p.facts.map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('')}</div>`:''}
     <h4 class="svc">What it is</h4><p>${p.about}</p>
     <h4 class="svc">How it works</h4><ul class="pjhow">${p.how.map(x=>`<li>${x}</li>`).join('')}</ul>
