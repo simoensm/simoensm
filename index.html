@@ -12,6 +12,10 @@
 <meta name="google-site-verification" content="C9NsBKkOfm8vqfv8Gas4DUzjAsuA9-holHbWKYQIRVo" />
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://mathias-simoens.abovebelgium.be/">
+<link rel="alternate" hreflang="en" href="https://mathias-simoens.abovebelgium.be/">
+<link rel="alternate" hreflang="fr" href="https://mathias-simoens.abovebelgium.be/fr/">
+<link rel="alternate" hreflang="nl" href="https://mathias-simoens.abovebelgium.be/nl/">
+<link rel="alternate" hreflang="x-default" href="https://mathias-simoens.abovebelgium.be/">
 <meta property="og:type" content="profile">
 <meta property="og:site_name" content="Mathias Simoens">
 <meta property="og:url" content="https://mathias-simoens.abovebelgium.be/">
@@ -122,6 +126,72 @@ html.night .btn.solid,html.night .btn.solid *{color:#14161a}
 html.night .btn.solid:hover{background:#fff}
 html.night .cta2 .btnp{background:#eef1f6;color:#14161a}html.night .cta2 .btnp:hover{background:#fff}html.night .cta2 .btns{color:var(--ink)}
 html.night .idhint::after{background:#eef1f6}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.vth{position:relative;aspect-ratio:16/9;border:0;padding:0;border-radius:14px;overflow:hidden;background:#111;cursor:pointer}
+.vth img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--spring),filter .4s}
+.vth:hover img{transform:scale(1.04);filter:brightness(.85)}
+.vth .vpl{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.88);color:#14161a;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .4s var(--spring)}
+.vth:hover .vpl{transform:scale(1.1)}
+.vth .vpl svg{width:20px;height:20px;margin-left:2px}
+.vth .vcat{position:absolute;left:10px;bottom:8px;font:500 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.vth.play{cursor:default}.vth iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vth.big{grid-column:1/-1}
+.vth.hid{display:none}
+.cllogos{display:flex;gap:12px;margin:18px 0 6px}
+.cllogos a{flex:1;display:grid;place-items:center;height:70px;border-radius:16px;background:rgba(255,255,255,.7);border:1px solid var(--line);transition:transform .4s var(--spring)}
+.cllogos a:hover{transform:translateY(-2px)}
+.cllogos img{max-height:30px;max-width:70%}
+html.night .cllogos a{background:rgba(255,255,255,.92)}
+/* quick view: a one-page summary laid out like an identity data page */
+#recap{position:fixed;inset:0;z-index:8500;display:none;place-items:center;padding:84px 20px 20px;background:rgba(236,239,244,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;transition:opacity .4s var(--ease)}
+html.night #recap{background:rgba(6,8,12,.6)}
+#recap.on{display:grid}#recap.vis{opacity:1}
+.rc-sheet{position:relative;width:min(1080px,100%);max-height:calc(100vh - 104px);overflow:auto;border-radius:28px;background:#fbfbfa;border:1px solid rgba(20,22,26,.08);box-shadow:0 40px 100px -30px rgba(20,30,60,.45);transform:translateY(30px) scale(.98);opacity:.6;transition:transform .9s var(--spring),opacity .5s}
+html.night .rc-sheet{background:#12151c;border-color:rgba(255,255,255,.08);box-shadow:0 40px 100px -30px rgba(0,0,0,.8)}
+#recap.vis .rc-sheet{transform:none;opacity:1}
+.rc-sheet{background-image:repeating-linear-gradient(115deg,rgba(63,107,255,.025) 0 2px,transparent 2px 9px),radial-gradient(circle at 85% 0,rgba(111,149,255,.12),transparent 45%);background-attachment:local}
+.rc-top{display:flex;align-items:center;gap:14px;padding:18px 24px;border-bottom:1px dashed rgba(127,127,127,.3);font:500 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.rc-top .rc-id{margin-left:auto}
+.rc-x{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:18px;line-height:1;color:var(--ink);cursor:pointer}
+.rc-grid{display:grid;grid-template-columns:300px 1fr;gap:0}
+.rc-id-card{padding:28px 24px;border-right:1px dashed rgba(127,127,127,.3)}
+.rc-ph{position:relative;width:132px;height:160px;border-radius:18px;overflow:hidden;background:#e9ecf1}
+.rc-ph img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;filter:saturate(.9)}
+.rc-rings{position:absolute;right:-18px;bottom:-18px;width:72px;height:72px;opacity:.55}
+.rc-rings circle{fill:none;stroke:#fff;stroke-width:2.6}
+.rc-id-card h2{font-size:26px;font-weight:600;letter-spacing:-.03em;margin:18px 0 4px}
+.rc-role{font-size:13.5px;color:var(--ink2);line-height:1.45}
+.rc-facts{margin:18px 0 0;display:grid;gap:10px}
+.rc-facts div{display:grid;gap:2px}
+.rc-facts dt{font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.rc-facts dd{margin:0;font-size:14px}
+.rc-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.rc-links .btn{padding:9px 14px;font-size:13px}
+.rc-main{padding:28px 30px}
+.rc-lead{font-size:19px;line-height:1.45;letter-spacing:-.01em;max-width:640px}
+.rc-sec{margin-top:22px}
+.rc-sec h4{font:500 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.rc-tl{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.rc-tl li{display:grid;grid-template-columns:120px 12px 1fr;gap:12px;align-items:start;padding:7px 0}
+.rc-tl li time{font:500 12px/1.4 var(--mono);color:var(--ink3)}
+.rc-tl li i{width:9px;height:9px;border-radius:50%;margin-top:5px;background:var(--c)}
+.rc-tl li b{font-size:14px;font-weight:600}.rc-tl li span{display:block;font-size:13px;color:var(--ink2)}
+.rc-work{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rc-work button{text-align:left;font:inherit;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(127,127,127,.05);color:var(--ink);cursor:pointer;transition:background .3s,transform .4s var(--spring)}
+.rc-work button:hover{background:rgba(63,107,255,.08);transform:translateY(-2px)}
+.rc-work b{display:block;font-size:14px}.rc-work span{display:block;font-size:12.5px;color:var(--ink2);margin-top:3px}
+.rc-sk{display:flex;flex-wrap:wrap;gap:6px}
+.rc-sk span{font-size:12.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(127,127,127,.04)}
+.rc-ab{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px 24px}.rc-ab h4{grid-column:1/-1;margin-bottom:2px}
+.rc-stats{display:flex;gap:22px}.rc-stats b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em}.rc-stats span{font-size:12px;color:var(--ink3)}
+.rc-logos{display:flex;gap:22px;align-items:center;justify-content:flex-end}.rc-logos img{height:24px;width:auto;opacity:.9}
+.rc-mrz{display:grid;gap:3px;padding:14px 24px 18px;border-top:1px dashed rgba(127,127,127,.3);font:500 12.5px/1.2 var(--mono);letter-spacing:.32em;color:var(--ink3);white-space:nowrap;overflow:hidden}
+#recap .rc-main>*,#recap .rc-id-card>*{opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease),transform .8s var(--spring)}
+#recap.vis .rc-main>*,#recap.vis .rc-id-card>*{opacity:1;transform:none}
+#recap.vis .rc-main>*:nth-child(2){transition-delay:.06s}#recap.vis .rc-main>*:nth-child(3){transition-delay:.12s}#recap.vis .rc-main>*:nth-child(4){transition-delay:.18s}#recap.vis .rc-main>*:nth-child(5){transition-delay:.24s}
+.idlinks .qv{font:inherit;cursor:pointer}
+@media (max-width:900px){.rc-grid{grid-template-columns:1fr}.rc-id-card{border-right:0;border-bottom:1px dashed rgba(127,127,127,.3)}.rc-work{grid-template-columns:1fr}.rc-tl li{grid-template-columns:96px 10px 1fr}.rc-ab{grid-template-columns:1fr}.rc-logos{justify-content:flex-start}#recap{padding:76px 10px 10px}}
+@media print{body>*:not(#recap){display:none!important}#recap{position:static;display:block;opacity:1;background:none;padding:0}.rc-sheet{max-height:none;box-shadow:none;transform:none}.rc-x{display:none}}
 /* CV viewer */
 #cvm{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:84px 24px 24px;background:rgba(8,10,14,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .35s}
 #cvm.on{display:grid}#cvm.vis{opacity:1}
@@ -897,7 +967,12 @@ html,body{overflow-x:clip}
 </head>
 <body>
 <div id="intro" aria-hidden="true"><i class="iris"></i><div class="in-rw"><i class="in-gl"></i><i class="rg o"></i><i class="rg i"></i><i class="ar o"></i><i class="ar i"></i></div></div>
-<script>(function(){ var H=document.documentElement; try{ var lg=localStorage.getItem('ms-lang'); if(!lg){ var nv=(navigator.languages||[navigator.language||'en']).map(function(x){return String(x).slice(0,2).toLowerCase();}); lg=nv.find(function(x){return x==='fr'||x==='nl'||x==='en';})||'en'; } window.__LANG=['en','fr','nl'].indexOf(lg)>=0?lg:'en'; H.lang=window.__LANG; }catch(e){ window.__LANG='en'; }
+<script>(function(){ var H=document.documentElement; try{ var fx=H.getAttribute('data-lang'), lg=fx||'en';
+  /* each language has its own address (/, /fr/, /nl/); the root sends a first-time visitor to their browser's language */
+  if(!fx){ var st=null; try{ st=localStorage.getItem('ms-lang'); }catch(e){} var bot=/bot|crawl|spider|slurp|lighthouse|preview/i.test(navigator.userAgent)||navigator.webdriver;
+    var want=st||(navigator.languages||[navigator.language||'en']).map(function(x){return String(x).slice(0,2).toLowerCase();}).find(function(x){return x==='fr'||x==='nl'||x==='en';})||'en';
+    if(!bot&&(want==='fr'||want==='nl')&&!/[?&]lang=en/.test(location.search)){ H.style.visibility='hidden'; location.replace(location.pathname.replace(/index\.html$/,'')+want+'/'+location.hash); } }
+  window.__LANG=['en','fr','nl'].indexOf(lg)>=0?lg:'en'; H.lang=window.__LANG; }catch(e){ window.__LANG='en'; }
   try{ if(sessionStorage.getItem('ms-skipintro')){ sessionStorage.removeItem('ms-skipintro'); H.classList.add('nointro'); var I0=document.getElementById('intro'); I0&&I0.remove(); window.__introDone&&window.__introDone(); return; } }catch(e){}
   H.classList.add('pre'); try{ var t=localStorage.getItem('ms-theme'); if(t==='night'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)) H.classList.add('night'); }catch(e){}
   var done=function(){ H.classList.remove('pre'); window.__introDone&&window.__introDone(); };
@@ -935,7 +1010,7 @@ html,body{overflow-x:clip}
           <li><span>Running</span><b>Above Belgium, self-employed student entrepreneur</b></li>
           <li><span>Speaks</span><b>French · Dutch · English</b></li>
         </ul>
-        <div class="idlinks"><a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a><a href="mailto:mathias.simoens@student.uclouvain.be">Email</a><a href="cv.pdf" class="cvlink">CV</a></div>
+        <div class="idlinks"><a href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a><a href="mailto:mathias.simoens@student.uclouvain.be">Email</a><button type="button" class="qv" data-qv>Quick view</button><a href="cv.pdf" class="cvlink">CV</a></div>
       </div></div>
     </div></div>
     <div class="eyb" id="eyb">Portfolio</div>
@@ -1111,6 +1186,35 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
 <use href="#c17" fill="#ffe7a0" opacity=".35" transform="translate(-1.3,-1.3)"/>
 <g fill="none" stroke="#5c3a07" stroke-width="1.4" opacity=".55" transform="translate(0,6)"><circle cx="-30" cy="7" r="3.4"/><circle cx="-53.5" cy="11" r="3.1"/><circle cx="30" cy="7" r="3.4"/><circle cx="53.5" cy="11" r="3.1"/><path d="M-8,-4 Q0,-8 8,-4"/></g>
 </g></svg><i class="shine"></i></div></div></div>
+<div id="recap" aria-hidden="true"><div class="rc-sheet" role="dialog" aria-label="Quick view">
+  <div class="rc-top"><span class="rc-k">Quick view</span><span class="rc-id">MS · BE · 2026</span><button class="rc-x" id="rcx" aria-label="Close">&times;</button></div>
+  <div class="rc-grid">
+    <aside class="rc-id-card">
+      <div class="rc-ph"><img src="portrait.jpg" alt="Mathias Simoens"></div>
+      <h2>Mathias Simoens</h2>
+      <p class="rc-role">MSc Business Engineering student · Data & AI · Photographer</p>
+      <dl class="rc-facts">
+        <div><dt>Based in</dt><dd>Belgium</dd></div>
+        <div><dt>Now</dt><dd>On exchange at NHH Bergen</dd></div>
+        <div><dt>Next</dt><dd>PwC, Technology - Cloud & Data internship, 2027</dd></div>
+        <div><dt>Speaks</dt><dd>French · Dutch · English</dd></div>
+      </dl>
+      <div class="rc-links"><a class="btn solid" href="cv.pdf" download>Download my CV</a><a class="btn" href="mailto:mathias.simoens@student.uclouvain.be">Email</a><a class="btn" href="https://www.linkedin.com/in/mathiassimoens" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/simoensm" target="_blank" rel="noopener">GitHub</a></div>
+    </aside>
+    <div class="rc-main">
+      <p class="rc-lead">Business engineering student who turns data into decisions, builds tools with AI, and runs his own photo and video company.</p>
+      <section class="rc-sec"><h4>Path</h4><ol class="rc-tl" id="rctl"></ol></section>
+      <section class="rc-sec"><h4>Selected work</h4><div class="rc-work">
+        <button data-rc="optim"><b>Movie Recommender</b><span>Recommender systems · 120+ configurations, 5-fold CV</span></button>
+        <button data-rc="optim"><b>ESG Web Mining</b><span>NLP and web mining · 3 brands compared</span></button>
+        <button data-rc="software"><b>Sony Recognizer</b><span>Event photos delivered by face matching</span></button></div></section>
+      <section class="rc-sec"><h4>Skills</h4><div class="rc-sk"><span>Python</span><span>pandas</span><span>scikit-learn</span><span>NLP</span><span>SQL</span><span>Statistical testing</span><span>Linear and integer programming</span><span>Power BI</span><span>Excel</span><span>Building with Claude</span><span>Odoo ERP</span><span>Adobe</span></div></section>
+      <section class="rc-sec rc-ab"><h4>Above Belgium</h4><div class="rc-stats"><div><b>10+</b><span>clients</span></div><div><b>4.98</b><span>on Google</span></div><div><b>2023</b><span>Self-employed</span></div></div>
+        <div class="rc-logos"><img src="logos/uclouvain.png" alt="UCLouvain"><img src="logos/apex.png" alt="APEX"></div></section>
+    </div>
+  </div>
+  <div class="rc-mrz" aria-hidden="true"><span>MS&lt;BEL&lt;SIMOENS&lt;&lt;MATHIAS&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><span>BUSINESS&lt;ANALYTICS&lt;&lt;DATA&lt;CODE&lt;LIGHT&lt;&lt;&lt;&lt;&lt;2027&lt;&lt;</span></div>
+</div></div>
 <div id="cvm" aria-hidden="true"><div class="cvp glass"><div class="cvh"><b>Curriculum vitae</b><span><a class="btn" href="cv.pdf" download>Download</a><a class="btn" href="cv.pdf" target="_blank" rel="noopener">Open</a><button class="btn solid" id="cvx">Close</button></span></div><iframe id="cvf" title="CV of Mathias Simoens"></iframe></div></div>
 <div id="glitch" aria-hidden="true"><div class="bars"></div><div class="sl"></div><div class="sl"></div><div class="sl"></div><div class="err" id="gerr"><div class="eh"><i></i>FATAL</div><div class="eb"><b>ERROR</b><p id="gmsg">mathias-simoens.abovebelgium.be has stopped responding.<br>Unexpected token in /egg. The website will close now.</p><div class="eq"><u></u></div></div></div></div>
 <div class="toast dglass" id="toast"></div>
@@ -1119,6 +1223,8 @@ esg_web_mining  gesture_recognition  privacy_guard  ...
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
 </script>
 <script defer src="i18n.js"></script>
+<script>window.goatcounter={no_onload:true};</script>
+<script async src="https://gc.zgo.at/count.js" data-goatcounter="https://mathias-simoens.goatcounter.com/count"></script>
 <script type="module">
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -1185,7 +1291,7 @@ document.addEventListener('click',e=>{ if(e.target.closest('[data-ai]')){ e.prev
 /* ============================ DISCOVERY GAME ============================ */
 // a small score at the top right: what a visitor has found about me so far, kept in this browser
 window.found=(...a)=>found(...a);
-const DISC=[['overview','The overview'],['badge','My badge'],['journey','The journey'],['play','The journey played'],['studio','Above Belgium studio'],['gear','A piece of gear'],['atelier','The atelier'],['project','A project up close'],['contact','The contact page'],['ai','How I use AI'],
+const DISC=[['overview','The overview'],['badge','My badge'],['journey','The journey'],['play','The journey played'],['studio','Above Belgium studio'],['gear','A piece of gear'],['atelier','The atelier'],['project','A project up close'],['contact','The contact page'],['ai','How I use AI'],['recap','The quick view'],
   ['song','The song on the desk',1],['duck','The white pony',1],['plane','A paper plane',1],['sun','The sun called M',1],['cat','The cat',1],['medal','The golden medal',1],['outside','The view outside',1],['egg','The /egg command',1]];
 let discGot=new Set(); try{ discGot=new Set(JSON.parse(localStorage.getItem('ms-disc')||'[]')); }catch(e){}
 function discDraw(){ const n=DISC.filter(d=>discGot.has(d[0])).length, pc=Math.round(n/DISC.length*100);
@@ -1200,10 +1306,11 @@ document.addEventListener('click',e=>{ if(!e.target.closest('#disc')) document.g
 
 /* ============================ ROUTER ============================ */
 const ROUTES=['overview','journey','studio','atelier','contact']; let route=null;
+function gcHit(path,title,n=0){ try{ const g=window.goatcounter; if(g&&g.count){ g.count({path,title}); return; } }catch(e){ return; } if(n<8) setTimeout(()=>gcHit(path,title,n+1),1000); }
 function go(r){ if(!ROUTES.includes(r)) r='overview'; if(location.hash!=='#'+r) location.hash=r; else show(r); }
 function show(r){
   if(!ROUTES.includes(r)) r='overview';
-  const prev=route; route=r; document.body.classList.remove('menu-open'); setTimeout(()=>found(r),900);
+  const prev=route; route=r; document.body.classList.remove('menu-open'); gcHit(location.pathname.replace(/index\.html$/,'')+r,r); setTimeout(()=>found(r),900);
   $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===r));
   document.body.classList.toggle('dark', document.documentElement.classList.contains('night') || (r!=='overview'&&r!=='contact'));
   document.body.classList.toggle('away', r!=='overview'&&r!=='contact');
@@ -1233,7 +1340,19 @@ $$('.reveal').forEach(el=>io.observe(el));
   c.addEventListener('focus',()=>{ found=true; hide(); });
   addEventListener('hashchange',()=>setTimeout(show,1200)); })();
 (()=>{ const c=$('#idcard'); let t=0; c.addEventListener('pointerenter',e=>{ if(e.pointerType!=='mouse') return; clearTimeout(t); t=setTimeout(()=>c.classList.add('hov'),400); }); c.addEventListener('pointerleave',()=>{ clearTimeout(t); c.classList.remove('hov'); }); })();
-$('#idcard').addEventListener('click',e=>{ if(e.target.closest('a')) return; if(matchMedia('(hover: none)').matches) $('#idcard').classList.toggle('open'); });
+$('#idcard').addEventListener('click',e=>{ if(e.target.closest('a,[data-qv]')) return; if(matchMedia('(hover: none)').matches) $('#idcard').classList.toggle('open'); else openRecap(); });
+/* videos: a thumbnail first, the YouTube player only after a click */
+document.addEventListener('click',e=>{ const c=e.target.closest('#vchips [data-vc]'); if(c){ document.querySelectorAll('#vchips button').forEach(b=>b.classList.toggle('on',b===c)); document.querySelectorAll('#vgrid .vth').forEach(v=>v.classList.toggle('hid',c.dataset.vc!=='all'&&v.dataset.vcat!==c.dataset.vc)); return; }
+  const v=e.target.closest('.vth[data-yt]'); if(v&&!v.classList.contains('play')){ v.classList.add('play','big'); v.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.dataset.yt}?autoplay=1&rel=0&modestbranding=1" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`; } });
+/* the quick view opens when the badge is clicked (hover keeps working as before) */
+function openRecap(){ const R=$('#recap'); if(!R) return; const tl=$('#rctl');
+  if(tl&&!tl.children.length) tl.innerHTML=[...TL].reverse().map(it=>`<li style="--c:${it.kind==='Education'?'#3f6bff':'#8b5cf6'}"><time>${it.when}</time><i></i><div><b>${it.t}</b><span>${it.o}</span></div></li>`).join('');
+  R.classList.add('on'); R.setAttribute('aria-hidden','false'); requestAnimationFrame(()=>requestAnimationFrame(()=>R.classList.add('vis'))); found('recap'); }
+function closeRecap(){ const R=$('#recap'); R.classList.remove('vis'); R.setAttribute('aria-hidden','true'); setTimeout(()=>R.classList.remove('on'),400); }
+$('#rcx').onclick=closeRecap; $('#recap').addEventListener('click',e=>{ if(e.target.id==='recap') closeRecap(); const w=e.target.closest('[data-rc]'); if(w){ closeRecap(); pendingFocus=w.dataset.rc; go('atelier'); } });
+document.addEventListener('click',e=>{ if(e.target.closest('[data-qv]')){ e.preventDefault(); $('#idcard').classList.remove('open','hov'); openRecap(); } });
+addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#recap').classList.contains('on')) closeRecap(); });
+$('#idcard').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target===$('#idcard')) openRecap(); });
 document.addEventListener('click',e=>{ if(!e.target.closest('#idcard')) $('#idcard')?.classList.remove('open'); });
 $$('.hg').forEach(el=>el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); }));
 $$('.world').forEach(w=>w.addEventListener('pointerenter',()=>w.querySelector('.hg')?.classList.add('lift')));
@@ -1777,7 +1896,8 @@ async function initGlobe(){
 /* ============================ PHOTOS ============================ */
 // Real photos come from photos/photos.json (built from the files you drop in photos-inbox/)
 const CATS=[['sports','Sports'],['motorsports','Motorsports'],['events','Events'],['portraits','Portraits'],['drone','Drone'],['realestate','Real estate'],['macro','Macro'],['products','Products']];
-const VCATS=[['aftermovies','Aftermovies'],['interviews','Interviews'],['products','Products'],['sports','Sports']];
+const VCATS=[['drone','Drone'],['interviews','Interviews'],['products','Products'],['nature','Nature'],['aftermovies','Aftermovies'],['sports','Sports']];
+const VIDEOS=[{yt:'2xuQsZlt5ec',cat:'drone'},{yt:'8GwYg8t82rs',cat:'drone'},{yt:'jva6SbkrojY',cat:'drone'},{yt:'GcVudF9SRMo',cat:'drone'},{yt:'FrPZQ24Ojxs',cat:'interviews'},{yt:'fNfyxJjofKg',cat:'products'},{yt:'P_l-wP6sE74',cat:'nature'}];
 const PHOTOS=fetch('photos/photos.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null);
 let PHOTOS_DATA=null; PHOTOS.then(m=>PHOTOS_DATA=m);
 const esc=t=>String(t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1788,7 +1908,7 @@ function portfolioSheet(cat){
   return `<div class="k">Above Belgium</div><h3>Portfolio</h3>
     <div class="tabs" id="ptabs"><button class="on" data-t="ph">Photos</button><button data-t="vi">Videos</button></div>
     <div id="pg-ph">${chips}<div class="masonry" id="mas"></div>${has?'':`<p class="note">No photos online yet. Drop your best shots in the <b>photos-inbox</b> folder of your repository, one subfolder per category, and I'll optimise and publish them here.</p>`}</div>
-    <div id="pg-vi" style="display:none"><div class="chipsrow">${VCATS.map(([k,n])=>`<button disabled>${n}<em>${vids.filter(v=>v.cat===k).length||''}</em></button>`).join('')}</div>${vids.length? vids.map(v=>`<div class="vid">${v.youtube?`<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(v.youtube)}" title="${esc(v.title)}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`:`<video src="${esc(v.src)}" controls preload="metadata" playsinline></video>`}<b>${esc(v.title)}</b></div>`).join('') : `<p class="note">Videos are best hosted on YouTube or Vimeo, then embedded here. Send me the links and their titles.</p>`}</div>`; }
+    <div id="pg-vi" style="display:none"><div class="chipsrow" id="vchips"><button data-vc="all" class="on">All<em>${VIDEOS.length}</em></button>${VCATS.filter(([k])=>VIDEOS.some(v=>v.cat===k)).map(([k,n])=>`<button data-vc="${k}">${n}<em>${VIDEOS.filter(v=>v.cat===k).length}</em></button>`).join('')}</div><div class="vgrid" id="vgrid">${VIDEOS.map((v,i)=>`<button class="vth" data-yt="${v.yt}" data-vcat="${v.cat}" aria-label="Play video"><img loading="lazy" src="https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg" alt=""><span class="vpl"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span><span class="vcat">${(VCATS.find(c=>c[0]===v.cat)||[,''])[1]}</span></button>`).join('')}</div></div>`; }
 function listFor(cat){ const m=PHOTOS_DATA||{}; return cat&&cat!=='all' ? (m[cat]||[]) : CATS.flatMap(([k])=>m[k]||[]); }
 function fillMasonry(cat){ const mas=document.getElementById('mas'); if(!mas) return; const list=listFor(cat);
   mas.innerHTML= list.length ? thumbsHTML(list) : CATS.filter(([k])=>!cat||cat==='all'||k===cat).map(([k,n])=>`<div class="ph-empty">${n}</div>`).join('');
@@ -2881,6 +3001,7 @@ function initRoom(){
     clients:()=>`<div class="k">Above Belgium</div><h3>Clients and reviews</h3>
       <div class="score"><div class="big">${REVIEWS.avg.toFixed(2).replace(/0$/,'')}</div><div>${stars(5)}<span>${REVIEWS.count} Google reviews</span></div></div>
       <div class="cta2"><a class="btnp" href="${REVIEW_URL}" target="_blank" rel="noopener">${STAR} Leave a review</a><a class="btns" href="${REVIEW_URL}" target="_blank" rel="noopener">See them on Google</a></div>
+      <div class="cllogos"><a href="https://uclouvain.be/fr" target="_blank" rel="noopener"><img src="logos/uclouvain.png" alt="UCLouvain"></a><a href="https://www.apex-racing.be" target="_blank" rel="noopener"><img src="logos/apex.png" alt="APEX"></a></div>
       <ul><li><b><a href="https://uclouvain.be/fr" target="_blank" rel="noopener">UCLouvain FUCaM Mons &rarr;</a></b>Official photographer of the Mons campus since September 2024: events, ceremonies and campus life.</li><li><b><a href="https://www.apex-racing.be" target="_blank" rel="noopener">APEX &rarr;</a></b>Automotive group I have been working with for several years.</li></ul>
       <ul class="rvs" id="rvs">${reviewsHTML(8)}</ul>
       <button class="more-rv" id="moreRv">Show all ${REVIEWS.items.length} reviews</button>`,
@@ -2890,7 +3011,7 @@ function initRoom(){
   };
   const sb=$('#sb');
   function focusF(id){ const h=hot.find(x=>x.id===id); if(!h) return;
-    if(h.side!==side){ side=h.side; history.replaceState(null,'','#'+side); route=side; $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===side)); placeHl(); setCap(); }
+    if(h.side!==side){ side=h.side; history.replaceState(null,'',location.pathname+location.search+'#'+side); route=side; $$('.nav .links a').forEach(a=>a.classList.toggle('on',a.dataset.go===side)); placeHl(); setCap(); }
     if(/^g-/.test(id)) found('gear'); found(h.side);
     focused=id; document.body.classList.add('focused'); const sid=h.sheet||(/^pf-/.test(id)?'portfolio':id); const sh=SHEETS[sid]; sb.innerHTML= typeof sh==='function' ? sh(h) : sh; $('#sheet').scrollTop=0; wireSheet(sid,h);
     const v={pos:[...h.view.pos],look:[...h.view.look]};
